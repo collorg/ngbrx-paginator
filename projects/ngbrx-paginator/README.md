@@ -22,3 +22,23 @@ Run `ng test ngbrx-paginator` to execute the unit tests via [Karma](https://karm
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## Usage (example with an EntityState)
+
+In your feature reducer, add:
+
+```ts
+import { Pagination, initialPagination } from 'ngbrx-paginator';
+
+export interface State extends EntityState<MyData> {
+  pagination: Pagination,
+  filterValue: string
+}
+
+export const adapter: EntityAdapter<MyData> = createEntityAdapter<MyData>();
+
+export const initialState: State = {
+  pagination: initialPagination,
+  filterValue: ''
+};
+```

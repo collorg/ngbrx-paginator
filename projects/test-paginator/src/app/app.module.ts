@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { DepartementModule } from 'projects/test-paginator/departement/departement.module';
 import { CommuneModule } from 'projects/test-paginator/commune/commune.module';
 import { StoreModule } from '@ngrx/store';
-import * as fromAppState from './reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 @NgModule({
@@ -18,7 +17,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     BrowserModule,
     DepartementModule,
     CommuneModule,
-    StoreModule.forRoot(fromAppState.reducers),
+    StoreModule.forRoot(),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: false,
