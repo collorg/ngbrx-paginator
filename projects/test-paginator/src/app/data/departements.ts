@@ -1,4 +1,6 @@
-export const departements = [
+import { Departement } from "../departement/departement.model";
+
+export const departements: Departement[] = [
 {"code":"01","region":"84","chefLieu":"01053","nom":"Ain","typeLiaison":5,"zone":"metro"},
 {"code":"02","region":"32","chefLieu":"02408","nom":"Aisne","typeLiaison":5,"zone":"metro"},
 {"code":"03","region":"84","chefLieu":"03190","nom":"Allier","typeLiaison":5,"zone":"metro"},

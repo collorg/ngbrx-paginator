@@ -12,7 +12,9 @@ export interface State extends EntityState<Departement> {
   filterValue: string
 }
 
-export const adapter: EntityAdapter<Departement> = createEntityAdapter<Departement>();
+export const adapter: EntityAdapter<Departement> = createEntityAdapter<Departement>({
+  selectId: (departement: Departement) => departement.code,
+});
 
 export const initialState: State = adapter.getInitialState({
   // additional entity state properties
