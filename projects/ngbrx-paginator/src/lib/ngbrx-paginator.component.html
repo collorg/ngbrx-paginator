@@ -1,0 +1,79 @@
+<div *ngIf="pagination$ | async as pagination">
+    <div class="row stick-to-the-top">
+      <div class="col">
+        <ngb-pagination
+          [collectionSize]="pagination.collectionSize"
+          [(page)]="page"
+          (pageChange)="selectPage(page.toString())"
+          [pageSize]="pagination.pageSize"
+          [boundaryLinks]="true"
+        >
+          <ng-template ngbPaginationPages let-page let-pages="pages">
+            <li class="ngb-custom-pages-item" *ngIf="pages.length > 0">
+              <div class="mb-3 d-flex flex-nowrap px-2">
+                <label
+                  id="paginationInputLabel"
+                  for="paginationInput"
+                  class="col-form-label me-2 ms-1"
+                  >Page</label
+                >
+                <input
+                  #i
+                  type="text"
+                  inputmode="numeric"
+                  pattern="[0-9]*"
+                  class="form-control custom-pages-input"
+                  id="paginationInput"
+                  [value]="page"
+                  (keyup.enter)="selectPage(i.value)"
+                  (blur)="selectPage(i.value)"
+                  (input)="formatInput($any($event).target)"
+                  aria-labelledby="paginationInputLabel paginationDescription"
+                  style="width: 5rem"
+                />
+                <span
+                  id="paginationDescription"
+                  class="col-form-label text-nowrap px-2"
+                >
+                  of {{ pagination.pagesCount }}</span
+                >
+              </div>
+            </li>
+          </ng-template>
+        </ngb-pagination>
+      </div>
+      <div class="col">
+        <button
+          class="btn dropdown-toggle"
+          id="dropdownMenuButton"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          {{ pagination.pageSize }} lines/page
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <li class="dropdown-item" value="20" (click)="setPageSize(20)">
+            20 lines
+          </li>
+          <li class="dropdown-item" value="50" (click)="setPageSize(50)">
+            50 lines
+          </li>
+          <li class="dropdown-item" value="100" (click)="setPageSize(100)">
+            100 lines
+          </li>
+        </ul>
+      </div>
+      <form class="col">
+        <input
+          class="form-control me-2"
+          type="search"
+          placeholder="Search"
+          aria-label="Search"
+          [(ngModel)]="filterValue"
+          [ngModelOptions]="{ standalone: true }"
+          (keyup)="filter()"
+        />
+      </form>
+    </div>
+  </div>
+  
