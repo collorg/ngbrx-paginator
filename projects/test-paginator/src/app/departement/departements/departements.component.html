@@ -1,1 +1,5 @@
-<p>departements works!</p>
+<ul>
+    <li *ngFor="let item of collection$ | async">
+        {{item.code}}
+    </li>
+</ul>
