@@ -35,6 +35,97 @@
           }
         }
       }
+    },
+    "test-paginator": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "projects/test-paginator",
+      "sourceRoot": "projects/test-paginator/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/test-paginator",
+            "index": "projects/test-paginator/src/index.html",
+            "main": "projects/test-paginator/src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "projects/test-paginator/tsconfig.app.json",
+            "assets": [
+              "projects/test-paginator/src/favicon.ico",
+              "projects/test-paginator/src/assets"
+            ],
+            "styles": [
+              "projects/test-paginator/src/styles.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "test-paginator:build:production"
+            },
+            "development": {
+              "browserTarget": "test-paginator:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "test-paginator:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "projects/test-paginator/tsconfig.spec.json",
+            "assets": [
+              "projects/test-paginator/src/favicon.ico",
+              "projects/test-paginator/src/assets"
+            ],
+            "styles": [
+              "projects/test-paginator/src/styles.css"
+            ],
+            "scripts": []
+          }
+        }
+      }
     }
   },
   "cli": {
