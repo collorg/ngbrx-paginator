@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
 import * as fromDepartement from './departement.reducer';
 import { DepartementsComponent } from './departements/departements.component';
-
-
+import { NgbrxPaginatorModule } from 'ngbrx-paginator';
+import { EffectsModule } from '@ngrx/effects';
+import { FilterCollectionEffects } from './filter-collection.effects';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,12 @@ import { DepartementsComponent } from './departements/departements.component';
   ],
   imports: [
     CommonModule,
-    StoreModule.forFeature(fromDepartement.departementsFeatureKey, fromDepartement.reducer)
+    NgbrxPaginatorModule,
+    StoreModule.forFeature(fromDepartement.departementsFeature),
+    EffectsModule.forFeature(FilterCollectionEffects)
+  ],
+  exports: [
+    DepartementsComponent
   ]
 })
 export class DepartementModule { }

@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { DepartementModule } from 'projects/test-paginator/departement/departement.module';
 import { CommuneModule } from 'projects/test-paginator/commune/commune.module';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { EffectsModule } from '@ngrx/effects';
+import { DepartementModule } from './departement/departement.module';
 
 @NgModule({
   declarations: [
@@ -15,9 +16,9 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
   imports: [
     CommonModule,
     BrowserModule,
-    DepartementModule,
     CommuneModule,
     StoreModule.forRoot(),
+    EffectsModule.forRoot(),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: false,
@@ -27,7 +28,8 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
         lock: true,
         persist: true
       }
-    })
+    }),
+    DepartementModule
   ],
   providers: [],
   bootstrap: [AppComponent]

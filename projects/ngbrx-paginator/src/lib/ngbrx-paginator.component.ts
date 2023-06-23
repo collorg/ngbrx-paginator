@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { EMPTY, Observable, Subscription, filter, map, take } from 'rxjs';
-import { Pagination } from './model';
-import { DefaultProjectorFn, Store, createAction, props } from '@ngrx/store';
+import { Pagination } from './paginator';
+import { Action, DefaultProjectorFn, Store, createAction, props } from '@ngrx/store';
 
 
 @Component({
@@ -12,7 +12,7 @@ import { DefaultProjectorFn, Store, createAction, props } from '@ngrx/store';
 export class NgbrxPaginatorComponent  implements OnInit, OnDestroy {
   @Input({ required: true }) collection$: Observable<any[]> = EMPTY;
   @Input({ required: true }) pagination$: Observable<Pagination> = EMPTY;
-  @Input({ required: true }) actionPrefix: string = '';
+  @Input({ required: true }) actions: any = null;
   @Input() filterSelector: DefaultProjectorFn<any> | null = null
   #setPage: any;
   #setPageSize: any;
@@ -28,9 +28,9 @@ export class NgbrxPaginatorComponent  implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.#setPage = createAction(`${this.actionPrefix} Set Page`, props<{ page: number }>());
-    this.#setPageSize = createAction(`${this.actionPrefix} Set Page Size`, props<{ pageSize: number }>());
-    this.#filterCollection = createAction(`${this.actionPrefix} Filter Collection`, props<{ filter: string }>());
+    this.#setPage = this.actions.setPage;
+    this.#setPageSize = this.actions.setPageSize;
+    this.#filterCollection = this.actions.filterCollection;
     if (this.filterSelector !== null) {
       this.filterValue$ = this.store.select(this.filterSelector);
       this.filterValue$.pipe(take(1)).subscribe((filter: string) => this.filterValue = filter);
@@ -65,6 +65,5 @@ export class NgbrxPaginatorComponent  implements OnInit, OnDestroy {
       map((pagination: Pagination) => Math.round(pagination.collectionSize / pagination.pageSize) || 1)
     )
   }
-
 
 }

@@ -11,3 +11,7 @@ export const initialPagination: Pagination = {
     pageSize: 100,
     pagesCount: 0,
 }
+
+export function getPagesCount(pagination: Pagination): number {
+    return Math.floor(pagination.collectionSize / pagination.pageSize) + 1;
+}

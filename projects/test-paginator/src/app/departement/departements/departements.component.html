@@ -1,5 +1,16 @@
-<ul>
-    <li *ngFor="let item of collection$ | async">
-        {{item.code}}
-    </li>
-</ul>
+<div class="card">
+  <div class="card-header sticky-top">
+    <lib-ngbrx-paginator
+      [collection$]="collection$"
+      [pagination$]="pagination$"
+      [actions]="actions"
+    ></lib-ngbrx-paginator>
+  </div>
+  <div class="card-body">
+      <div class="list-group">
+        <div class="list-group-item" *ngFor="let item of pageItems$ | async">
+          {{ item.code }} {{ item.nom }}
+        </div>
+      </div>
+  </div>
+</div>

@@ -1,14 +1,13 @@
-import { createFeature, createReducer, on } from '@ngrx/store';
+import { createFeature, createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { Departement } from './departement.model';
 import { DepartementActions } from './departement.actions';
-import { Pagination, initialPagination } from 'ngbrx-paginator';
+import * as paginator from 'ngbrx-paginator';
 
 export const departementsFeatureKey = 'departements';
 
 export interface State extends EntityState<Departement> {
-  // additional entities state properties
-  pagination: Pagination,
+  pagination: paginator.Pagination,
   filterValue: string
 }
 
@@ -17,8 +16,7 @@ export const adapter: EntityAdapter<Departement> = createEntityAdapter<Departeme
 });
 
 export const initialState: State = adapter.getInitialState({
-  // additional entity state properties
-  pagination: initialPagination,
+  pagination: paginator.initialPagination,
   filterValue: ''
 });
 
@@ -49,11 +47,42 @@ export const reducer = createReducer(
     (state, action) => adapter.removeMany(action.ids, state)
   ),
   on(DepartementActions.loadDepartements,
-    (state, action) => adapter.setAll(action.departements, state)
+    (state, action) => {
+      let pagination = { ...state.pagination };
+      pagination.collectionSize = action.departements.length;
+      pagination.pagesCount = paginator.getPagesCount(pagination);
+
+      return adapter.setAll(action.departements, { ...state, pagination })
+    }
   ),
   on(DepartementActions.clearDepartements,
     state => adapter.removeAll(state)
   ),
+  on(DepartementActions.setPage, (state, { page }) => {
+    let pagination = { ...state.pagination };
+    pagination.page = page;
+    return { ...state, pagination };
+  }),
+  on(DepartementActions.setPageSize, (state, { pageSize }) => {
+    let pagination = { ...state.pagination };
+    const oldPageSize = pagination.pageSize;
+    const oldPage = pagination.page;
+    let newPage = Math.trunc((oldPageSize / pageSize) * oldPage - (oldPageSize / pageSize)) + 1;
+    pagination.pageSize = pageSize;
+    pagination.page = newPage;
+    pagination.pagesCount = paginator.getPagesCount(pagination);
+    return { ...state, pagination };
+  }),
+  on(DepartementActions.storeFilterQuery, (state, { filter }) => {
+    return { ...state, filterValue: filter };
+  }),
+  on(DepartementActions.setFilteredCollectionSize, (state, { size }) => {
+    let pagination = { ...state.pagination };
+    pagination.collectionSize = size;
+    pagination.pagesCount = paginator.getPagesCount(pagination);
+    return { ...state, pagination };
+  })
+
 );
 
 export const departementsFeature = createFeature({
@@ -70,3 +99,36 @@ export const {
   selectAll,
   selectTotal,
 } = departementsFeature;
+
+export const featureSelector = createFeatureSelector<State>(departementsFeatureKey);
+
+export const selectedPagination = createSelector(
+  featureSelector,
+  (state: State) => state.pagination
+);
+
+export const selectFilterValue = createSelector(
+  featureSelector,
+  (state: State) => state.filterValue
+);
+
+function filterDepartement(item: Departement, query: string): Boolean {
+  return !query || item.nom.toLowerCase().indexOf(query.toLocaleLowerCase()) === 0;
+}
+
+
+export const selectFilteredCollection = createSelector(
+  departementsFeature.selectAll,
+  selectFilterValue,
+  (items: Departement[], query: string) => {
+    return items.filter((item: Departement) => filterDepartement(item, query))
+  }
+);
+
+export const selectPageItems = createSelector(
+  selectFilteredCollection,
+  selectedPagination,
+  (items: Departement[], pagination: paginator.Pagination) => {
+    return items.slice((pagination.page - 1) * pagination.pageSize, pagination.page * pagination.pageSize)
+  }
+)

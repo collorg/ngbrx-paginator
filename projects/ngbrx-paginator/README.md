@@ -42,3 +42,34 @@ export const initialState: State = {
   filterValue: ''
 };
 ```
+
+Add to actions:
+
+```ts
+export const DepartementActions = createActionGroup({
+    // [...]
+
+    'Set Page': props<{page: number}>(),
+    'Set Page Size': props<{pageSize: number}>(),
+    'Filter Collection': props<{ filter: string}>(),
+    'Store Filter Query': props<{ filter: string}>(),
+    'Set Filtered Collection Size': props<{ size: number}>()
+
+}
+```
+
+Add
+
+```ts
+
+  on(DepartementActions.storeFilterQuery, (state, { filter }) => {
+    return { ...state, filterValue: filter };
+  }),
+  on(DepartementActions.setFilteredCollectionSize, (state, { size }) => {
+    let pagination = { ...state.pagination };
+    pagination.collectionSize = size;
+    pagination.pagesCount = paginator.getPagesCount(pagination);
+    return { ...state, pagination };
+  })
+
+```

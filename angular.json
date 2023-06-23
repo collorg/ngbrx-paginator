@@ -30,7 +30,8 @@
             "tsConfig": "projects/ngbrx-paginator/tsconfig.spec.json",
             "polyfills": [
               "zone.js",
-              "zone.js/testing"
+              "zone.js/testing",
+              "@angular/localize/init"
             ]
           }
         }
@@ -58,9 +59,12 @@
               "projects/test-paginator/src/assets"
             ],
             "styles": [
-              "projects/test-paginator/src/styles.css"
+              "projects/test-paginator/src/styles.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -122,7 +126,9 @@
             "styles": [
               "projects/test-paginator/src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "@popperjs/core/dist/umd/popper.min.js"
+            ]
           }
         }
       }
