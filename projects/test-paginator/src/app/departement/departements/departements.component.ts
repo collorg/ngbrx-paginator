@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { departements } from '../../data/departements';
 import { Store } from '@ngrx/store';
-import { DepartementActions, DepartementActionsPrefix } from '../departement.actions';
+import { DepartementActions } from '../departement.actions';
 import { Observable } from 'rxjs';
 import { Departement } from '../departement.model';
 import * as fromStore from '../departement.reducer';
@@ -22,7 +21,5 @@ export class DepartementsComponent {
 
   constructor(
     private store: Store
-  ) {
-    this.store.dispatch(DepartementActions.loadDepartements({departements}))
-  }
+  ) { }
 }

@@ -1,3 +1,9 @@
 <div class="container">
-    <app-departements></app-departements>
+    <div class="btn">
+        <a [routerLink]="['departements']">Départements</a>
+    </div>
+    <div class="btn">
+        <a [routerLink]="['communes']">Communes</a>
+    </div>
+    <router-outlet></router-outlet>
 </div>

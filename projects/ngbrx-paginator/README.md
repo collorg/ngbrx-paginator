@@ -46,23 +46,21 @@ export const initialState: State = {
 Add to actions:
 
 ```ts
-export const DepartementActions = createActionGroup({
+export const DepartementActionsPrefix = 'Departement/API';
+
+let actions = createActionGroup({
     // [...]
-
-    'Set Page': props<{page: number}>(),
-    'Set Page Size': props<{pageSize: number}>(),
-    'Filter Collection': props<{ filter: string}>(),
-    'Store Filter Query': props<{ filter: string}>(),
-    'Set Filtered Collection Size': props<{ size: number}>()
-
 }
+
+export const DepartementActions = paginator.addPaginationActions(DepartementActionsPrefix, actions);
+
 ```
 
 Add
 
 ```ts
 
-  on(DepartementActions.storeFilterQuery, (state, { filter }) => {
+  on(DepartementActions.setFilterQuery, (state, { filter }) => {
     return { ...state, filterValue: filter };
   }),
   on(DepartementActions.setFilteredCollectionSize, (state, { size }) => {

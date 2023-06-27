@@ -58,30 +58,11 @@ export const reducer = createReducer(
   on(DepartementActions.clearDepartements,
     state => adapter.removeAll(state)
   ),
-  on(DepartementActions.setPage, (state, { page }) => {
-    let pagination = { ...state.pagination };
-    pagination.page = page;
-    return { ...state, pagination };
-  }),
-  on(DepartementActions.setPageSize, (state, { pageSize }) => {
-    let pagination = { ...state.pagination };
-    const oldPageSize = pagination.pageSize;
-    const oldPage = pagination.page;
-    let newPage = Math.trunc((oldPageSize / pageSize) * oldPage - (oldPageSize / pageSize)) + 1;
-    pagination.pageSize = pageSize;
-    pagination.page = newPage;
-    pagination.pagesCount = paginator.getPagesCount(pagination);
-    return { ...state, pagination };
-  }),
-  on(DepartementActions.storeFilterQuery, (state, { filter }) => {
-    return { ...state, filterValue: filter };
-  }),
-  on(DepartementActions.setFilteredCollectionSize, (state, { size }) => {
-    let pagination = { ...state.pagination };
-    pagination.collectionSize = size;
-    pagination.pagesCount = paginator.getPagesCount(pagination);
-    return { ...state, pagination };
-  })
+  
+  on(DepartementActions.setPage, (state, { page }) => paginator.setPage(state, page)),
+  on(DepartementActions.setPageSize, (state, { pageSize }) => paginator.setPageSize(state, pageSize)),
+  on(DepartementActions.setFilterQuery, (state, { filter }) => paginator.setFilterQuery(state, filter)),
+  on(DepartementActions.setFilteredCollectionSize, (state, { size }) => paginator.setFilteredCollectionSize(state, size))
 
 );
 

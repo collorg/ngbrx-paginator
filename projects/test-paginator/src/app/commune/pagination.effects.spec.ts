@@ -2,21 +2,21 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs';
 
-import { FilterCollectionEffects } from './filter-collection.effects';
+import { PaginationEffects } from './pagination.effects';
 
-describe('FilterCollectionEffects', () => {
+describe('PaginationEffects', () => {
   let actions$: Observable<any>;
-  let effects: FilterCollectionEffects;
+  let effects: PaginationEffects;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        FilterCollectionEffects,
+        PaginationEffects,
         provideMockActions(() => actions$)
       ]
     });
 
-    effects = TestBed.inject(FilterCollectionEffects);
+    effects = TestBed.inject(PaginationEffects);
   });
 
   it('should be created', () => {

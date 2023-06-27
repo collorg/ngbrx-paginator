@@ -5,7 +5,7 @@ import * as fromDepartement from './departement.reducer';
 import { DepartementsComponent } from './departements/departements.component';
 import { NgbrxPaginatorModule } from 'ngbrx-paginator';
 import { EffectsModule } from '@ngrx/effects';
-import { FilterCollectionEffects } from './filter-collection.effects';
+import { PaginationEffects } from './pagination.effects';
 
 @NgModule({
   declarations: [
@@ -15,7 +15,7 @@ import { FilterCollectionEffects } from './filter-collection.effects';
     CommonModule,
     NgbrxPaginatorModule,
     StoreModule.forFeature(fromDepartement.departementsFeature),
-    EffectsModule.forFeature(FilterCollectionEffects)
+    EffectsModule.forFeature(PaginationEffects)
   ],
   exports: [
     DepartementsComponent

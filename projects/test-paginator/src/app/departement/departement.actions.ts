@@ -1,11 +1,12 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { Update } from '@ngrx/entity';
+import * as paginator from 'ngbrx-paginator';
 
 import { Departement } from './departement.model';
 
 export const DepartementActionsPrefix = 'Departement/API';
 
-export const DepartementActions = createActionGroup({
+let actions = createActionGroup({
   source: DepartementActionsPrefix,
   events: {
     'Load Departements': props<{ departements: Departement[] }>(),
@@ -18,11 +19,7 @@ export const DepartementActions = createActionGroup({
     'Delete Departement': props<{ id: string }>(),
     'Delete Departements': props<{ ids: string[] }>(),
     'Clear Departements': emptyProps(),
-
-    'Set Page': props<{page: number}>(),
-    'Set Page Size': props<{pageSize: number}>(),
-    'Filter Collection': props<{ filter: string}>(),
-    'Store Filter Query': props<{ filter: string}>(),
-    'Set Filtered Collection Size': props<{ size: number}>()
   }
 });
+
+export const DepartementActions = paginator.addPaginationActions(DepartementActionsPrefix, actions);
