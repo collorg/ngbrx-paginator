@@ -59,10 +59,10 @@ export const reducer = createReducer(
     state => adapter.removeAll(state)
   ),
   
-  on(PaginationActions.setPage, (state, { page }) => paginator.setPage(state, page)),
-  on(PaginationActions.setPageSize, (state, { pageSize }) => paginator.setPageSize(state, pageSize)),
-  on(PaginationActions.setFilterQuery, (state, { filter }) => paginator.setFilterQuery(state, filter)),
-  on(PaginationActions.setFilteredCollectionSize, (state, { size }) => paginator.setFilteredCollectionSize(state, size))
+  on(PaginationActions.setPage, paginator.setPage),
+  on(PaginationActions.setPageSize, paginator.setPageSize),
+  on(PaginationActions.setFilterQuery, paginator.setFilterQuery),
+  on(PaginationActions.setFilteredCollectionSize, paginator.setFilteredCollectionSize)
 
 );
 

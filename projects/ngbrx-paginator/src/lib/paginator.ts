@@ -23,13 +23,14 @@ export function getPagesCount(pagination: Pagination): number {
     return Math.floor(pagination.collectionSize / pagination.pageSize) + 1;
 }
 
-export function setPage(state: any, page: number): any {
+
+export function setPage(state: any, { page }: { page: number }): any {
     let pagination = { ...state.pagination };
     pagination.page = page;
     return { ...state, pagination };
 }
 
-export function setPageSize(state: any, pageSize: number): any {
+export function setPageSize(state: any, { pageSize }: { pageSize: number }): any {
     let pagination = { ...state.pagination };
     const oldPageSize = pagination.pageSize;
     const oldPage = pagination.page;
@@ -40,11 +41,11 @@ export function setPageSize(state: any, pageSize: number): any {
     return { ...state, pagination };
 }
 
-export function setFilterQuery(state: any, filter: string): any {
+export function setFilterQuery(state: any, { filter }: { filter: string }): any {
     return { ...state, filterValue: filter };
 }
 
-export function setFilteredCollectionSize(state: any, size: number) {
+export function setFilteredCollectionSize(state: any, { size }: { size: number }) {
     let pagination = { ...state.pagination };
     pagination.collectionSize = size;
     pagination.pagesCount = getPagesCount(pagination);
