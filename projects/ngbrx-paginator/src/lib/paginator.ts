@@ -1,4 +1,7 @@
-import { createAction, props } from "@ngrx/store";
+import { MemoizedSelector, Store, createAction, props } from "@ngrx/store";
+import { Actions, createEffect, ofType } from "@ngrx/effects";
+import { switchMap, tap } from "rxjs";
+import { PaginationActions } from "./pagination.actions";
 
 export interface Pagination {
     page: number;
@@ -56,4 +59,21 @@ export function createPaginationActions(actionsPrefix: string) {
         setFilterQuery: createAction(`[${actionsPrefix}] Set Filter Query`, props<{ filter: string }>()),
         setFilteredCollectionSize: createAction(`[${actionsPrefix}] Set Filtered Collection Size`, props<{ size: number }>())
     }
+}
+
+export function createFilterEffect<T>(actions$: Actions, store: Store, actions: PaginationActions, filterSelector: MemoizedSelector<{}, T[]>) {
+    return createEffect(() =>
+        actions$.pipe(
+        ofType(actions.filterCollection),
+        tap((action) => {
+            store.dispatch(actions.setFilterQuery({ filter: action.filter }));
+            store.dispatch(actions.setPage({ page: 1 }));
+        }),
+        switchMap(() => store.select(filterSelector)),
+        tap((collection: T[]) => {
+            store.dispatch(actions.setFilteredCollectionSize({ size: collection.length }));
+            return [];
+        })
+        ), { dispatch: false }
+    );
 }

@@ -7,27 +7,14 @@ import * as fromStore from './commune.reducer';
 
 import { PaginationActions } from './commune.actions';
 import { Commune } from './commune.model';
+import * as paginator from 'ngbrx-paginator';
 
 
 
 @Injectable()
 export class PaginationEffects {
 
-  filterCollection$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(PaginationActions.filterCollection),
-      tap((action) => {
-        this.store.dispatch(PaginationActions.setFilterQuery({ filter: action.filter }));
-        this.store.dispatch(PaginationActions.setPage({ page: 1 }));
-      }),
-      switchMap(() => this.store.pipe<Commune[]>(select(fromStore.selectFilteredCollection))),
-      tap((collection: Commune[]) => {
-        this.store.dispatch(PaginationActions.setFilteredCollectionSize({ size: collection.length }));
-        return [];
-      })
-    ), { dispatch: false });
-
-
+  filterCollection$ = paginator.createFilterEffect<Commune>(this.actions$, this.store, PaginationActions, fromStore.selectFilteredCollection);
   constructor(
     private actions$: Actions,
     private store: Store
