@@ -1,7 +1,7 @@
 import { createFeature, createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { Departement } from './departement.model';
-import { DepartementActions } from './departement.actions';
+import { DepartementActions, PaginationActions } from './departement.actions';
 import * as paginator from 'ngbrx-paginator';
 
 export const departementsFeatureKey = 'departements';
@@ -59,10 +59,10 @@ export const reducer = createReducer(
     state => adapter.removeAll(state)
   ),
   
-  on(DepartementActions.setPage, (state, { page }) => paginator.setPage(state, page)),
-  on(DepartementActions.setPageSize, (state, { pageSize }) => paginator.setPageSize(state, pageSize)),
-  on(DepartementActions.setFilterQuery, (state, { filter }) => paginator.setFilterQuery(state, filter)),
-  on(DepartementActions.setFilteredCollectionSize, (state, { size }) => paginator.setFilteredCollectionSize(state, size))
+  on(PaginationActions.setPage, (state, { page }) => paginator.setPage(state, page)),
+  on(PaginationActions.setPageSize, (state, { pageSize }) => paginator.setPageSize(state, pageSize)),
+  on(PaginationActions.setFilterQuery, (state, { filter }) => paginator.setFilterQuery(state, filter)),
+  on(PaginationActions.setFilteredCollectionSize, (state, { size }) => paginator.setFilteredCollectionSize(state, size))
 
 );
 

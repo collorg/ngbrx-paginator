@@ -5,7 +5,7 @@ import { switchMap, tap } from 'rxjs';
 
 import * as fromStore from './departement.reducer';
 
-import { DepartementActions } from './departement.actions';
+import { PaginationActions } from './departement.actions';
 import { Departement } from './departement.model';
 
 
@@ -15,14 +15,14 @@ export class PaginationEffects {
 
   filterCollection$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(DepartementActions.filterCollection),
+      ofType(PaginationActions.filterCollection),
       tap((action) => {
-        this.store.dispatch(DepartementActions.setFilterQuery({ filter: action.filter }));
-        this.store.dispatch(DepartementActions.setPage({ page: 1 }));
+        this.store.dispatch(PaginationActions.setFilterQuery({ filter: action.filter }));
+        this.store.dispatch(PaginationActions.setPage({ page: 1 }));
       }),
       switchMap(() => this.store.pipe<Departement[]>(select(fromStore.selectFilteredCollection))),
       tap((collection: Departement[]) => {
-        this.store.dispatch(DepartementActions.setFilteredCollectionSize({ size: collection.length }));
+        this.store.dispatch(PaginationActions.setFilteredCollectionSize({ size: collection.length }));
         return [];
       })
     ), { dispatch: false });

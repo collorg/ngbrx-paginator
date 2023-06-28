@@ -1,7 +1,7 @@
 import { createFeature, createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { Commune } from './commune.model';
-import { CommuneActions } from './commune.actions';
+import { CommuneActions, PaginationActions } from './commune.actions';
 import * as paginator from 'ngbrx-paginator';
 
 export const communesFeatureKey = 'communes';
@@ -49,20 +49,21 @@ export const reducer = createReducer(
   on(CommuneActions.loadCommunes,
     (state, action) => {
       let pagination = { ...state.pagination };
-      pagination.collectionSize = action.communes.length;
-      pagination.pagesCount = paginator.getPagesCount(pagination);
 
-      return adapter.setAll(action.communes, { ...state, pagination })
+      const intermediateState = adapter.setAll(action.communes, { ...state })
+      pagination.collectionSize = intermediateState.ids.length;
+      pagination.pagesCount = paginator.getPagesCount(pagination);
+      return {...intermediateState, pagination }
     }
   ),
   on(CommuneActions.clearCommunes,
     state => adapter.removeAll(state)
   ),
   
-  on(CommuneActions.setPage, (state, { page }) => paginator.setPage(state, page)),
-  on(CommuneActions.setPageSize, (state, { pageSize }) => paginator.setPageSize(state, pageSize)),
-  on(CommuneActions.setFilterQuery, (state, { filter }) => paginator.setFilterQuery(state, filter)),
-  on(CommuneActions.setFilteredCollectionSize, (state, { size }) => paginator.setFilteredCollectionSize(state, size))
+  on(PaginationActions.setPage, (state, { page }) => paginator.setPage(state, page)),
+  on(PaginationActions.setPageSize, (state, { pageSize }) => paginator.setPageSize(state, pageSize)),
+  on(PaginationActions.setFilterQuery, (state, { filter }) => paginator.setFilterQuery(state, filter)),
+  on(PaginationActions.setFilteredCollectionSize, (state, { size }) => paginator.setFilteredCollectionSize(state, size))
 
 );
 
@@ -101,15 +102,12 @@ function filterCommune(item: Commune, query: string): Boolean {
 export const selectFilteredCollection = createSelector(
   communesFeature.selectAll,
   selectFilterValue,
-  (items: Commune[], query: string) => {
-    return items.filter((item: Commune) => filterCommune(item, query))
-  }
+  (items: Commune[], query: string) => items.filter((item: Commune) => filterCommune(item, query))
 );
 
 export const selectPageItems = createSelector(
   selectFilteredCollection,
   selectedPagination,
-  (items: Commune[], pagination: paginator.Pagination) => {
-    return items.slice((pagination.page - 1) * pagination.pageSize, pagination.page * pagination.pageSize)
-  }
+  (items: Commune[], pagination: paginator.Pagination) => 
+    items.slice((pagination.page - 1) * pagination.pageSize, pagination.page * pagination.pageSize)
 )

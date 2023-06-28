@@ -1,7 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { EMPTY, Observable, Subscription, filter, map, take } from 'rxjs';
+import { EMPTY, Observable, Subscription, debounceTime, distinctUntilChanged, filter, map, take } from 'rxjs';
 import { Pagination } from './paginator';
 import { Action, DefaultProjectorFn, Store, createAction, props } from '@ngrx/store';
+import { FormControl } from '@angular/forms';
 
 
 @Component({
@@ -16,12 +17,12 @@ export class NgbrxPaginatorComponent  implements OnInit, OnDestroy {
   @Input() filterSelector: DefaultProjectorFn<any> | null = null
   #setPage: any;
   #setPageSize: any;
-  #filterCollection: any;
   filterValue$: Observable<string> = EMPTY;
   page: number = 1;
   filterValue: string = '';
   FILTER_PAG_REGEX = /[^0-9]/g;
   subscriptions: Subscription[] = [];
+  control = new FormControl();
 
   constructor(
     private store: Store
@@ -30,7 +31,6 @@ export class NgbrxPaginatorComponent  implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.#setPage = this.actions.setPage;
     this.#setPageSize = this.actions.setPageSize;
-    this.#filterCollection = this.actions.filterCollection;
     if (this.filterSelector !== null) {
       this.filterValue$ = this.store.select(this.filterSelector);
       this.filterValue$.pipe(take(1)).subscribe((filter: string) => this.filterValue = filter);
@@ -38,6 +38,12 @@ export class NgbrxPaginatorComponent  implements OnInit, OnDestroy {
     this.subscriptions.push(this.pagination$.pipe(
       filter((pagination: Pagination) => pagination !== undefined)
     ).subscribe((pagination: Pagination) => this.page = pagination.page));
+    this.subscriptions.push(this.control.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe((input: string) => {
+      this.store.dispatch(this.actions.filterCollection({ filter: this.filterValue }));
+    }))
   }
 
   ngOnDestroy(): void {
@@ -54,10 +60,6 @@ export class NgbrxPaginatorComponent  implements OnInit, OnDestroy {
 
   formatInput(input: HTMLInputElement) {
     input.value = input.value.replace(this.FILTER_PAG_REGEX, '');
-  }
-
-  filter() {
-    this.store.dispatch(this.#filterCollection({ filter: this.filterValue }));
   }
 
   numberOfPages$(): Observable<number> {

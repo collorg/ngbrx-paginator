@@ -48,11 +48,12 @@ export function setFilteredCollectionSize(state: any, size: number) {
     return { ...state, pagination };
 }
 
-export function addPaginationActions(actionsPrefix: string, actionsGroup: any) {
-    actionsGroup.setPage = createAction(`[${actionsPrefix}] Set Page`, props<{page: number}>());
-    actionsGroup.setPageSize = createAction(`[${actionsPrefix}] Set Page Size`, props<{pageSize: number}>());
-    actionsGroup.filterCollection = createAction(`[${actionsPrefix}] Filter Collection`, props<{ filter: string}>());
-    actionsGroup.setFilterQuery = createAction(`[${actionsPrefix}] Set Filter Query`, props<{ filter: string}>());
-    actionsGroup.setFilteredCollectionSize = createAction(`[${actionsPrefix}] Set Filtered Collection Size`, props<{ size: number}>());
-    return actionsGroup;
+export function createPaginationActions(actionsPrefix: string) {
+    return {
+        setPage: createAction(`[${actionsPrefix}] Set Page`, props<{ page: number }>()),
+        setPageSize: createAction(`[${actionsPrefix}] Set Page Size`, props<{ pageSize: number }>()),
+        filterCollection: createAction(`[${actionsPrefix}] Filter Collection`, props<{ filter: string }>()),
+        setFilterQuery: createAction(`[${actionsPrefix}] Set Filter Query`, props<{ filter: string }>()),
+        setFilteredCollectionSize: createAction(`[${actionsPrefix}] Set Filtered Collection Size`, props<{ size: number }>())
+    }
 }

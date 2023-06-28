@@ -6,7 +6,7 @@ import { Commune } from './commune.model';
 
 export const CommuneActionsPrefix = 'Commune/API';
 
-let actions = createActionGroup({
+export const CommuneActions = createActionGroup({
   source: CommuneActionsPrefix,
   events: {
     'Load Communes': props<{ communes: Commune[] }>(),
@@ -22,4 +22,4 @@ let actions = createActionGroup({
   }
 });
 
-export const CommuneActions = paginator.addPaginationActions(CommuneActionsPrefix, actions);
+export const PaginationActions = paginator.createPaginationActions(CommuneActionsPrefix);

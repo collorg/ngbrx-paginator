@@ -6,7 +6,7 @@ import { Departement } from './departement.model';
 
 export const DepartementActionsPrefix = 'Departement/API';
 
-let actions = createActionGroup({
+export const DepartementActions = createActionGroup({
   source: DepartementActionsPrefix,
   events: {
     'Load Departements': props<{ departements: Departement[] }>(),
@@ -22,4 +22,4 @@ let actions = createActionGroup({
   }
 });
 
-export const DepartementActions = paginator.addPaginationActions(DepartementActionsPrefix, actions);
+export const PaginationActions = paginator.createPaginationActions(DepartementActionsPrefix);

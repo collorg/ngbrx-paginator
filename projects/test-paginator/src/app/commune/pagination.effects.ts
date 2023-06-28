@@ -5,7 +5,7 @@ import { switchMap, tap } from 'rxjs';
 
 import * as fromStore from './commune.reducer';
 
-import { CommuneActions } from './commune.actions';
+import { PaginationActions } from './commune.actions';
 import { Commune } from './commune.model';
 
 
@@ -15,14 +15,14 @@ export class PaginationEffects {
 
   filterCollection$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(CommuneActions.filterCollection),
+      ofType(PaginationActions.filterCollection),
       tap((action) => {
-        this.store.dispatch(CommuneActions.setFilterQuery({ filter: action.filter }));
-        this.store.dispatch(CommuneActions.setPage({ page: 1 }));
+        this.store.dispatch(PaginationActions.setFilterQuery({ filter: action.filter }));
+        this.store.dispatch(PaginationActions.setPage({ page: 1 }));
       }),
       switchMap(() => this.store.pipe<Commune[]>(select(fromStore.selectFilteredCollection))),
       tap((collection: Commune[]) => {
-        this.store.dispatch(CommuneActions.setFilteredCollectionSize({ size: collection.length }));
+        this.store.dispatch(PaginationActions.setFilteredCollectionSize({ size: collection.length }));
         return [];
       })
     ), { dispatch: false });

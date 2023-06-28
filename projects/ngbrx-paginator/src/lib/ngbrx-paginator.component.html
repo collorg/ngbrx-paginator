@@ -65,13 +65,12 @@
       </div>
       <form class="col">
         <input
+          [formControl]="control"
           class="form-control me-2"
           type="search"
           placeholder="Search"
           aria-label="Search"
           [(ngModel)]="filterValue"
-          [ngModelOptions]="{ standalone: true }"
-          (keyup)="filter()"
         />
       </form>
     </div>

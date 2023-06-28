@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { DepartementActions } from '../departement.actions';
+import { PaginationActions } from '../departement.actions';
 import { Observable } from 'rxjs';
 import { Departement } from '../departement.model';
 import * as fromStore from '../departement.reducer';
@@ -12,7 +12,7 @@ import { Pagination } from 'ngbrx-paginator';
   styleUrls: ['./departements.component.css']
 })
 export class DepartementsComponent {
-  actions = DepartementActions;
+  actions = PaginationActions;
   collection$: Observable<Departement[]> = this.store.select(fromStore.selectFilteredCollection);
   pageItems$: Observable<Departement[]> = this.store.select(fromStore.selectPageItems);
   pagination$: Observable<Pagination> = this.store.select(fromStore.selectedPagination);
