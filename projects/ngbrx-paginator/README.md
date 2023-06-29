@@ -63,11 +63,5 @@ Add
   on(DepartementActions.setFilterQuery, (state, { filter }) => {
     return { ...state, filterValue: filter };
   }),
-  on(DepartementActions.setFilteredCollectionSize, (state, { size }) => {
-    let pagination = { ...state.pagination };
-    pagination.collectionSize = size;
-    pagination.pagesCount = paginator.getPagesCount(pagination);
-    return { ...state, pagination };
-  })
 
 ```

@@ -47,13 +47,7 @@ export const reducer = createReducer(
     (state, action) => adapter.removeMany(action.ids, state)
   ),
   on(DepartementActions.loadDepartements,
-    (state, action) => {
-      let pagination = { ...state.pagination };
-      pagination.collectionSize = action.departements.length;
-      pagination.pagesCount = paginator.getPagesCount(pagination);
-
-      return adapter.setAll(action.departements, { ...state, pagination })
-    }
+    (state, action) => adapter.setAll(action.departements, state)
   ),
   on(DepartementActions.clearDepartements,
     state => adapter.removeAll(state)
@@ -62,7 +56,6 @@ export const reducer = createReducer(
   on(PaginationActions.setPage, paginator.setPage),
   on(PaginationActions.setPageSize, paginator.setPageSize),
   on(PaginationActions.setFilterQuery, paginator.setFilterQuery),
-  on(PaginationActions.setFilteredCollectionSize, paginator.setFilteredCollectionSize)
 
 );
 
@@ -90,7 +83,7 @@ export const selectedPagination = createSelector(
 
 export const selectFilterValue = createSelector(
   featureSelector,
-  (state: State) => state.filterValue
+  (state: State) => state.pagination.filter
 );
 
 function filterDepartement(item: Departement, query: string): Boolean {

@@ -2,7 +2,7 @@
     <div class="row stick-to-the-top">
       <div class="col">
         <ngb-pagination
-          [collectionSize]="pagination.collectionSize"
+          [collectionSize]="(collection$ | async)?.length || 0"
           [(page)]="page"
           (pageChange)="selectPage(page.toString())"
           [pageSize]="pagination.pageSize"
@@ -35,7 +35,7 @@
                   id="paginationDescription"
                   class="col-form-label text-nowrap px-2"
                 >
-                  of {{ pagination.pagesCount }}</span
+                  of {{ pagesCount$ | async }}</span
                 >
               </div>
             </li>
@@ -63,16 +63,16 @@
           </li>
         </ul>
       </div>
-      <form class="col">
+      <div class="col">
         <input
-          [formControl]="control"
-          class="form-control me-2"
+          class="me-2"
           type="search"
           placeholder="Search"
           aria-label="Search"
           [(ngModel)]="filterValue"
+          (keyup)="setFilterValue()"
         />
-      </form>
+      </div>
     </div>
   </div>
   

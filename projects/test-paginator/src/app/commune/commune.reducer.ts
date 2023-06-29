@@ -47,14 +47,7 @@ export const reducer = createReducer(
     (state, action) => adapter.removeMany(action.ids, state)
   ),
   on(CommuneActions.loadCommunes,
-    (state, action) => {
-      let pagination = { ...state.pagination };
-
-      const intermediateState = adapter.setAll(action.communes, { ...state })
-      pagination.collectionSize = intermediateState.ids.length;
-      pagination.pagesCount = paginator.getPagesCount(pagination);
-      return {...intermediateState, pagination }
-    }
+    (state, action) => adapter.setAll(action.communes, state)
   ),
   on(CommuneActions.clearCommunes,
     state => adapter.removeAll(state)
@@ -63,7 +56,6 @@ export const reducer = createReducer(
   on(PaginationActions.setPage, paginator.setPage),
   on(PaginationActions.setPageSize, paginator.setPageSize),
   on(PaginationActions.setFilterQuery, paginator.setFilterQuery),
-  on(PaginationActions.setFilteredCollectionSize, paginator.setFilteredCollectionSize)
 
 );
 
@@ -91,7 +83,7 @@ export const selectedPagination = createSelector(
 
 export const selectFilterValue = createSelector(
   featureSelector,
-  (state: State) => state.filterValue
+  (state: State) => state.pagination.filter
 );
 
 function filterCommune(item: Commune, query: string): Boolean {
