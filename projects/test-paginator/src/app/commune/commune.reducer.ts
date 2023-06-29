@@ -8,7 +8,6 @@ export const communesFeatureKey = 'communes';
 
 export interface State extends EntityState<Commune> {
   pagination: paginator.Pagination,
-  filterValue: string
 }
 
 export const adapter: EntityAdapter<Commune> = createEntityAdapter<Commune>({
