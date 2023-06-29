@@ -75,16 +75,8 @@ export const {
 } = communesFeature;
 
 export const featureSelector = createFeatureSelector<State>(communesFeatureKey);
-
-export const selectedPagination = createSelector(
-  featureSelector,
-  (state: State) => state.pagination
-);
-
-export const selectFilterValue = createSelector(
-  featureSelector,
-  (state: State) => state.pagination.filter
-);
+export const selectedPagination = paginator.selectedPagination<State>(featureSelector);
+export const selectFilterValue = paginator.selectFilterValue<State>(featureSelector);
 
 function filterCommune(item: Commune, query: string): Boolean {
   return !query || item.nom.toLowerCase().indexOf(query.toLocaleLowerCase()) === 0;

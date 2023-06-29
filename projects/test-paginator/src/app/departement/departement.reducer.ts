@@ -8,7 +8,6 @@ export const departementsFeatureKey = 'departements';
 
 export interface State extends EntityState<Departement> {
   pagination: paginator.Pagination,
-  filterValue: string
 }
 
 export const adapter: EntityAdapter<Departement> = createEntityAdapter<Departement>({
@@ -17,7 +16,6 @@ export const adapter: EntityAdapter<Departement> = createEntityAdapter<Departeme
 
 export const initialState: State = adapter.getInitialState({
   pagination: paginator.initialPagination,
-  filterValue: ''
 });
 
 export const reducer = createReducer(
@@ -75,27 +73,14 @@ export const {
 } = departementsFeature;
 
 export const featureSelector = createFeatureSelector<State>(departementsFeatureKey);
-
-export const selectedPagination = createSelector(
-  featureSelector,
-  (state: State) => state.pagination
-);
-
-export const selectFilterValue = createSelector(
-  featureSelector,
-  (state: State) => state.pagination.filter
-);
-
-function filterDepartement(item: Departement, query: string): Boolean {
-  return !query || item.nom.toLowerCase().indexOf(query.toLocaleLowerCase()) === 0;
-}
-
+export const selectedPagination = paginator.selectedPagination<State>(featureSelector);
+export const selectFilterValue = paginator.selectFilterValue<State>(featureSelector);
 
 export const selectFilteredCollection = createSelector(
   departementsFeature.selectAll,
   selectFilterValue,
   (items: Departement[], query: string) => {
-    return items.filter((item: Departement) => filterDepartement(item, query))
+    return items.filter((item: Departement) => !query || item.nom.toLowerCase().indexOf(query.toLocaleLowerCase()) === 0)
   }
 );
 
