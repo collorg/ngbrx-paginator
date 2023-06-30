@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { EMPTY, Observable, Subscription, filter, map, zip } from 'rxjs';
+import { EMPTY, Observable, Subscription, filter, map, take, tap, zip } from 'rxjs';
 import { Pagination } from './paginator';
 import { DefaultProjectorFn, Store } from '@ngrx/store';
 import { FormControl } from '@angular/forms';
@@ -38,8 +38,20 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  selectPage(page: string) {
-    this.store.dispatch(this.actions.setPage({ page: parseInt(page, 10) || 1 }));
+  changePage(page: number) {
+    this.store.dispatch(this.actions.setPage({ page }));
+    this.page = page;
+  }
+
+  setPage(page: string) {
+    let pageInt = parseInt(page, 10) || 1;
+    this.pagesCount$.pipe(
+      take(1),
+      tap((pagesCount: number) => {
+        pageInt = Math.min(pageInt, pagesCount);
+        pageInt !== this.page && this.changePage(pageInt);
+      })
+    ).subscribe();
   }
 
   setPageSize(pageSize: number) {

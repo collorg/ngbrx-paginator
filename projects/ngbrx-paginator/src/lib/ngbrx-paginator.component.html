@@ -4,7 +4,7 @@
       <ngb-pagination
         [collectionSize]="(collection$ | async)?.length || 0"
         [(page)]="page"
-        (pageChange)="selectPage(page.toString())"
+        (pageChange)="changePage(page)"
         [pageSize]="pagination.pageSize"
         [boundaryLinks]="true"
       >
@@ -25,8 +25,8 @@
                 class="form-control custom-pages-input"
                 id="paginationInput"
                 [value]="page"
-                (keyup.enter)="selectPage(i.value)"
-                (blur)="selectPage(i.value)"
+                (keyup.enter)="setPage(i.value)"
+                (blur)="setPage(i.value)"
                 (input)="formatInput($any($event).target)"
                 aria-labelledby="paginationInputLabel paginationDescription"
                 style="width: 5rem"
