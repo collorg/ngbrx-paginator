@@ -1,4 +1,4 @@
-import { DefaultProjectorFn, MemoizedSelector, State, Store, createAction, createSelector, props } from "@ngrx/store";
+import { DefaultProjectorFn, MemoizedSelector, createAction, createSelector, props } from "@ngrx/store";
 
 export interface Pagination {
     page: number;
@@ -12,13 +12,13 @@ export const initialPagination: Pagination = {
     filter: ''
 }
 
-export function setPage(state: any, { page }: { page: number }): any {
+export function setPage<S extends { pagination: Pagination }>(state: S, { page }: { page: number }): S {
     let pagination = { ...state.pagination };
     pagination.page = page;
     return { ...state, pagination };
 }
 
-export function setPageSize(state: any, { pageSize }: { pageSize: number }): any {
+export function setPageSize<S extends { pagination: Pagination }>(state: S, { pageSize }: { pageSize: number }): S {
     let pagination = { ...state.pagination };
     const oldPageSize = pagination.pageSize;
     const oldPage = pagination.page;
@@ -28,7 +28,7 @@ export function setPageSize(state: any, { pageSize }: { pageSize: number }): any
     return { ...state, pagination };
 }
 
-export function setFilterQuery(state: any, { filter }: { filter: string }): any {
+export function setFilterQuery<S extends { pagination: Pagination }>(state: S, { filter }: { filter: string }): S {
     const pagination = { ...state.pagination }
     pagination.page = 1
     pagination.filter = filter
@@ -43,26 +43,16 @@ export function createPaginationActions(actionsPrefix: string) {
     }
 }
 
-export function selectedPagination<T extends { pagination: Pagination }>(featureSelector: MemoizedSelector<object, T, DefaultProjectorFn<T>>): MemoizedSelector<object, Pagination, (s1: T) => Pagination> {
+export function selectedPagination<S extends { pagination: Pagination }>(featureSelector: MemoizedSelector<object, S, DefaultProjectorFn<S>>): MemoizedSelector<object, Pagination, (s1: S) => Pagination> {
     return createSelector(
         featureSelector,
-        (state: T) => state.pagination
+        (state: S) => state.pagination
     );
 }
 
-export function selectFilterValue<T extends { pagination: Pagination }>(featureSelector: MemoizedSelector<object, T, DefaultProjectorFn<T>>) {
+export function selectFilterValue<S extends { pagination: Pagination }>(featureSelector: MemoizedSelector<object, S, DefaultProjectorFn<S>>) {
     return createSelector(
         featureSelector,
-        (state: T) => state.pagination.filter
+        (state: S) => state.pagination.filter
     );
 }
-
-// export function selectPageItems<M>(collection: MemoizedSelector<object, M[], (s1: M[], s2: string) => M[]>) {
-//     return createSelector(
-//         collection,
-//         selectedPagination,
-//         (items: M[], pagination) => {
-//             return items.slice((pagination.page - 1) * pagination.pageSize, pagination.page * pagination.pageSize)
-//         }
-//     )
-// }

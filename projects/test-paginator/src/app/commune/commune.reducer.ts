@@ -1,7 +1,7 @@
 import { createFeature, createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { Commune } from './commune.model';
-import { CommuneActions, PaginationActions } from './commune.actions';
+import { CommuneActions, CommuneActionsPrefix, PaginationActions } from './commune.actions';
 import * as paginator from 'ngbrx-paginator';
 
 export const communesFeatureKey = 'communes';
@@ -73,6 +73,8 @@ export const {
   selectTotal,
 } = communesFeature;
 
+communesFeature.selectAll
+
 export const featureSelector = createFeatureSelector<State>(communesFeatureKey);
 export const selectedPagination = paginator.selectedPagination<State>(featureSelector);
 export const selectFilterValue = paginator.selectFilterValue<State>(featureSelector);
@@ -80,7 +82,6 @@ export const selectFilterValue = paginator.selectFilterValue<State>(featureSelec
 function filterCommune(item: Commune, query: string): Boolean {
   return !query || item.nom.toLowerCase().indexOf(query.toLocaleLowerCase()) === 0;
 }
-
 
 export const selectFilteredCollection = createSelector(
   communesFeature.selectAll,
