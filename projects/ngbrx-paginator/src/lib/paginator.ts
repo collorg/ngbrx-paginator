@@ -8,7 +8,7 @@ export interface Pagination {
 
 export const initialPagination: Pagination = {
     page: 1,
-    pageSize: 100,
+    pageSize: 20,
     filter: ''
 }
 
