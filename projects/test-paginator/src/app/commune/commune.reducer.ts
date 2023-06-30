@@ -16,7 +16,6 @@ export const adapter: EntityAdapter<Commune> = createEntityAdapter<Commune>({
 
 export const initialState: State = adapter.getInitialState({
   pagination: paginator.initialPagination,
-  filterValue: ''
 });
 
 export const reducer = createReducer(
