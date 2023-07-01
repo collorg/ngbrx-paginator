@@ -1,12 +1,55 @@
 # NgbrxPaginator
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.0.2.
+Easy reactive pagination with [ngrx](https://ngrx.io/) and [ng-bootstrap](https://ng-bootstrap.github.io). 
 
-## Usage (example with an EntityState)
+### Demo
 
-The code is extracted from the [departement](./projects/test-paginator/src/app/departement) module
+https://collorg.github.io/ngbrx-paginator-demo
 
-Add the `NgbrxPaginatorModule` in your [departement](./projects/test-paginator/src/app/departement/departement.module.ts) dependencies:
+### Before (unpaginated list):
+
+* component:
+```ts
+  collection$: Observable<D[]> = this.store.select(fromStore.selectCollection);
+```
+* template:
+```html
+  <div class="list-group">
+    <div class="list-group-item" *ngFor="let item of collection$ | async">
+      {{ item }}
+    </div>
+  </div>
+```
+
+### After:
+
+* component:
+```ts
+  actions = PaginationActions;
+  collection$: Observable<D[]> = this.store.select(fromStore.selectFilteredCollection);
+  pagination$: Observable<Pagination> = this.store.select(fromStore.selectedPagination);
+  pageItems$: Observable<D[]> = this.store.select(fromStore.selectPageItems);
+```
+* template:
+```html
+  <lib-ngbrx-paginator
+    [collection$]="collection$"
+    [pagination$]="pagination$"
+    [actions]="actions"
+  ></lib-ngbrx-paginator>
+  
+  <div class="list-group">
+    <div class="list-group-item" *ngFor="let item of pageItems$ | async">
+      {{ item }}
+    </div>
+  </div>
+```
+
+## Usage
+
+The example code is extracted from the [departement](./projects/test-paginator/src/app/departement) module
+
+Add the `NgbrxPaginatorModule` in your [departement.module.ts](./projects/test-paginator/src/app/departement/departement.module.ts) dependencies:
 
 ```ts
 import { NgbrxPaginatorModule } from 'ngbrx-paginator';
@@ -45,8 +88,6 @@ export interface State extends EntityState<MyData> {
   pagination: paginator.Pagination,
 }
 
-export const adapter: EntityAdapter<MyData> = createEntityAdapter<MyData>();
-
 export const initialState: State = {
   pagination: paginator.initialPagination,
 };
@@ -64,7 +105,7 @@ export const reducer = createReducer(
 
 ```
 
-And finally the selectors:
+And finally the selectors (you have to provide a filterFunction for the selector `selectFilteredCollection`):
 
 ```ts
 export const featureSelector = createFeatureSelector<State>(departementsFeatureKey);
@@ -75,7 +116,7 @@ export const selectFilteredCollection = createSelector(
   departementsFeature.selectAll,
   selectFilterValue,
   (items: Departement[], query: string) => {
-    return items.filter((item: Departement) => !query || item.nom.toLowerCase().indexOf(query.toLocaleLowerCase()) === 0)
+    return filterFunction(item, query)
   }
 );
 
