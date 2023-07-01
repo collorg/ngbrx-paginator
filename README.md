@@ -93,6 +93,7 @@ in your component class add the attributes `actions`, `collection$`, `pagination
 
 ```ts
 [...]
+import { PaginationActions } from '../departement.actions';
 import { Departement } from '../departement.model';
 import * as fromStore from '../departement.reducer';
 import { Pagination } from 'ngbrx-paginator';

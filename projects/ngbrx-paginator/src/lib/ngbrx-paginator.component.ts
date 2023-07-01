@@ -16,6 +16,7 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   @Input({ required: true }) actions: any = null;
   @Input() filterSelector: DefaultProjectorFn<any> | null = null
   page: number = 1;
+  oldFilterValue: string = '';
   filterValue: string = '';
   FILTER_PAG_REGEX = /[^0-9]/g;
   subscriptions: Subscription[] = [];
@@ -69,6 +70,9 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   }
 
   setFilterValue() {
-    this.store.dispatch(this.actions.setFilterQuery({ filter: this.filterValue }))
+    if (this.filterValue !== this.oldFilterValue) {
+      this.store.dispatch(this.actions.setFilterQuery({ filter: this.filterValue }));
+      this.oldFilterValue = this.filterValue;
+    }
   }
 }
