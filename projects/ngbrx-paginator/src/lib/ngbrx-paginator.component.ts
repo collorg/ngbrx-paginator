@@ -6,7 +6,7 @@ import { FormControl } from '@angular/forms';
 
 
 @Component({
-  selector: 'lib-ngbrx-paginator',
+  selector: 'ngbrx-paginator',
   templateUrl: './ngbrx-paginator.component.html',
   styleUrls: ['./ngbrx-paginator.component.css']
 })

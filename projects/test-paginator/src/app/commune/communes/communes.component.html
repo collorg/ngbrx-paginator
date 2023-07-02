@@ -1,11 +1,11 @@
 <div class="card">
   <div class="card-header sticky-top">
     <h3>Liste des communes ({{ (collection$ | async)?.length }}<span *ngIf="(pagination$ | async)?.filter as filter"> {{ filter }}</span>)</h3>
-    <lib-ngbrx-paginator
+    <ngbrx-paginator
       [collection$]="collection$"
       [pagination$]="pagination$"
       [actions]="actions"
-    ></lib-ngbrx-paginator>
+    ></ngbrx-paginator>
   </div>
   <div class="card-body">
       <div class="list-group">
