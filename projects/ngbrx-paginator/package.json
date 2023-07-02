@@ -1,12 +1,13 @@
  
 {
   "name": "ngbrx-paginator",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "license": "MIT",
   "keywords": [
     "angular",
     "ngrx",
-    "pagination"
+    "pagination",
+    "ng-bootstrap"
   ],
   "repository": {
     "type": "git",

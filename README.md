@@ -157,22 +157,26 @@ export class DepartementsComponent {
 }
 ```
 
-And finally, use the lib-ngbrx-paginator component in your [template](./projects/test-paginator/src/app/departement/departements/departements.component.html):
+And finally, use the ngbrx-paginator component in your [template](./projects/test-paginator/src/app/departement/departements/departements.component.html):
 
 ```html
-<lib-ngbrx-paginator
+<ngbrx-paginator
   [collection$]="collection$"
   [pagination$]="pagination$"
   [actions]="actions"
-></lib-ngbrx-paginator>
+  [pageSizeOptions]="[20, 50, 100]"
+></ngbrx-paginator>
 ```
+
+Thi input `pageSizeOptions` is optional and defaults to `[5, 10, 25, 100]`.
 
 You have to replace the observable of the collection you used to iterate over the items by `pageItems$`:
 
 
-```html
+```diff
 <div class="list-group">
-  <div class="list-group-item" *ngFor="let item of pageItems$ | async">
+-  <div class="list-group-item" *ngFor="let item of collection$ | async">
++  <div class="list-group-item" *ngFor="let item of pageItems$ | async">
     {{ item.code }} {{ item.nom }}
   </div>
 </div>
