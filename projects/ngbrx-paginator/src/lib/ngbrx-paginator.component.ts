@@ -69,7 +69,13 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
 
   get pagesCount$(): Observable<number> {
     return zip(this.collection$, this.pagination$).pipe(
-      map(([collection, pagination]) => Math.floor(collection.length / pagination.pageSize) + 1)
+      map(([collection, pagination]) => {
+        let pagesCount = Math.floor(collection.length / pagination.pageSize);
+        if (pagesCount * pagination.pageSize < collection.length) {
+          pagesCount += 1;
+        }
+        return pagesCount;
+      })
     )
   }
 
