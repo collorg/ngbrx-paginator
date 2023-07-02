@@ -75,7 +75,7 @@ export const {
 communesFeature.selectAll
 
 export const featureSelector = createFeatureSelector<State>(communesFeatureKey);
-export const selectedPagination = paginator.selectedPagination<State>(featureSelector);
+export const selectPagination = paginator.selectPagination<State>(featureSelector);
 export const selectFilterValue = paginator.selectFilterValue<State>(featureSelector);
 
 function filterCommune(item: Commune, query: string): Boolean {
@@ -90,7 +90,7 @@ export const selectFilteredCollection = createSelector(
 
 export const selectPageItems = createSelector(
   selectFilteredCollection,
-  selectedPagination,
+  selectPagination,
   (items: Commune[], pagination: paginator.Pagination) => 
     items.slice((pagination.page - 1) * pagination.pageSize, pagination.page * pagination.pageSize)
 )

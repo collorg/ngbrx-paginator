@@ -73,7 +73,7 @@ export const {
 } = departementsFeature;
 
 export const featureSelector = createFeatureSelector<State>(departementsFeatureKey);
-export const selectedPagination = paginator.selectedPagination<State>(featureSelector);
+export const selectPagination = paginator.selectPagination<State>(featureSelector);
 export const selectFilterValue = paginator.selectFilterValue<State>(featureSelector);
 
 export const selectFilteredCollection = createSelector(
@@ -86,7 +86,7 @@ export const selectFilteredCollection = createSelector(
 
 export const selectPageItems = createSelector(
   selectFilteredCollection,
-  selectedPagination,
+  selectPagination,
   (items: Departement[], pagination: paginator.Pagination) => {
     return items.slice((pagination.page - 1) * pagination.pageSize, pagination.page * pagination.pageSize)
   }

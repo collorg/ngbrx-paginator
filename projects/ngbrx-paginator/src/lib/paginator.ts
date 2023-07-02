@@ -43,7 +43,7 @@ export function createPaginationActions(actionsPrefix: string) {
     }
 }
 
-export function selectedPagination<S extends { pagination: Pagination }>(featureSelector: MemoizedSelector<object, S, DefaultProjectorFn<S>>): MemoizedSelector<object, Pagination, (s1: S) => Pagination> {
+export function selectPagination<S extends { pagination: Pagination }>(featureSelector: MemoizedSelector<object, S, DefaultProjectorFn<S>>): MemoizedSelector<object, Pagination, (s1: S) => Pagination> {
     return createSelector(
         featureSelector,
         (state: S) => state.pagination

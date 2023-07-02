@@ -14,7 +14,7 @@ import { Pagination } from 'ngbrx-paginator';
 export class DepartementsComponent {
   actions = PaginationActions;
   collection$: Observable<Departement[]> = this.store.select(fromStore.selectFilteredCollection);
-  pagination$: Observable<Pagination> = this.store.select(fromStore.selectedPagination);
+  pagination$: Observable<Pagination> = this.store.select(fromStore.selectPagination);
 
   pageItems$: Observable<Departement[]> = this.store.select(fromStore.selectPageItems);
 

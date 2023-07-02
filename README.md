@@ -6,6 +6,12 @@ Easy reactive pagination with [ngrx](https://ngrx.io/) and [ng-bootstrap](https:
 
 https://collorg.github.io/ngbrx-paginator-demo
 
+### Installation
+
+```bash
+yarn add ngbrx-paginator
+```
+
 ### Before (unpaginated list):
 
 * component:
@@ -27,7 +33,7 @@ https://collorg.github.io/ngbrx-paginator-demo
 ```ts
   actions = PaginationActions;
   collection$: Observable<D[]> = this.store.select(fromStore.selectFilteredCollection);
-  pagination$: Observable<Pagination> = this.store.select(fromStore.selectedPagination);
+  pagination$: Observable<Pagination> = this.store.select(fromStore.selectPagination);
   pageItems$: Observable<D[]> = this.store.select(fromStore.selectPageItems);
 ```
 * template:
@@ -109,7 +115,7 @@ And finally the selectors (you have to provide a filterFunction for the selector
 
 ```ts
 export const featureSelector = createFeatureSelector<State>(departementsFeatureKey);
-export const selectedPagination = paginator.selectedPagination<State>(featureSelector);
+export const selectPagination = paginator.selectPagination<State>(featureSelector);
 export const selectFilterValue = paginator.selectFilterValue<State>(featureSelector);
 
 export const selectFilteredCollection = createSelector(
@@ -122,7 +128,7 @@ export const selectFilteredCollection = createSelector(
 
 export const selectPageItems = createSelector(
   selectFilteredCollection,
-  selectedPagination,
+  selectPagination,
   (items: Departement[], pagination: paginator.Pagination) => {
     return items.slice((pagination.page - 1) * pagination.pageSize, pagination.page * pagination.pageSize)
   }
@@ -147,7 +153,7 @@ import { Pagination } from 'ngbrx-paginator';
 export class DepartementsComponent {
   actions = PaginationActions;
   collection$: Observable<Departement[]> = this.store.select(fromStore.selectFilteredCollection);
-  pagination$: Observable<Pagination> = this.store.select(fromStore.selectedPagination);
+  pagination$: Observable<Pagination> = this.store.select(fromStore.selectPagination);
 
   pageItems$: Observable<Departement[]> = this.store.select(fromStore.selectPageItems);
 
