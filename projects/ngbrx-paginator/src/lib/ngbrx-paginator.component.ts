@@ -14,7 +14,8 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   @Input({ required: true }) collection$: Observable<any[]> = EMPTY;
   @Input({ required: true }) pagination$: Observable<Pagination> = EMPTY;
   @Input({ required: true }) actions: any = null;
-  @Input() filterSelector: DefaultProjectorFn<any> | null = null
+  @Input() filterSelector: DefaultProjectorFn<any> | null = null;
+  @Input() pageSizeOptions: number[] = [5, 10, 25, 100];
   page: number = 1;
   oldFilterValue: string = '';
   filterValue: string = '';
@@ -32,6 +33,9 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
     ).subscribe((pagination: Pagination) => {
       this.filterValue = pagination.filter;
       this.page = pagination.page;
+      if (!pagination.pageSize) {
+        this.store.dispatch(this.actions.setPageSize({pageSize: this.pageSizeOptions[0]}));
+      }
     }));
   }
 

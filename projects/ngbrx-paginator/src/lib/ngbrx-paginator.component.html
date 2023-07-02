@@ -52,14 +52,8 @@
         {{ pagination.pageSize }} lines/page
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <li class="dropdown-item" value="20" (click)="setPageSize(20)">
-          20 lines
-        </li>
-        <li class="dropdown-item" value="50" (click)="setPageSize(50)">
-          50 lines
-        </li>
-        <li class="dropdown-item" value="100" (click)="setPageSize(100)">
-          100 lines
+        <li *ngFor="let pageSize of pageSizeOptions" class="dropdown-item" value="{{pageSize}}" (click)="setPageSize(pageSize)">
+          {{pageSize}} lines
         </li>
       </ul>
     </div>
