@@ -45,4 +45,12 @@ export class NgbrxPaginatorService {
     NgbrxPaginatorService.features[featureKey] = { filterFunction, allDataSelector };
   }
 
+  filterValue$(feature: string): Observable<string> {
+    return this.store.select(fromStore.selectFilterValue(feature))
+  }
+
+  numberOfFilteredItems$(feature: string): Observable<number> {
+    return this.store.select(fromStore.selectNumberOfFilteredItems(feature))
+  }
+
 }

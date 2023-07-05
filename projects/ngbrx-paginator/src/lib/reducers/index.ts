@@ -129,3 +129,8 @@ export const selectPagesCount = (featureKey: string) => createSelector(
     return pagesCount;
   }
 )
+
+export const selectNumberOfFilteredItems = (featureKey: string) => createSelector(
+  selectFilteredCollection(featureKey),
+  (collection) => collection.length
+)
