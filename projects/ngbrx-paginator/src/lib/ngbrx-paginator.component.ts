@@ -1,8 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { EMPTY, Observable, Subscription, filter, map, take, tap, zip } from 'rxjs';
-import { Pagination } from './paginator';
-import { DefaultProjectorFn, Store } from '@ngrx/store';
+import { Pagination } from './reducers';
+import { Store } from '@ngrx/store';
 import { FormControl } from '@angular/forms';
+import * as fromStore from './reducers';
+import { NgbrxPaginatorActions } from './reducers/ngbrx-paginator.actions';
+import { NgbrxPaginatorService } from './ngbrx-paginator.service';
 
 
 @Component({
@@ -11,11 +14,11 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./ngbrx-paginator.component.css']
 })
 export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
-  @Input({ required: true }) collection$: Observable<any[]> = EMPTY;
-  @Input({ required: true }) pagination$: Observable<Pagination> = EMPTY;
-  @Input({ required: true }) actions: any = null;
-  @Input() filterSelector: DefaultProjectorFn<any> | null = null;
-  @Input() pageSizeOptions: number[] = [5, 10, 25, 100];
+  @Input({required: true}) featureKey: string = '';
+  collection$: Observable<any[]> = EMPTY;
+  pagination$: Observable<Pagination> = EMPTY;
+  pagesCount$: Observable<number> = EMPTY;
+  hasFilter: boolean = false;
   page: number = 1;
   oldFilterValue: string = '';
   filterValue: string = '';
@@ -24,27 +27,23 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   control = new FormControl();
 
   constructor(
-    private store: Store
-  ) { }
+    private store: Store,
+    private service: NgbrxPaginatorService
+  ) {
+  }
 
   ngOnInit(): void {
-    this.subscriptions.push(this.pagination$.pipe(
-      filter((pagination: Pagination) => pagination !== undefined)
-    ).subscribe((pagination: Pagination) => {
-      this.filterValue = pagination.filter;
-      this.page = pagination.page;
-      if (!pagination.pageSize) {
-        this.store.dispatch(this.actions.setPageSize({pageSize: this.pageSizeOptions[0]}));
-      }
-    }));
+    this.collection$ = this.store.select(fromStore.selectFilteredCollection(this.featureKey));
+    this.pagination$ = this.store.select(fromStore.selectPagination(this.featureKey));
+    this.pagesCount$ = this.store.select(fromStore.selectPagesCount(this.featureKey));
+    this.hasFilter = this.service.hasFilter(this.featureKey);
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   changePage(page: number) {
-    this.store.dispatch(this.actions.setPage({ page }));
+    this.store.dispatch(NgbrxPaginatorActions.setPage({ featureKey: this.featureKey, page }));
     this.page = page;
   }
 
@@ -60,28 +59,16 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   }
 
   setPageSize(pageSize: number) {
-    this.store.dispatch(this.actions.setPageSize({ pageSize }));
+    this.store.dispatch(NgbrxPaginatorActions.setPageSize({ featureKey: this.featureKey, pageSize }));
   }
 
   formatInput(input: HTMLInputElement) {
     input.value = input.value.replace(this.FILTER_PAG_REGEX, '');
   }
 
-  get pagesCount$(): Observable<number> {
-    return zip(this.collection$, this.pagination$).pipe(
-      map(([collection, pagination]) => {
-        let pagesCount = Math.floor(collection.length / pagination.pageSize);
-        if (pagesCount * pagination.pageSize < collection.length) {
-          pagesCount += 1;
-        }
-        return pagesCount;
-      })
-    )
-  }
-
   setFilterValue() {
     if (this.filterValue !== this.oldFilterValue) {
-      this.store.dispatch(this.actions.setFilterQuery({ filter: this.filterValue }));
+      this.store.dispatch(NgbrxPaginatorActions.setFilterQuery({ featureKey: this.featureKey, filter: this.filterValue }));
       this.oldFilterValue = this.filterValue;
     }
   }

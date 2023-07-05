@@ -1,13 +1,11 @@
-import { createFeature, createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
+import { MemoizedSelector, createFeature, createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { Departement } from './departement.model';
-import { DepartementActions, PaginationActions } from './departement.actions';
-import * as paginator from 'ngbrx-paginator';
+import { DepartementActions } from './departement.actions';
 
 export const departementsFeatureKey = 'departements';
 
 export interface State extends EntityState<Departement> {
-  pagination: paginator.Pagination,
 }
 
 export const adapter: EntityAdapter<Departement> = createEntityAdapter<Departement>({
@@ -15,7 +13,6 @@ export const adapter: EntityAdapter<Departement> = createEntityAdapter<Departeme
 });
 
 export const initialState: State = adapter.getInitialState({
-  pagination: paginator.initialPagination,
 });
 
 export const reducer = createReducer(
@@ -50,10 +47,6 @@ export const reducer = createReducer(
   on(DepartementActions.clearDepartements,
     state => adapter.removeAll(state)
   ),
-  
-  on(PaginationActions.setPage, paginator.setPage),
-  on(PaginationActions.setPageSize, paginator.setPageSize),
-  on(PaginationActions.setFilterQuery, paginator.setFilterQuery),
 
 );
 
@@ -72,22 +65,6 @@ export const {
   selectTotal,
 } = departementsFeature;
 
-export const featureSelector = createFeatureSelector<State>(departementsFeatureKey);
-export const selectPagination = paginator.selectPagination<State>(featureSelector);
-export const selectFilterValue = paginator.selectFilterValue<State>(featureSelector);
-
-export const selectFilteredCollection = createSelector(
-  departementsFeature.selectAll,
-  selectFilterValue,
-  (items: Departement[], query: string) => {
-    return items.filter((item: Departement) => !query || item.nom.toLowerCase().indexOf(query.toLocaleLowerCase()) === 0)
-  }
-);
-
-export const selectPageItems = createSelector(
-  selectFilteredCollection,
-  selectPagination,
-  (items: Departement[], pagination: paginator.Pagination) => {
-    return items.slice((pagination.page - 1) * pagination.pageSize, pagination.page * pagination.pageSize)
-  }
-)
+export function filterFunction(items: Departement[], query: string): Departement[] {
+  return items.filter((item: Departement) => !query || item.nom.toLowerCase().indexOf(query.toLocaleLowerCase()) === 0)
+}

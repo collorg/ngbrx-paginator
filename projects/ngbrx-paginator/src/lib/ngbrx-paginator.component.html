@@ -52,13 +52,13 @@
         {{ pagination.pageSize }} lines/page
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <li *ngFor="let pageSize of pageSizeOptions" class="dropdown-item" value="{{pageSize}}" (click)="setPageSize(pageSize)">
+        <li *ngFor="let pageSize of pagination.pageSizeOptions" class="dropdown-item" value="{{pageSize}}" (click)="setPageSize(pageSize)">
           {{pageSize}} lines
         </li>
       </ul>
     </div>
     <div class="col">
-      <input
+      <input *ngIf="hasFilter"
         class="me-2"
         type="search"
         placeholder="Search"

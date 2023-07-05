@@ -1,13 +1,11 @@
 import { createFeature, createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { Commune } from './commune.model';
-import { CommuneActions, CommuneActionsPrefix, PaginationActions } from './commune.actions';
-import * as paginator from 'ngbrx-paginator';
+import { CommuneActions } from './commune.actions';
 
 export const communesFeatureKey = 'communes';
 
 export interface State extends EntityState<Commune> {
-  pagination: paginator.Pagination,
 }
 
 export const adapter: EntityAdapter<Commune> = createEntityAdapter<Commune>({
@@ -15,7 +13,6 @@ export const adapter: EntityAdapter<Commune> = createEntityAdapter<Commune>({
 });
 
 export const initialState: State = adapter.getInitialState({
-  pagination: paginator.initialPagination,
 });
 
 export const reducer = createReducer(
@@ -50,10 +47,6 @@ export const reducer = createReducer(
   on(CommuneActions.clearCommunes,
     state => adapter.removeAll(state)
   ),
-  
-  on(PaginationActions.setPage, paginator.setPage),
-  on(PaginationActions.setPageSize, paginator.setPageSize),
-  on(PaginationActions.setFilterQuery, paginator.setFilterQuery),
 
 );
 
@@ -74,23 +67,6 @@ export const {
 
 communesFeature.selectAll
 
-export const featureSelector = createFeatureSelector<State>(communesFeatureKey);
-export const selectPagination = paginator.selectPagination<State>(featureSelector);
-export const selectFilterValue = paginator.selectFilterValue<State>(featureSelector);
-
-function filterCommune(item: Commune, query: string): Boolean {
-  return !query || item.nom.toLowerCase().indexOf(query.toLocaleLowerCase()) === 0;
+export function filterFunction(items: Commune[], query: string): Commune[] {
+  return items.filter((item: Commune) => !query || item.nom.toLowerCase().indexOf(query.toLocaleLowerCase()) === 0)
 }
-
-export const selectFilteredCollection = createSelector(
-  communesFeature.selectAll,
-  selectFilterValue,
-  (items: Commune[], query: string) => items.filter((item: Commune) => filterCommune(item, query))
-);
-
-export const selectPageItems = createSelector(
-  selectFilteredCollection,
-  selectPagination,
-  (items: Commune[], pagination: paginator.Pagination) => 
-    items.slice((pagination.page - 1) * pagination.pageSize, pagination.page * pagination.pageSize)
-)

@@ -1,6 +1,5 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { Update } from '@ngrx/entity';
-import * as paginator from 'ngbrx-paginator';
 
 import { Commune } from './commune.model';
 
@@ -21,5 +20,3 @@ export const CommuneActions = createActionGroup({
     'Clear Communes': emptyProps(),
   }
 });
-
-export const PaginationActions = paginator.createPaginationActions(CommuneActionsPrefix);
