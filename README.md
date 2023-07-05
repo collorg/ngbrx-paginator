@@ -12,6 +12,7 @@ https://collorg.github.io/ngbrx-paginator-demo
 yarn add ngbrx-paginator
 ```
 
+ngbrx-paginator uses @ng-bootstrap/bootstrap and @ngrx/store.
 
 ## Usage
 
@@ -21,7 +22,6 @@ Add the `NgbrxPaginatorModule` in your [departement.module.ts](./projects/test-p
 
 ```ts
 import * as fromDepartement from './departement.reducer';
-import { NgbrxPaginatorModule } from 'ngbrx-paginator';
 import { NgbrxPaginatorModule } from 'ngbrx-paginator';
 
 @NgModule({
@@ -53,7 +53,9 @@ import { NgbrxPaginatorService } from 'ngbrx-paginator';
 })
 export class DepartementsComponent {
   featureKey = 'Departement/Pagination'; // same as in NgbrxPaginatorModules.forFeature
-  collection$: Observable<Departement[]> = this.paginationService.getPageItems$<Departement>(this.featureKey);
+  pageItems$: Observable<Departement[]> = this.paginationService.getPageItems$<Departement>(this.featureKey);
+  filterValue$: Observable<string> = this.paginationService.filterValue$(this.featureKey);
+  numberOfFilteredItems$: Observable<number> = this.paginationService.numberOfFilteredItems$(this.featureKey);
 
   constructor(
     private paginationService: NgbrxPaginatorService
@@ -65,8 +67,23 @@ export class DepartementsComponent {
 And finally, use the ngbrx-paginator component in your [template](./projects/test-paginator/src/app/departement/departements/departements.component.html):
 
 ```html
+<div class="card">
+  <div class="card-header sticky-top">
+    <h3>
+      Liste des départements
+      ({{ (numberOfFilteredItems$ | async) }}<span *ngIf="(filterValue$ | async) as filter"> {{ filter }}</span>)
+    </h3>
     <ngbrx-paginator
       [featureKey]="featureKey"
     ></ngbrx-paginator>
+  </div>
+  <div class="card-body">
+    <div class="list-group">
+      <div class="list-group-item" *ngFor="let item of pageItems$ | async">
+        {{ item.code }} {{ item.nom }}
+      </div>
+    </div>
+  </div>
+</div>
 ```
 
