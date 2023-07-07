@@ -11,9 +11,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/collorg/ngbrx-pagination"
+    "url": "https://github.com/collorg/ngbrx-paginator"
   },
-  "author": "Joël Maizi <joel.maizi@collorg.org",
+  "author": "Joël Maizi <joel.maizi@collorg.org>",
   "peerDependencies": {
     "@ngrx/store": "^16.0.0",
     "@angular/localize": "^16.0.0",
