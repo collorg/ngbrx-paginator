@@ -1,10 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { EMPTY, Observable, Subscription, filter, map, take, tap, zip } from 'rxjs';
 import { Pagination } from './reducers';
-import { Store } from '@ngrx/store';
 import { FormControl } from '@angular/forms';
-import * as fromStore from './reducers';
-import { NgbrxPaginatorActions } from './reducers/ngbrx-paginator.actions';
 import { NgbrxPaginatorService } from './ngbrx-paginator.service';
 
 
@@ -20,14 +17,12 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   pagesCount$: Observable<number> = EMPTY;
   hasFilter: boolean = false;
   page: number = 1;
-  oldFilterValue: string = '';
   filterValue: string = '';
   FILTER_PAG_REGEX = /[^0-9]/g;
   subscriptions: Subscription[] = [];
   control = new FormControl();
 
   constructor(
-    private store: Store,
     private service: NgbrxPaginatorService
   ) {
   }
@@ -44,8 +39,7 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   }
 
   changePage(page: number) {
-    this.store.dispatch(NgbrxPaginatorActions.setPage({ featureKey: this.featureKey, page }));
-    this.page = page;
+    this.page = this.service.setPage(this.featureKey, page)
   }
 
   setPage(page: string) {
@@ -60,7 +54,7 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   }
 
   setPageSize(pageSize: number) {
-    this.store.dispatch(NgbrxPaginatorActions.setPageSize({ featureKey: this.featureKey, pageSize }));
+    this.service.setPageSize(this.featureKey, pageSize);
   }
 
   formatInput(input: HTMLInputElement) {
@@ -68,10 +62,6 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   }
 
   setFilterValue() {
-    if (this.filterValue !== this.oldFilterValue) {
-      this.store.dispatch(NgbrxPaginatorActions.setFilterQuery({ featureKey: this.featureKey, filter: this.filterValue }));
-      this.changePage(1);
-      this.oldFilterValue = this.filterValue;
-    }
+    this.service.setFilterQuery(this.featureKey, this.filterValue);
   }
 }

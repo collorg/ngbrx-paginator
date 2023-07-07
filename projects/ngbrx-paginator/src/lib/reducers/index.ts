@@ -87,9 +87,11 @@ export const reducers = createReducer(
     (state, action) => {
       const newState = { ...state };
       const pagination = { ...newState[action.featureKey] };
-      pagination.page = 1
-      pagination.filter = action.filter
-      newState[action.featureKey] = pagination;
+      if (action.filter !== pagination.filter) {
+        pagination.page = 1
+        pagination.filter = action.filter
+        newState[action.featureKey] = pagination;
+      }
       return newState;
     }
   )

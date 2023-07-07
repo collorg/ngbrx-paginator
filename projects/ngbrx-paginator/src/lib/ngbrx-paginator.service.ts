@@ -3,7 +3,7 @@ import { Store, Selector } from '@ngrx/store';
 
 import * as fromStore from './reducers';
 import { NgbrxPaginatorActions } from './reducers/ngbrx-paginator.actions';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 
 
 export interface FilterFunction<D> {
@@ -61,8 +61,9 @@ export class NgbrxPaginatorService {
     return this.store.select(fromStore.selectPagesCount(featureKey));
   }
 
-  setPage(featureKey: string, page: number) {
+  setPage(featureKey: string, page: number): number {
     this.store.dispatch(NgbrxPaginatorActions.setPage({featureKey, page}));
+    return page;
   }
 
   setPageSize(featureKey: string, pageSize: number) {
