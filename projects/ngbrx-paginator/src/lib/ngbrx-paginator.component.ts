@@ -33,9 +33,9 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.collection$ = this.store.select(fromStore.selectFilteredCollection(this.featureKey));
-    this.pagination$ = this.store.select(fromStore.selectPagination(this.featureKey));
-    this.pagesCount$ = this.store.select(fromStore.selectPagesCount(this.featureKey));
+    this.collection$ = this.service.filteredCollection$(this.featureKey);
+    this.pagination$ = this.service.pagination$(this.featureKey);
+    this.pagesCount$ = this.service.pagesCount$(this.featureKey);
     this.hasFilter = this.service.hasFilter(this.featureKey);
     this.subscriptions.push(this.pagination$.subscribe((pagination) => this.filterValue = pagination.filter))
   }

@@ -6,6 +6,7 @@ export const NgbrxPaginatorActions = createActionGroup({
     'Init Feature': props<{ featureKey: string, pageSizeOptions?: number[] }>(),
     'Set Page': props<{ featureKey: string, page: number }>(),
     'Set Page Size': props<{ featureKey: string, pageSize: number }>(),
+    'Set Page Size Options': props<{ featureKey: string, pageSizeOptions: number[] }>(),
     'Set Filter Query': props<{ featureKey: string, filter: string }>()
   }
 });

@@ -60,6 +60,16 @@ export const reducers = createReducer(
       return newState;
     }
   ),
+  on(NgbrxPaginatorActions.setPageSizeOptions,
+    (state, action) => {
+      const newState = { ...state }
+      const pagination = { ...newState[action.featureKey] }
+      pagination.pageSizeOptions = action.pageSizeOptions;
+      pagination.page = 0;
+      newState[action.featureKey] = pagination;
+      return newState;
+    }
+  ),
   on(NgbrxPaginatorActions.setPageSize,
     (state, action) => {
       const newState = { ...state };
