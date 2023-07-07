@@ -24,7 +24,7 @@
                 pattern="[0-9]*"
                 class="form-control custom-pages-input"
                 id="paginationInput"
-                [value]="page"
+                [value]="pagination.page"
                 (keyup.enter)="setPage(i.value)"
                 (blur)="setPage(i.value)"
                 (input)="formatInput($any($event).target)"
