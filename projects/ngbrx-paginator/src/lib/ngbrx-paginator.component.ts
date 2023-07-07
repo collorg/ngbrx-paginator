@@ -53,5 +53,7 @@ export class NgbrxPaginatorComponent implements OnInit {
 
   setFilterValue() {
     this.service.setFilterQuery(this.featureKey, this.filterValue);
+    this.changePage(1)
   }
+
 }
