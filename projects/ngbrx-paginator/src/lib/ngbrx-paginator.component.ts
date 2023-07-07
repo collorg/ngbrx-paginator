@@ -10,7 +10,7 @@ import { NgbrxPaginatorService } from './ngbrx-paginator.service';
   templateUrl: './ngbrx-paginator.component.html',
   styleUrls: ['./ngbrx-paginator.component.css']
 })
-export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
+export class NgbrxPaginatorComponent implements OnInit {
   @Input({required: true}) featureKey: string = '';
   collection$: Observable<any[]> = EMPTY;
   pagination$: Observable<Pagination> = EMPTY;
@@ -35,22 +35,12 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.pagination$.subscribe((pagination) => this.filterValue = pagination.filter))
   }
 
-  ngOnDestroy(): void {
-  }
-
   changePage(page: number) {
     this.page = this.service.setPage(this.featureKey, page)
   }
 
   setPage(page: string) {
-    let pageInt = parseInt(page, 10) || 1;
-    this.pagesCount$.pipe(
-      take(1),
-      tap((pagesCount: number) => {
-        pageInt = Math.min(pageInt, pagesCount);
-        pageInt !== this.page && this.changePage(pageInt);
-      })
-    ).subscribe();
+    this.changePage(parseInt(page, 10) || 1)
   }
 
   setPageSize(pageSize: number) {
