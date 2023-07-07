@@ -70,6 +70,7 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   setFilterValue() {
     if (this.filterValue !== this.oldFilterValue) {
       this.store.dispatch(NgbrxPaginatorActions.setFilterQuery({ featureKey: this.featureKey, filter: this.filterValue }));
+      this.changePage(1);
       this.oldFilterValue = this.filterValue;
     }
   }
