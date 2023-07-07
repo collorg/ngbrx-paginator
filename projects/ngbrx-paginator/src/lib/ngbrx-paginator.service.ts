@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Store, Selector } from '@ngrx/store';
 
 import * as fromStore from './reducers';
-import { FeatureFunctions } from './feature-functions';
 import { Observable } from 'rxjs';
 
 
