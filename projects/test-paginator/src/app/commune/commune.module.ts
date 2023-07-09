@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
 import * as fromCommune from './commune.reducer';
 import { CommunesComponent } from './communes/communes.component';
-import { NgbrxPaginatorModule } from 'ngbrx-paginator'; 
+import { NgbrxPaginatorModule } from 'ngbrx-paginator';
 import { CommuneRoutingModule } from './commune-routing.module';
 
 @NgModule({
@@ -13,9 +13,11 @@ import { CommuneRoutingModule } from './commune-routing.module';
   imports: [
     CommonModule,
     NgbrxPaginatorModule.forFeature({
-      featureKey: 'Commune/Pagination',
-      filterFunction: fromCommune.filterFunction,
-      allDataSelector: fromCommune.selectAll
+      paginators: [{
+        featureKey: 'Commune/Pagination',
+        filterFunction: fromCommune.filterFunction,
+        allDataSelector: fromCommune.selectAll
+      }]
     }),
     StoreModule.forFeature(fromCommune.communesFeature),
     CommuneRoutingModule

@@ -6,19 +6,23 @@ import { Selector, Store, StoreModule } from '@ngrx/store';
 import { NgbModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import * as fromPaginationState from './reducers';
 import { NgbrxPaginatorActions } from './reducers/ngbrx-paginator.actions';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, take } from 'rxjs';
 import { NgbrxPaginatorService } from './ngbrx-paginator.service';
 
-interface ModuleParams {
+interface PaginatorParams {
   featureKey?: string,
   filterFunction?: any,
   allDataSelector: Selector<object, any[]>,
   pageSizeOptions?: number[]
 }
 
-let features: ModuleParams[] = [];
-const featuresSubject: BehaviorSubject<ModuleParams[]> = new BehaviorSubject<ModuleParams[]>(features);
-const features$: Observable<ModuleParams[]> = featuresSubject.asObservable();
+interface ModuleParams {
+  paginators: PaginatorParams[]
+}
+
+let paginators: PaginatorParams[] = [];
+const paginatorsSubject: BehaviorSubject<PaginatorParams[]> = new BehaviorSubject<PaginatorParams[]>(paginators);
+const paginators$: Observable<PaginatorParams[]> = paginatorsSubject.asObservable();
 
 @NgModule({
   declarations: [
@@ -44,46 +48,34 @@ export class NgbrxPaginatorModule {
   }
 
   static forFeature(options: ModuleParams): ModuleWithProviders<NgbrxPaginatorModule> {
-    features.push(options);
-    featuresSubject.next(features);
+    Array.prototype.push.apply(paginators, options.paginators);
+    paginatorsSubject.next(paginators);
     return {
       ngModule: NgbrxPaginatorModule,
       providers: [
-        { provide: 'FEATURE_KEY', useValue: options.featureKey },
-        { provide: 'ALL_DATA_SELECTOR', useValue: options.allDataSelector },
-        { provide: 'FILTER_FUNCTION', useValue: options?.filterFunction },
-        { provide: 'PAGE_SIZE_OPTIONS', useValue: options?.pageSizeOptions },
+        { provide: 'PAGINATORS', useValue: options.paginators },
       ]
     };
   }
 
   constructor(
     private store: Store,
-    @Optional() @Inject('FEATURE_KEY') private featureKey: string,
-    @Optional() @Inject('ALL_DATA_SELECTOR') private allDataSelector: Function,
-    @Optional() @Inject('FILTER_FUNCTION') private filterFunction?: any,
-    @Optional() @Inject('PAGE_SIZE_OPTIONS') private pageSizeOptions?: any,
   ) {
-    features$.subscribe(
-      (features) => {
-        features.forEach((feature: ModuleParams) => {
-          if (feature.featureKey) {
-            this.addFeature(feature)
-          }
-        })
-      }
-    )
+      paginators$.pipe(
+        take(1)
+      ).subscribe(
+        (paginators: PaginatorParams[]) => paginators.forEach((paginator: PaginatorParams) => this.addFeature(paginator))
+      )
 
   }
 
-  addFeature(feature: ModuleParams) {
-    if (feature.featureKey) {
-      this.store.dispatch(NgbrxPaginatorActions.initFeature({ featureKey: feature.featureKey, pageSizeOptions: feature.pageSizeOptions }));
-      if (feature.filterFunction) {
-        NgbrxPaginatorService.add(feature.featureKey, feature.filterFunction, feature.allDataSelector);
+  addFeature(paginator: PaginatorParams) {
+    if (paginator.featureKey) {
+      this.store.dispatch(NgbrxPaginatorActions.initFeature({ featureKey: paginator.featureKey, pageSizeOptions: paginator.pageSizeOptions }));
+      if (paginator.filterFunction) {
+        NgbrxPaginatorService.add(paginator.featureKey, paginator.filterFunction, paginator.allDataSelector);
       }
     }
   }
-
 
 }
