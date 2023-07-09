@@ -29,10 +29,14 @@ import { NgbrxPaginatorModule } from 'ngbrx-paginator';
   imports: [
     [...]
     NgbrxPaginatorModule.forFeature({
-      featureKey: 'Departement/Pagination', // must be unique for the app
-      filterFunction: fromDepartement.filterFunction,
-      allDataSelector: fromDepartement.selectAll,
-      pageSizeOptions: [10, 20, 30] // defaults to [5, 10, 25, 100]
+      paginators: [ // you can have as many paginators as you need per module
+        {
+          featureKey: 'Departement/Pagination', // must be unique for the app
+          filterFunction: fromDepartement.filterFunction,
+          allDataSelector: fromDepartement.selectAll, // ngrx selector returning all the data set
+          pageSizeOptions: [10, 20, 30] // defaults to [5, 10, 25, 100]
+        }
+      ]
     }),
     [...]
   ],
