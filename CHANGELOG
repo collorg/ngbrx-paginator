@@ -1,0 +1,104 @@
+# release 0.0.12
+
+* Update README. (7dd993b)
+
+# release 0.0.11
+
+* Allow more than one paginator per module. (eced555)
+
+## Breaking changes
+
+NgbrxPaginatorModule.forFeature now expects a list of paginators to allow more
+than one paginator by NbModule.
+
+* before:
+```ts
+    NgbrxPaginatorModule.forFeature({
+      featureKey: 'Departement/Pagination',
+      filterFunction: fromDepartement.filterFunction,
+      allDataSelector: fromDepartement.selectAll,
+      pageSizeOptions: [10, 20, 30]
+    })
+```
+* now:
+```ts
+    NgbrxPaginatorModule.forFeature({
+      paginators: [ // you can have as many paginators as you need per module
+        {
+          featureKey: 'Departement/Pagination',
+          filterFunction: fromDepartement.filterFunction,
+          allDataSelector: fromDepartement.selectAll,
+          pageSizeOptions: [10, 20, 30]
+        }
+      ]
+    })
+```
+
+# release 0.0.10
+
+* Force page to 1 if filterValue changes. (5c010fb)
+* Use pagination value of page for paginationInput. (89f0dcd)
+* Simplify NgbrxPaginatorComponent.setPage (removed subscribe). (e84beda)
+* Only use NgbrxPaginatorService in NgbrxPaginatorComponent. No more store. (5490017)
+* Lazyly loading module commune in example app. (ed52c89)
+* bump semver to 7.5.3 (03b1bd9)
+
+# Release 0.0.9
+
+* Reset page to 1 when filter value changes. (b9e09b4)
+
+# release 0.0.8
+
+* Add getters and setters in NgbrxPaginatorService. (86b0e92)
+* Remove feture-functions. (ee4867a)
+* Fix typo in package.json (649bbb1)
+
+# release 0.0.7
+
+* Add numberOfFilterdItems$ and filterValue$ to NgbrxPaginatorService. (6e784f5)
+
+# release 0.0.6
+
+* Complete refactor (see the README). (e626975)
+* Rename selector selectedPagination to selectPagination. (lasy-loading) (9a862bb)
+* Fix pagesCount when the number of items is a multiple of pageSize. (c57acd0)
+
+## Breaking changes
+
+Use of NgbrxPaginatorModule.forFeature to simplify the API.
+
+# release 0.0.5
+.
+* Add pageSizeOptions as Input to ngbrx-paginator component. (fc212d2)
+* Remove 'lib-' from template selector. (3dd0685)
+* Update README. (14a0334)
+* License is MIT. (0051390)
+* Add ref to the demo. (b9bd190)
+* Remove tslib dependency. (69aa9b5)
+* Fix dependencies. (3fd8ce4)
+* yarn install --upgrade (e882afc)
+* ng update @angular/cli @angular/core -> 16.1.3. (ec43200)
+* Add filter to count of items (commues, departements). (958d054)
+* Do not dispatch setPage if current page. (8a3f680)
+* Indentation. (2ebe3ca)
+* Set default pageSize to 20. (184805c)
+* Add typing to pagination actions handlers. (537ad29)
+* Add README. (96c0f5a)
+* Move some pagination selectors to paginator.ts. (9187e67)
+* Remove effects and simplify pagination interface and actions. (03f2455)
+* les reducers sont appelés directement depuis la fonction issue de paginatori (9b04adb)
+* paginator propose createFilteredEffect (e184f68)
+* Split ActionsGroup and PaginationActions. (b9ab823)
+* Add module commune. Simplify declaration of actions and reducers. (ac38077)
+* Module departement is paginated. (85ea00f)
+* Add collection$ to departement component. (fea3e27)
+* Load departements. (da7a1e7)
+* Add commune and departement modules to test-paginator app. Add featureStore to departement module. (280151f)
+* ng g st AppState... (f44b6ed)
+* Add test app. (dfaa005)
+
+# release 0.0.1
+
+* ng g lib ngbrx-paginator (da32ab4)
+* ng update @angular/cli -> 16.1.0. (798b8db)
+* Empty workspace (0ba0670)
