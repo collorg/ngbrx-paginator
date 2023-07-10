@@ -1,28 +1,18 @@
-import { Inject, ModuleWithProviders, NgModule, Optional } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { NgbrxPaginatorComponent } from './ngbrx-paginator.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Selector, Store, StoreModule } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import { NgbModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import * as fromPaginationState from './reducers';
 import { NgbrxPaginatorActions } from './reducers/ngbrx-paginator.actions';
 import { BehaviorSubject, Observable, take } from 'rxjs';
 import { NgbrxPaginatorService } from './ngbrx-paginator.service';
+import { ModuleParams, PaginatorParams } from './ngbrx-paginator.model';
 
-interface PaginatorParams {
-  key?: string,
-  filters?: any,
-  allDataSelector: Selector<object, any[]>,
-  pageSizeOptions?: number[]
-}
-
-interface ModuleParams {
-  paginators: PaginatorParams[]
-}
-
-let paginators: PaginatorParams[] = [];
-const paginatorsSubject: BehaviorSubject<PaginatorParams[]> = new BehaviorSubject<PaginatorParams[]>(paginators);
-const paginators$: Observable<PaginatorParams[]> = paginatorsSubject.asObservable();
+let paginators: PaginatorParams<any>[] = [];
+const paginatorsSubject: BehaviorSubject<PaginatorParams<any>[]> = new BehaviorSubject<PaginatorParams<any>[]>(paginators);
+const paginators$: Observable<PaginatorParams<any>[]> = paginatorsSubject.asObservable();
 
 @NgModule({
   declarations: [
@@ -64,12 +54,12 @@ export class NgbrxPaginatorModule {
       paginators$.pipe(
         take(1)
       ).subscribe(
-        (paginators: PaginatorParams[]) => paginators.forEach((paginator: PaginatorParams) => this.addFeature(paginator))
+        (paginators: PaginatorParams<any>[]) => paginators.forEach((paginator: PaginatorParams<any>) => this.addFeature(paginator))
       )
 
   }
 
-  addFeature(paginator: PaginatorParams) {
+  addFeature(paginator: PaginatorParams<any>) {
     if (paginator.key) {
       this.store.dispatch(NgbrxPaginatorActions.initFeature({ key: paginator.key, pageSizeOptions: paginator.pageSizeOptions }));
       if (paginator.filters) {

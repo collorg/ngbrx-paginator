@@ -3,19 +3,8 @@ import { Store, Selector } from '@ngrx/store';
 
 import * as fromStore from './reducers';
 import { NgbrxPaginatorActions } from './reducers/ngbrx-paginator.actions';
-import { Observable, take } from 'rxjs';
-
-
-export interface FilterFunction<D> {
-  (items: D[], query: string): D[];
-}
-
-export interface Features {
-  [key: string]: {
-    filters: FilterFunction<any>,
-    allDataSelector: Selector<object, any[]>
-  }
-}
+import { Observable } from 'rxjs';
+import { Features, FilterFunction } from './ngbrx-paginator.model';
 
 
 @Injectable({
