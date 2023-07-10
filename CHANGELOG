@@ -14,7 +14,7 @@ than one paginator by NbModule.
 * before:
 ```ts
     NgbrxPaginatorModule.forFeature({
-      featureKey: 'Departement/Pagination',
+      key: 'Departement/Pagination',
       filterFunction: fromDepartement.filterFunction,
       allDataSelector: fromDepartement.selectAll,
       pageSizeOptions: [10, 20, 30]
@@ -25,7 +25,7 @@ than one paginator by NbModule.
     NgbrxPaginatorModule.forFeature({
       paginators: [ // you can have as many paginators as you need per module
         {
-          featureKey: 'Departement/Pagination',
+          key: 'Departement/Pagination',
           filterFunction: fromDepartement.filterFunction,
           allDataSelector: fromDepartement.selectAll,
           pageSizeOptions: [10, 20, 30]

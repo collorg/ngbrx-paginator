@@ -5,7 +5,7 @@
       ({{ (numberOfFilteredItems$ | async) }}<span *ngIf="(filterValue$ | async) as filter"> {{ filter }}</span>)
     </h3>
     <ngbrx-paginator
-      [featureKey]="featureKey"
+      [key]="key"
     ></ngbrx-paginator>
   </div>
   <div class="card-body">

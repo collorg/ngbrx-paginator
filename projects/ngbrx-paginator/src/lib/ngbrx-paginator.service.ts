@@ -12,7 +12,7 @@ export interface FilterFunction<D> {
 
 export interface Features {
   [key: string]: {
-    filterFunction: FilterFunction<any>,
+    filters: FilterFunction<any>,
     allDataSelector: Selector<object, any[]>
   }
 }
@@ -29,53 +29,53 @@ export class NgbrxPaginatorService {
   ) {
   }
 
-  static add(featureKey: string, filterFunction: FilterFunction<any>, allDataSelector: Selector<object, any[]>) {
-    NgbrxPaginatorService.features[featureKey] = { filterFunction, allDataSelector };
+  static add(key: string, filters: FilterFunction<any>, allDataSelector: Selector<object, any[]>) {
+    NgbrxPaginatorService.features[key] = { filters, allDataSelector };
   }
 
-  hasFilter(featureKey: string) {
-    return NgbrxPaginatorService.features[featureKey].filterFunction !== null;
+  hasFilter(key: string) {
+    return NgbrxPaginatorService.features[key].filters !== null;
   }
 
-  getPageItems$<M>(featureKey: string): Observable<M[]> {
-    return this.store.select(fromStore.selectPageItems<M>(featureKey));
+  getPageItems$<M>(key: string): Observable<M[]> {
+    return this.store.select(fromStore.selectPageItems<M>(key));
   }
 
-  filterValue$(featureKey: string): Observable<string> {
-    return this.store.select(fromStore.selectFilterValue(featureKey));
+  filterValue$(key: string): Observable<string> {
+    return this.store.select(fromStore.selectFilterValue(key));
   }
 
-  numberOfFilteredItems$(featureKey: string): Observable<number> {
-    return this.store.select(fromStore.selectNumberOfFilteredItems(featureKey));
+  numberOfFilteredItems$(key: string): Observable<number> {
+    return this.store.select(fromStore.selectNumberOfFilteredItems(key));
   }
 
-  filteredCollection$<M>(featureKey: string): Observable<M> {
-    return this.store.select<M>(fromStore.selectFilteredCollection(featureKey));
+  filteredCollection$<M>(key: string): Observable<M> {
+    return this.store.select<M>(fromStore.selectFilteredCollection(key));
   }
 
-  pagination$(featureKey: string): Observable<fromStore.Pagination> {
-    return this.store.select(fromStore.selectPagination(featureKey));
+  pagination$(key: string): Observable<fromStore.Pagination> {
+    return this.store.select(fromStore.selectPagination(key));
   }
 
-  pagesCount$(featureKey: string): Observable<number> {
-    return this.store.select(fromStore.selectPagesCount(featureKey));
+  pagesCount$(key: string): Observable<number> {
+    return this.store.select(fromStore.selectPagesCount(key));
   }
 
-  setPage(featureKey: string, page: number): number {
-    this.store.dispatch(NgbrxPaginatorActions.setPage({featureKey, page}));
+  setPage(key: string, page: number): number {
+    this.store.dispatch(NgbrxPaginatorActions.setPage({key, page}));
     return page;
   }
 
-  setPageSize(featureKey: string, pageSize: number) {
-    this.store.dispatch(NgbrxPaginatorActions.setPageSize({featureKey, pageSize}));
+  setPageSize(key: string, pageSize: number) {
+    this.store.dispatch(NgbrxPaginatorActions.setPageSize({key, pageSize}));
   }
 
-  setPageSizeOptions(featureKey: string, pageSizeOptions: number[]) {
-    this.store.dispatch(NgbrxPaginatorActions.setPageSizeOptions({featureKey, pageSizeOptions}));
+  setPageSizeOptions(key: string, pageSizeOptions: number[]) {
+    this.store.dispatch(NgbrxPaginatorActions.setPageSizeOptions({key, pageSizeOptions}));
   }
 
-  setFilterQuery(featureKey: string, filter: string) {
-    this.store.dispatch(NgbrxPaginatorActions.setFilterQuery({featureKey, filter}));
+  setFilterQuery(key: string, filter: string) {
+    this.store.dispatch(NgbrxPaginatorActions.setFilterQuery({key, filter}));
   }
 
 }

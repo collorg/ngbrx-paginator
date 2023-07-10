@@ -31,7 +31,7 @@ import { NgbrxPaginatorModule } from 'ngbrx-paginator';
     NgbrxPaginatorModule.forFeature({
       paginators: [ // you can have as many paginators as you need per module
         {
-          featureKey: 'Departement/Pagination', // must be unique for the app
+          key: 'Departement/Pagination', // must be unique for the app
           filterFunction: fromDepartement.filterFunction,
           allDataSelector: fromDepartement.selectAll, // ngrx selector returning all the data set
           pageSizeOptions: [10, 20, 30] // defaults to [5, 10, 25, 100]
@@ -42,7 +42,7 @@ import { NgbrxPaginatorModule } from 'ngbrx-paginator';
   ],
 ```
 
-in your component class add the attributes `featureKey`, and use NgbrxPaginationService to filter your collection by page:
+in your component class add the attributes `key`, and use NgbrxPaginationService to filter your collection by page:
 
 ```ts
 import { Component } from '@angular/core';
@@ -56,10 +56,10 @@ import { NgbrxPaginatorService } from 'ngbrx-paginator';
   styleUrls: ['./departements.component.css']
 })
 export class DepartementsComponent {
-  featureKey = 'Departement/Pagination'; // same as in NgbrxPaginatorModules.forFeature
-  pageItems$: Observable<Departement[]> = this.paginationService.getPageItems$<Departement>(this.featureKey);
-  filterValue$: Observable<string> = this.paginationService.filterValue$(this.featureKey);
-  numberOfFilteredItems$: Observable<number> = this.paginationService.numberOfFilteredItems$(this.featureKey);
+  key = 'Departement/Pagination'; // same as in NgbrxPaginatorModules.forFeature
+  pageItems$: Observable<Departement[]> = this.paginationService.getPageItems$<Departement>(this.key);
+  filterValue$: Observable<string> = this.paginationService.filterValue$(this.key);
+  numberOfFilteredItems$: Observable<number> = this.paginationService.numberOfFilteredItems$(this.key);
 
   constructor(
     private paginationService: NgbrxPaginatorService
@@ -78,7 +78,7 @@ And finally, use the ngbrx-paginator component in your [template](./projects/tes
       ({{ (numberOfFilteredItems$ | async) }}<span *ngIf="(filterValue$ | async) as filter"> {{ filter }}</span>)
     </h3>
     <ngbrx-paginator
-      [featureKey]="featureKey"
+      [key]="key"
     ></ngbrx-paginator>
   </div>
   <div class="card-body">

@@ -10,8 +10,8 @@ import { BehaviorSubject, Observable, take } from 'rxjs';
 import { NgbrxPaginatorService } from './ngbrx-paginator.service';
 
 interface PaginatorParams {
-  featureKey?: string,
-  filterFunction?: any,
+  key?: string,
+  filters?: any,
   allDataSelector: Selector<object, any[]>,
   pageSizeOptions?: number[]
 }
@@ -70,10 +70,10 @@ export class NgbrxPaginatorModule {
   }
 
   addFeature(paginator: PaginatorParams) {
-    if (paginator.featureKey) {
-      this.store.dispatch(NgbrxPaginatorActions.initFeature({ featureKey: paginator.featureKey, pageSizeOptions: paginator.pageSizeOptions }));
-      if (paginator.filterFunction) {
-        NgbrxPaginatorService.add(paginator.featureKey, paginator.filterFunction, paginator.allDataSelector);
+    if (paginator.key) {
+      this.store.dispatch(NgbrxPaginatorActions.initFeature({ key: paginator.key, pageSizeOptions: paginator.pageSizeOptions }));
+      if (paginator.filters) {
+        NgbrxPaginatorService.add(paginator.key, paginator.filters, paginator.allDataSelector);
       }
     }
   }

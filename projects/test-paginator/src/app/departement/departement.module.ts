@@ -13,8 +13,8 @@ import { NgbrxPaginatorModule } from 'ngbrx-paginator';
     CommonModule,
     NgbrxPaginatorModule.forFeature({
       paginators: [{
-        featureKey: 'Departement/Pagination',
-        filterFunction: fromDepartement.filterFunction,
+        key: 'Departement/Pagination',
+        filters: fromDepartement.filterFunction,
         allDataSelector: fromDepartement.selectAll,
         pageSizeOptions: [10, 20, 30]
       }]

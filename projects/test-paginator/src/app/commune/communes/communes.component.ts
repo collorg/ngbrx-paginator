@@ -9,10 +9,10 @@ import { NgbrxPaginatorService } from 'ngbrx-paginator';
   styleUrls: ['./communes.component.css']
 })
 export class CommunesComponent {
-  featureKey = 'Commune/Pagination';
-  collection$: Observable<Commune[]> = this.paginationService.getPageItems$<Commune>(this.featureKey);
-  filterValue$: Observable<string> = this.paginationService.filterValue$(this.featureKey);
-  numberOfFilteredItems$: Observable<number> = this.paginationService.numberOfFilteredItems$(this.featureKey);
+  key = 'Commune/Pagination';
+  collection$: Observable<Commune[]> = this.paginationService.getPageItems$<Commune>(this.key);
+  filterValue$: Observable<string> = this.paginationService.filterValue$(this.key);
+  numberOfFilteredItems$: Observable<number> = this.paginationService.numberOfFilteredItems$(this.key);
 
   constructor(
     private paginationService: NgbrxPaginatorService

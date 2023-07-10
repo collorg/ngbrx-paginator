@@ -11,7 +11,7 @@ import { NgbrxPaginatorService } from './ngbrx-paginator.service';
   styleUrls: ['./ngbrx-paginator.component.css']
 })
 export class NgbrxPaginatorComponent implements OnInit {
-  @Input({required: true}) featureKey: string = '';
+  @Input({required: true}) key: string = '';
   collection$: Observable<any[]> = EMPTY;
   pagination$: Observable<Pagination> = EMPTY;
   pagesCount$: Observable<number> = EMPTY;
@@ -28,15 +28,15 @@ export class NgbrxPaginatorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.collection$ = this.service.filteredCollection$(this.featureKey);
-    this.pagination$ = this.service.pagination$(this.featureKey);
-    this.pagesCount$ = this.service.pagesCount$(this.featureKey);
-    this.hasFilter = this.service.hasFilter(this.featureKey);
+    this.collection$ = this.service.filteredCollection$(this.key);
+    this.pagination$ = this.service.pagination$(this.key);
+    this.pagesCount$ = this.service.pagesCount$(this.key);
+    this.hasFilter = this.service.hasFilter(this.key);
     this.subscriptions.push(this.pagination$.subscribe((pagination) => this.filterValue = pagination.filter))
   }
 
   changePage(page: number) {
-    this.page = this.service.setPage(this.featureKey, page)
+    this.page = this.service.setPage(this.key, page)
   }
 
   setPage(page: string) {
@@ -44,7 +44,7 @@ export class NgbrxPaginatorComponent implements OnInit {
   }
 
   setPageSize(pageSize: number) {
-    this.service.setPageSize(this.featureKey, pageSize);
+    this.service.setPageSize(this.key, pageSize);
   }
 
   formatInput(input: HTMLInputElement) {
@@ -52,7 +52,7 @@ export class NgbrxPaginatorComponent implements OnInit {
   }
 
   setFilterValue() {
-    this.service.setFilterQuery(this.featureKey, this.filterValue);
+    this.service.setFilterQuery(this.key, this.filterValue);
     this.changePage(1)
   }
 
