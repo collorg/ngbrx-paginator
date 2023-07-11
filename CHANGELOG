@@ -1,3 +1,30 @@
+# release 0.0.13 (2023-07-11)
+
+* Allow more than one filter by paginator. (72e585a)
+* Add ngbrx-paginator.model. (0376d09)
+* [WIP] Rename featureKey to key and filterFunction to filters. (e34a9fd)
+* Add CHANGELOG (c586306)
+
+## Breaking changes
+
+In NgbrxPaginatorModule.forFeature, parameter `filter` is now replaced by `filters`. 
+
+```ts
+    NgbrxPaginatorModule.forFeature({
+      paginators: [{
+        key: 'Departement/Pagination',
+        filters: {
+          'By name': fromDepartement.byName,
+          'By code': fromDepartement.byCode,
+          'By region': fromDepartement.byRegion
+        },
+        filter: fromDepartement.byName,
+        allDataSelector: fromDepartement.selectAll,
+        pageSizeOptions: [10, 20, 30]
+      }]
+    }),
+```
+
 # release 0.0.12
 
 * Update README. (7dd993b)
