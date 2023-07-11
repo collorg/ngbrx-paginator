@@ -10,9 +10,13 @@
   </div>
   <div class="card-body">
     <div class="list-group">
-      <div class="list-group-item" *ngFor="let item of collection$ | async">
-        {{ item.code }} {{ item.nom }}
-      </div>
+      <ng-container class="list-group-item" *ngFor="let item of collection$ | async">
+        <div class="row list-group-item">
+          <span>{{ item.code }} {{ item.nom }}
+          <span class="right">Code région {{ item.region }}</span>
+        </span>
+        </div>
+      </ng-container>
     </div>
   </div>
 </div>

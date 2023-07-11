@@ -62,9 +62,7 @@ export class NgbrxPaginatorModule {
   addFeature(paginator: PaginatorParams<any>) {
     if (paginator.key) {
       this.store.dispatch(NgbrxPaginatorActions.initPaginator({ paginator }));
-      if (paginator.filter) {
-        NgbrxPaginatorService.add(paginator.key, paginator.filter, paginator.allDataSelector, paginator.filters || {});
-      }
+      NgbrxPaginatorService.add(paginator.key, paginator.allDataSelector, paginator.filters || {});
     }
   }
 

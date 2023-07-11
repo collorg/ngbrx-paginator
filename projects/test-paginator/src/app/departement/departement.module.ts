@@ -14,8 +14,11 @@ import { NgbrxPaginatorModule } from 'ngbrx-paginator';
     NgbrxPaginatorModule.forFeature({
       paginators: [{
         key: 'Departement/Pagination',
-        filters: { 'Select by name': fromDepartement.byName },
-        filter: fromDepartement.byName,
+        filters: {
+          'By name': fromDepartement.byName,
+          'By code': fromDepartement.byCode,
+          'By region': fromDepartement.byRegion
+        },
         allDataSelector: fromDepartement.selectAll,
         pageSizeOptions: [10, 20, 30]
       }]

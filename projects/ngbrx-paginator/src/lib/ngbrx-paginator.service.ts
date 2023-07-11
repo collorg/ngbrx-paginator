@@ -18,8 +18,8 @@ export class NgbrxPaginatorService {
   ) {
   }
 
-  static add(key: string, filter: FilterFunction<any>, allDataSelector: Selector<object, any[]>, filters: FilterFunctions<any>) {
-    NgbrxPaginatorService.features[key] = { filter, allDataSelector, filters };
+  static add(key: string, allDataSelector: Selector<object, any[]>, filters: FilterFunctions<any>) {
+    NgbrxPaginatorService.features[key] = { allDataSelector, filters };
   }
 
   setCurrent(paginatorKey: string) {
@@ -27,7 +27,7 @@ export class NgbrxPaginatorService {
   }
 
   hasFilter(key: string) {
-    return NgbrxPaginatorService.features[key].filter !== null;
+    return !!NgbrxPaginatorService.features[key].filters;
   }
 
   getPageItems$<M>(key: string): Observable<M[]> {

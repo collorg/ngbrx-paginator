@@ -19,7 +19,6 @@ import { CommuneRoutingModule } from './commune-routing.module';
           'by code': fromCommune.byCode,
           'by name': fromCommune.byName,
         },
-        filter: fromCommune.byCode,
         allDataSelector: fromCommune.selectAll
       }]
     }),

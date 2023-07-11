@@ -11,7 +11,6 @@ export interface FilterFunctions<D> {
 export interface Feature<D> {
   allDataSelector: Selector<object, D[]>,
   filters: FilterFunctions<D>,
-  filter: FilterFunction<D>,
   pageSizeOptions?: number[]
 }
 
