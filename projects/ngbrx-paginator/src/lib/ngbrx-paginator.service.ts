@@ -4,7 +4,7 @@ import { Store, Selector } from '@ngrx/store';
 import * as fromStore from './reducers';
 import { NgbrxPaginatorActions } from './reducers/ngbrx-paginator.actions';
 import { Observable } from 'rxjs';
-import { Features, FilterFunction } from './ngbrx-paginator.model';
+import { Features, FilterFunction, FilterFunctions } from './ngbrx-paginator.model';
 
 
 @Injectable({
@@ -18,20 +18,32 @@ export class NgbrxPaginatorService {
   ) {
   }
 
-  static add(key: string, filters: FilterFunction<any>, allDataSelector: Selector<object, any[]>) {
-    NgbrxPaginatorService.features[key] = { filters, allDataSelector };
+  static add(key: string, filter: FilterFunction<any>, allDataSelector: Selector<object, any[]>, filters: FilterFunctions<any>) {
+    NgbrxPaginatorService.features[key] = { filter, allDataSelector, filters };
+  }
+
+  setCurrent(paginatorKey: string) {
+    this.store.dispatch(NgbrxPaginatorActions.setCurrentPaginator({ paginatorKey }));
   }
 
   hasFilter(key: string) {
-    return NgbrxPaginatorService.features[key].filters !== null;
+    return NgbrxPaginatorService.features[key].filter !== null;
   }
 
   getPageItems$<M>(key: string): Observable<M[]> {
     return this.store.select(fromStore.selectPageItems<M>(key));
   }
 
-  filterValue$(key: string): Observable<string> {
-    return this.store.select(fromStore.selectFilterValue(key));
+  filterQuery$(key: string): Observable<string> {
+    return this.store.select(fromStore.selectFilterQuery(key));
+  }
+
+  currentFilter$(key: string): Observable<string> {
+    return this.store.select(fromStore.selectCurrentFilter(key));
+  }
+
+  filterQueries$(key: string): Observable<{ [key: string]: string }> {
+    return this.store.select(fromStore.selectFilterQueries(key));
   }
 
   numberOfFilteredItems$(key: string): Observable<number> {
@@ -51,20 +63,24 @@ export class NgbrxPaginatorService {
   }
 
   setPage(key: string, page: number): number {
-    this.store.dispatch(NgbrxPaginatorActions.setPage({key, page}));
+    this.store.dispatch(NgbrxPaginatorActions.setPage({ key, page }));
     return page;
   }
 
   setPageSize(key: string, pageSize: number) {
-    this.store.dispatch(NgbrxPaginatorActions.setPageSize({key, pageSize}));
+    this.store.dispatch(NgbrxPaginatorActions.setPageSize({ key, pageSize }));
   }
 
   setPageSizeOptions(key: string, pageSizeOptions: number[]) {
-    this.store.dispatch(NgbrxPaginatorActions.setPageSizeOptions({key, pageSizeOptions}));
+    this.store.dispatch(NgbrxPaginatorActions.setPageSizeOptions({ key, pageSizeOptions }));
   }
 
-  setFilterQuery(key: string, filter: string) {
-    this.store.dispatch(NgbrxPaginatorActions.setFilterQuery({key, filter}));
+  setCurrentFilter(key: string, filterKey: string) {
+    this.store.dispatch(NgbrxPaginatorActions.setCurrentFilter({ key, filterKey }))
+  }
+
+  setFilterQuery(key: string, filterQuery: string) {
+    this.store.dispatch(NgbrxPaginatorActions.setFilterQuery({ key, filterQuery }));
   }
 
 }

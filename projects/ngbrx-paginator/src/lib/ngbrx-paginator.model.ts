@@ -4,10 +4,14 @@ export interface FilterFunction<D> {
   (items: D[], query: string): D[];
 }
 
+export interface FilterFunctions<D> {
+  [key: string]: FilterFunction<D>
+}
+
 export interface Feature<D> {
   allDataSelector: Selector<object, D[]>,
-  // filters?: {[key: string]: FilterFunction<D>},
-  filters: FilterFunction<D>,
+  filters: FilterFunctions<D>,
+  filter: FilterFunction<D>,
   pageSizeOptions?: number[]
 }
 
@@ -22,4 +26,3 @@ export interface ModuleParams {
 export interface Features {
   [key: string]: Feature<any>
 }
-

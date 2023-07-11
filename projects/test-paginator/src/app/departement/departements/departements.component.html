@@ -2,7 +2,7 @@
   <div class="card-header sticky-top">
     <h3>
       Liste des départements
-      ({{ (numberOfFilteredItems$ | async) }}<span *ngIf="(filterValue$ | async) as filter"> {{ filter }}</span>)
+      ({{ (numberOfFilteredItems$ | async) }}<span *ngIf="(filterQuery$ | async) as filter"> {{ filter }}</span>)
     </h3>
     <ngbrx-paginator
       [key]="key"

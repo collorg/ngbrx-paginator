@@ -32,7 +32,7 @@ import { NgbrxPaginatorModule } from 'ngbrx-paginator';
       paginators: [ // you can have as many paginators as you need per module
         {
           key: 'Departement/Pagination', // must be unique for the app
-          filterFunction: fromDepartement.filterFunction,
+          byName: fromDepartement.byName,
           allDataSelector: fromDepartement.selectAll, // ngrx selector returning all the data set
           pageSizeOptions: [10, 20, 30] // defaults to [5, 10, 25, 100]
         }
@@ -58,7 +58,7 @@ import { NgbrxPaginatorService } from 'ngbrx-paginator';
 export class DepartementsComponent {
   key = 'Departement/Pagination'; // same as in NgbrxPaginatorModules.forFeature
   pageItems$: Observable<Departement[]> = this.paginationService.getPageItems$<Departement>(this.key);
-  filterValue$: Observable<string> = this.paginationService.filterValue$(this.key);
+  filterQuery$: Observable<string> = this.paginationService.filterQuery$(this.key);
   numberOfFilteredItems$: Observable<number> = this.paginationService.numberOfFilteredItems$(this.key);
 
   constructor(
@@ -75,7 +75,7 @@ And finally, use the ngbrx-paginator component in your [template](./projects/tes
   <div class="card-header sticky-top">
     <h3>
       Liste des départements
-      ({{ (numberOfFilteredItems$ | async) }}<span *ngIf="(filterValue$ | async) as filter"> {{ filter }}</span>)
+      ({{ (numberOfFilteredItems$ | async) }}<span *ngIf="(filterQuery$ | async) as filter"> {{ filter }}</span>)
     </h3>
     <ngbrx-paginator
       [key]="key"

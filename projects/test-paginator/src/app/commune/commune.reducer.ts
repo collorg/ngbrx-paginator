@@ -67,6 +67,10 @@ export const {
 
 communesFeature.selectAll
 
-export function filterFunction(items: Commune[], query: string): Commune[] {
+export function byName(items: Commune[], query: string): Commune[] {
   return items.filter((item: Commune) => !query || item.nom.toLowerCase().indexOf(query.toLocaleLowerCase()) === 0)
+}
+
+export function byCode(items: Commune[], query: string): Commune[] {
+  return items.filter((item: Commune) => !query || item.code.indexOf(query) === 0)
 }

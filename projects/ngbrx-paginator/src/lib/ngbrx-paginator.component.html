@@ -52,20 +52,29 @@
         {{ pagination.pageSize }} lines/page
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <li *ngFor="let pageSize of pagination.pageSizeOptions" class="dropdown-item" value="{{pageSize}}" (click)="setPageSize(pageSize)">
-          {{pageSize}} lines
+        <li
+          *ngFor="let pageSize of pagination.pageSizeOptions"
+          class="dropdown-item"
+          value="{{ pageSize }}"
+          (click)="setPageSize(pageSize)"
+        >
+          {{ pageSize }} lines
         </li>
       </ul>
     </div>
-    <div class="col">
-      <input *ngIf="hasFilter"
-        class="me-2"
+    <div class="col input-query">
+      <input class="form-control"
+        *ngIf="hasFilter"
         type="search"
         placeholder="Search"
-        aria-label="Search"
-        [(ngModel)]="filterValue"
+        [(ngModel)]="filterQuery"
         (keyup)="setFilterValue()"
       />
+    </div>
+    <div class="col filter-selector" *ngIf="filterKeys as filterKeys">
+      <select class="form-select" aria-label="Default select example">
+        <option *ngFor="let key of filterKeys" [value]="key" (click)="setCurrentFilter(key)">{{key}}</option>
+      </select>
     </div>
   </div>
 </div>

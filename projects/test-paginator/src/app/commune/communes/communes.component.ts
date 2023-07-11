@@ -11,11 +11,14 @@ import { NgbrxPaginatorService } from 'ngbrx-paginator';
 export class CommunesComponent {
   key = 'Commune/Pagination';
   collection$: Observable<Commune[]> = this.paginationService.getPageItems$<Commune>(this.key);
-  filterValue$: Observable<string> = this.paginationService.filterValue$(this.key);
+  filterQuery$: Observable<string> = this.paginationService.filterQuery$(this.key);
   numberOfFilteredItems$: Observable<number> = this.paginationService.numberOfFilteredItems$(this.key);
+  currentFilter$: Observable<string> = this.paginationService.currentFilter$(this.key);
 
   constructor(
     private paginationService: NgbrxPaginatorService
-  ) { }
+  ) {
+    this.paginationService.setCurrent(this.key);
+  }
 
 }

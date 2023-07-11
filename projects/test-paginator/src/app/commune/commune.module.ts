@@ -15,7 +15,11 @@ import { CommuneRoutingModule } from './commune-routing.module';
     NgbrxPaginatorModule.forFeature({
       paginators: [{
         key: 'Commune/Pagination',
-        filters: fromCommune.filterFunction,
+        filters: {
+          'by code': fromCommune.byCode,
+          'by name': fromCommune.byName,
+        },
+        filter: fromCommune.byCode,
         allDataSelector: fromCommune.selectAll
       }]
     }),
