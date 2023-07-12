@@ -1,6 +1,10 @@
+# release 0.0.14 (2023-07-12)
+
+* Fix selected filter. (9613518)
+
 # release 0.0.13 (2023-07-11)
 
-* Remove filter from 'Feature'. (HEAD -> main) (6cc4ce0)
+* Remove filter from 'Feature'. (6cc4ce0)
 * Allow more than one filter by paginator. (72e585a)
 * Add ngbrx-paginator.model. (0376d09)
 * [WIP] Rename featureKey to key and filterFunction to filters. (e34a9fd)
