@@ -13,7 +13,6 @@ export interface Pagination {
   pageSize: number;
   currentFilter: string;
   filterQueries: { [key: string]: string }
-  filterQuery: string;
   pageSizeOptions: number[]
 }
 
@@ -22,7 +21,6 @@ export const initialPagination: Pagination = {
   pageSize: 0,
   currentFilter: '',
   filterQueries: {},
-  filterQuery: '',
   pageSizeOptions: [5, 10, 25, 100]
 }
 
@@ -130,10 +128,9 @@ export const reducers = createReducer(
       const newState = { ...state };
       const paginators = { ...state.paginators };
       const pagination = { ...state.paginators[action.key] };
-      if (action.filterQuery !== pagination.filterQuery) {
+      const filterQueries = { ...state.paginators[action.key].filterQueries }
+      if (action.filterQuery !== filterQueries[pagination.currentFilter]) {
         pagination.page = 1;
-        pagination.filterQuery = action.filterQuery;
-        const filterQueries = { ...state.paginators[action.key].filterQueries }
         filterQueries[pagination.currentFilter] = action.filterQuery;
         pagination.filterQueries = filterQueries;
         paginators[action.key] = pagination;
@@ -161,8 +158,9 @@ export const selectFilterQuery = (key: string) => createSelector(
   featureSelector,
   (state: State) => {
     const filters = state.paginators[key].filterQueries;
-    const currentfilter = state.paginators[key].currentFilter;
-    return filters[currentfilter]
+    const currentFilter = state.paginators[key].currentFilter;
+    console.log('XXX', currentFilter)
+    return filters[currentFilter]
   }
 );
 

@@ -73,7 +73,7 @@
     </div>
     <div class="col filter-selector" *ngIf="filterKeys as filterKeys">
       <select class="form-select" aria-label="Default select example">
-        <option *ngFor="let key of filterKeys" [value]="key" (click)="setCurrentFilter(key)">{{key}}</option>
+        <option *ngFor="let key of filterKeys" [value]="key" [selected]="currentFilter === key" (click)="setCurrentFilter(key)">{{key}}</option>
       </select>
     </div>
   </div>
