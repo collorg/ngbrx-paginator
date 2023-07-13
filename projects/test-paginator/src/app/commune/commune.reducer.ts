@@ -74,3 +74,11 @@ export function byName(items: Commune[], query: string): Commune[] {
 export function byCode(items: Commune[], query: string): Commune[] {
   return items.filter((item: Commune) => !query || item.code.indexOf(query) === 0)
 }
+
+export function byPopulationGreaterThan(items: Commune[], query: string): Commune[] {
+  return items.filter((item: Commune) => !query || item.population > Number(query))
+}
+
+export function byPopulationLesserThan(items: Commune[], query: string): Commune[] {
+  return items.filter((item: Commune) => !query || item.population < Number(query))
+}

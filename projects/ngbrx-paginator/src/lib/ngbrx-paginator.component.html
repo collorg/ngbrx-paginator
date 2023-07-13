@@ -62,19 +62,27 @@
         </li>
       </ul>
     </div>
-    <div class="col input-query">
-      <input class="form-control"
-        *ngIf="hasFilter"
+  </div>
+  <div class="row" *ngIf="filterKeys as filterKeys">
+    <div *ngFor="let filterKey of filterKeys; index as idx" class="col input-group">
+      <div class="input-group-text">
+        <input
+          class="form-check-input mt-0"
+          type="checkbox"
+          [checked]="isChecked$(filterKey) | async"
+          aria-label="Checkbox for following text input"
+          (click)="toggleSelectedFilterKey(filterKey)"
+        />
+      </div>
+      <input
+        class="form-control col-md-auto"
+        [ngClass]="{'current': filterKey === currentFilter}"
+        id="filter_key_{{ idx }}"
         type="search"
-        placeholder="Search"
-        [(ngModel)]="filterQuery"
-        (keyup)="setFilterValue()"
+        [placeholder]="filterKey"
+        (focus)="setFilterKey(filterKey)"
+        (keyup)="setFilterQuery('filter_key_' + idx)"
       />
-    </div>
-    <div class="col filter-selector" *ngIf="filterKeys as filterKeys">
-      <select class="form-select" aria-label="Default select example">
-        <option *ngFor="let key of filterKeys" [value]="key" [selected]="currentFilter === key" (click)="setCurrentFilter(key)">{{key}}</option>
-      </select>
     </div>
   </div>
 </div>

@@ -12,14 +12,16 @@ export interface Pagination {
   page: number;
   pageSize: number;
   currentFilter: string;
-  filterQueries: { [key: string]: string }
-  pageSizeOptions: number[]
+  selectedFilters: string[];
+  filterQueries: { [key: string]: string };
+  pageSizeOptions: number[];
 }
 
 export const initialPagination: Pagination = {
   page: 1,
   pageSize: 0,
   currentFilter: '',
+  selectedFilters: [],
   filterQueries: {},
   pageSizeOptions: [5, 10, 25, 100]
 }
@@ -123,6 +125,23 @@ export const reducers = createReducer(
       return newState;
     }
   ),
+  on(NgbrxPaginatorActions.selectFilter,
+    (state, action) => {
+      const newState = { ...state };
+      const paginators = { ...state.paginators };
+      const pagination = { ...state.paginators[action.key] };
+      const selectedFilters = [...pagination.selectedFilters]
+      const index = selectedFilters.indexOf(action.filterKey);
+      if (index === -1) {
+        selectedFilters.push(action.filterKey);
+      } else {
+        selectedFilters.splice(index, 1);
+      }
+      pagination.selectedFilters = selectedFilters;
+      paginators[action.key] = pagination;
+      newState.paginators = paginators;
+      return newState;
+    }),
   on(NgbrxPaginatorActions.setFilterQuery,
     (state, action) => {
       const newState = { ...state };
@@ -159,7 +178,6 @@ export const selectFilterQuery = (key: string) => createSelector(
   (state: State) => {
     const filters = state.paginators[key].filterQueries;
     const currentFilter = state.paginators[key].currentFilter;
-    console.log('XXX', currentFilter)
     return filters[currentFilter]
   }
 );
@@ -169,16 +187,26 @@ export const selectFilterQueries = (key: string) => createSelector(
   (state: State) => state.paginators[key].filterQueries
 );
 
+export const selectSelectedFilters = (key: string) => createSelector(
+  featureSelector,
+  (state: State) => state.paginators[key].selectedFilters
+);
+
 export const selectFilteredCollection = (key: string) => createSelector(
   featureSelector,
   NgbrxPaginatorService.features[key].allDataSelector,
   (state: State, collection: any) => {
     const paginator = NgbrxPaginatorService.features[key];
     const filters = paginator.filters;
+    const selectedFilters = state.paginators[key].selectedFilters;
     const stateFilters = state.paginators[key].filterQueries;
     const currentFilter = state.paginators[key].currentFilter;
-    if (filters && !!stateFilters[currentFilter]) {
-      return filters[currentFilter](collection, stateFilters[currentFilter]);
+    if (selectedFilters || filters) {
+      let filteredCollection = filters[currentFilter](collection, stateFilters[currentFilter]);
+      selectedFilters.forEach((filterKey: string) => {
+        filteredCollection = filters[filterKey](filteredCollection, stateFilters[filterKey]);
+      });
+      return filteredCollection;
     }
     return collection;
   }

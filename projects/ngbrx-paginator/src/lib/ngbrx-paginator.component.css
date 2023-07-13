@@ -1,7 +1,9 @@
 .filter-selector {
-    padding-left: 0px;
-    margin-left: 0px;
+    padding-right: 0px;
 }
 .input-query {
-    padding-right: 0px;
+    padding-left: 0px;
+}
+.current {
+    background-color: rgb(207, 240, 248);
 }

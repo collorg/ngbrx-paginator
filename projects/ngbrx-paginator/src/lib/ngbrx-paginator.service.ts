@@ -46,6 +46,10 @@ export class NgbrxPaginatorService {
     return this.store.select(fromStore.selectFilterQueries(key));
   }
 
+  selectedFilters$(key: string): Observable<string[]> {
+    return this.store.select(fromStore.selectSelectedFilters(key));
+  }
+
   numberOfFilteredItems$(key: string): Observable<number> {
     return this.store.select(fromStore.selectNumberOfFilteredItems(key));
   }
@@ -81,6 +85,14 @@ export class NgbrxPaginatorService {
 
   setFilterQuery(key: string, filterQuery: string) {
     this.store.dispatch(NgbrxPaginatorActions.setFilterQuery({ key, filterQuery }));
+  }
+
+  selectFilter(key: string, filterKey: string) {
+    this.store.dispatch(NgbrxPaginatorActions.selectFilter({ key, filterKey }))
+  }
+
+  unselectFilter(key: string, filterKey: string) {
+    this.store.dispatch(NgbrxPaginatorActions.unselectFilter({ key, filterKey }))
   }
 
 }

@@ -16,8 +16,10 @@ import { CommuneRoutingModule } from './commune-routing.module';
       paginators: [{
         key: 'Commune/Pagination',
         filters: {
-          'by code': fromCommune.byCode,
-          'by name': fromCommune.byName,
+          'Code': fromCommune.byCode,
+          'Name': fromCommune.byName,
+          'Population >': fromCommune.byPopulationGreaterThan,
+          'Population <': fromCommune.byPopulationLesserThan
         },
         allDataSelector: fromCommune.selectAll
       }]
