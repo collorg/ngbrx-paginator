@@ -1,3 +1,10 @@
+# release 0.0.15 (2023-07-14)
+
+* Rename ngbrx-paginator-selected-filter-desc to ngbrx-paginator-filter-desc. (67517e8)
+* Retains filter values for ngbrx-paginator component. (146857b)
+* Add ngbrx-paginator-selected-filter-desc. (96b02d4)
+* Combine filters. (e0c8141)
+
 # release 0.0.14 (2023-07-12)
 
 * Fix selected filter. (9613518)
