@@ -68,8 +68,10 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
     input.value = input.value.replace(this.FILTER_PAG_REGEX, '');
   }
 
-  getFilterQuery(filterKey: string) {
-    return this.filterQueries[filterKey];
+  getFilterQuery$(filterKey: string) {
+    return this.filterQueries$.pipe(
+      map((filterQueries: { [key: string]: string }) => filterQueries[filterKey])
+    )
   }
 
   setCurrentFilter(filterKey: string) {

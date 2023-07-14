@@ -80,6 +80,7 @@
         id="filter_key_{{ idx }}"
         type="search"
         [placeholder]="filterKey"
+        [value]="getFilterQuery$(filterKey) | async"
         (focus)="setFilterKey(filterKey)"
         (keyup)="setFilterQuery('filter_key_' + idx)"
       />
