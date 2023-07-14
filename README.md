@@ -1,6 +1,11 @@
 # NgbrxPaginator (BETA)
 
-Easy reactive pagination with [ngrx](https://ngrx.io/) and [ng-bootstrap](https://ng-bootstrap.github.io). This package does not deal with backend pagination.
+You have an application that uses ngrx to store your data.
+NgbrxPaginator provides you easy reactive pagination with multiple filters that can be combined.
+
+![communes](images/communes.png)
+
+This package does not deal with backend pagination.
 
 ### Demo
 
@@ -9,10 +14,10 @@ https://collorg.github.io/ngbrx-paginator-demo
 ### Installation
 
 ```bash
-yarn add ngbrx-paginator
+npm i ngbrx-paginator
 ```
 
-ngbrx-paginator uses @ng-bootstrap/bootstrap and @ngrx/store.
+ngbrx-paginator depends on [ngrx](https://ngrx.io/) and [ng-bootstrap](https://ng-bootstrap.github.io).
 
 ## Usage
 
@@ -63,19 +68,23 @@ export class DepartementsComponent {
   key = "Departement/Pagination"; // same as in NgbrxPaginatorModules.forFeature
   pageItems$: Observable<Departement[]> = this.paginationService.getPageItems$<Departement>(this.key);
   // the following are optional (used for feedback. See the template)
-  filterQuery$: Observable<string> = this.paginationService.filterQuery$(this.key);
   numberOfFilteredItems$: Observable<number> = this.paginationService.numberOfFilteredItems$(this.key);
 
   constructor(private paginationService: NgbrxPaginatorService) {}
 }
 ```
 
-And finally, use the ngbrx-paginator component in your [template](./projects/test-paginator/src/app/departement/departements/departements.component.html):
+And finally, use the `ngbrx-paginator` and `ngbrx-paginator-filter-desc` components in your [template](./projects/test-paginator/src/app/departement/departements/departements.component.html):
 
 ```html
 <div class="card">
   <div class="card-header sticky-top">
-    <h3>Liste des départements ({{ (numberOfFilteredItems$ | async) }}<span *ngIf="(filterQuery$ | async) as filter"> {{ filter }}</span>)</h3>
+    <h3>
+      Liste des départements
+      <div class="right">
+        <small><small><ngbrx-paginator-filter-desc [key]="key"></ngbrx-paginator-filter-desc></small></small>
+      </div>
+    </h3>
     <ngbrx-paginator [key]="key"></ngbrx-paginator>
   </div>
   <div class="card-body">
@@ -85,3 +94,5 @@ And finally, use the ngbrx-paginator component in your [template](./projects/tes
   </div>
 </div>
 ```
+
+![départements](images/departements.png)

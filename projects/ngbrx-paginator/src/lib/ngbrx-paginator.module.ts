@@ -9,8 +9,7 @@ import { NgbrxPaginatorActions } from './reducers/ngbrx-paginator.actions';
 import { BehaviorSubject, Observable, take } from 'rxjs';
 import { NgbrxPaginatorService } from './ngbrx-paginator.service';
 import { ModuleParams, PaginatorParams } from './ngbrx-paginator.model';
-import { NgbrxCombineFiltersComponent } from './ngbrx-combine-filters/ngbrx-combine-filters.component';
-import { NgbrxPaginatorCurrentFilterComponent } from './ngbrx-paginator-current-filter/ngbrx-paginator-current-filter.component';
+import { NgbrxPaginatorFilterDesc } from './ngbrx-paginator-filter-desc/ngbrx-paginator-filter-desc.component';
 
 let paginators: PaginatorParams<any>[] = [];
 const paginatorsSubject: BehaviorSubject<PaginatorParams<any>[]> = new BehaviorSubject<PaginatorParams<any>[]>(paginators);
@@ -19,8 +18,7 @@ const paginators$: Observable<PaginatorParams<any>[]> = paginatorsSubject.asObse
 @NgModule({
   declarations: [
     NgbrxPaginatorComponent,
-    NgbrxCombineFiltersComponent,
-    NgbrxPaginatorCurrentFilterComponent
+    NgbrxPaginatorFilterDesc
   ],
   imports: [
     CommonModule,
@@ -32,7 +30,7 @@ const paginators$: Observable<PaginatorParams<any>[]> = paginatorsSubject.asObse
   ],
   exports: [
     NgbrxPaginatorComponent,
-    NgbrxPaginatorCurrentFilterComponent
+    NgbrxPaginatorFilterDesc
   ]
 })
 export class NgbrxPaginatorModule {

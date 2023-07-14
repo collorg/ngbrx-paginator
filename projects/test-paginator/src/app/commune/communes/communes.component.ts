@@ -11,7 +11,6 @@ import { NgbrxPaginatorService } from 'ngbrx-paginator';
 export class CommunesComponent {
   key = 'Commune/Pagination';
   collection$: Observable<Commune[]> = this.paginationService.getPageItems$<Commune>(this.key);
-  numberOfFilteredItems$: Observable<number> = this.paginationService.numberOfFilteredItems$(this.key);
 
   constructor(
     private paginationService: NgbrxPaginatorService
