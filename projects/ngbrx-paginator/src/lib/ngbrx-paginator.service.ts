@@ -50,6 +50,10 @@ export class NgbrxPaginatorService {
     return this.store.select(fromStore.selectSelectedFilters(key));
   }
 
+  currentFiltersDesc$(key: string): Observable<string> {
+    return this.store.select(fromStore.selectCurrentFilterDesc(key))
+  }
+
   numberOfFilteredItems$(key: string): Observable<number> {
     return this.store.select(fromStore.selectNumberOfFilteredItems(key));
   }

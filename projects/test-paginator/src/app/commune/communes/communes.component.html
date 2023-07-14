@@ -2,7 +2,10 @@
   <div class="card-header sticky-top">
     <h3>
       Liste des communes
-      ({{ (numberOfFilteredItems$ | async) }}<span *ngIf="(filterQuery$ | async) as filter"> {{ currentFilter$ | async }} {{ filter }}</span>)
+      ({{ (numberOfFilteredItems$ | async) }})
+      <div class="right">
+        <small><small><ngbrx-paginator-current-filter-desc [key]="key"></ngbrx-paginator-current-filter-desc></small></small>
+      </div>
     </h3>
     <ngbrx-paginator
       [key]="key"

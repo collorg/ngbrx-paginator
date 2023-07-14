@@ -164,13 +164,13 @@ export const featureSelector = createFeatureSelector<State>(paginationStateFeatu
 
 export const selectPagination = (key: string) => createSelector(
   featureSelector,
-  (state: State) => state.paginators[key]
+  (state: State) => state.paginators && state.paginators[key]
 );
 
 
 export const selectCurrentFilter = (key: string) => createSelector(
   featureSelector,
-  (state: State) => state.paginators[key].currentFilter
+  (state: State) => state.paginators && state.paginators[key] && state.paginators[key].currentFilter || ''
 );
 
 export const selectFilterQuery = (key: string) => createSelector(
@@ -178,18 +178,18 @@ export const selectFilterQuery = (key: string) => createSelector(
   (state: State) => {
     const filters = state.paginators[key].filterQueries;
     const currentFilter = state.paginators[key].currentFilter;
-    return filters[currentFilter]
+    return filters[currentFilter];
   }
 );
 
 export const selectFilterQueries = (key: string) => createSelector(
   featureSelector,
-  (state: State) => state.paginators[key].filterQueries
+  (state: State) => state.paginators && state.paginators[key] && state.paginators[key].filterQueries || []
 );
 
 export const selectSelectedFilters = (key: string) => createSelector(
   featureSelector,
-  (state: State) => state.paginators[key].selectedFilters
+  (state: State) => state.paginators && state.paginators[key] && state.paginators[key].selectedFilters || []
 );
 
 export const selectFilteredCollection = (key: string) => createSelector(
@@ -235,4 +235,21 @@ export const selectPagesCount = (key: string) => createSelector(
 export const selectNumberOfFilteredItems = (key: string) => createSelector(
   selectFilteredCollection(key),
   (collection) => collection.length
+)
+
+export const selectCurrentFilterDesc = (key: string) => createSelector(
+  selectCurrentFilter(key),
+  selectSelectedFilters(key),
+  selectFilterQueries(key),
+  (current: string, selected: string[], queries: { [key: string]: string }) => {
+    let desc: string[] = [];
+    Object.keys(queries).forEach((key: string) => {
+      if (key === current || selected.indexOf(key) > -1) {
+        if (queries[key]) {
+          desc.push(`${key}: ${queries[key]}`);
+        }
+      }
+    })
+    return desc.join(' & ')
+  }
 )
