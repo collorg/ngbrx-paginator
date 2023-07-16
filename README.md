@@ -67,8 +67,6 @@ import { NgbrxPaginatorService } from "ngbrx-paginator";
 export class DepartementsComponent {
   key = "Departement/Pagination"; // same as in NgbrxPaginatorModules.forFeature
   pageItems$: Observable<Departement[]> = this.paginationService.getPageItems$<Departement>(this.key);
-  // the following are optional (used for feedback. See the template)
-  numberOfFilteredItems$: Observable<number> = this.paginationService.numberOfFilteredItems$(this.key);
 
   constructor(private paginationService: NgbrxPaginatorService) {}
 }

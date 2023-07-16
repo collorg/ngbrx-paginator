@@ -15,7 +15,7 @@
       <ng-container class="list-group-item" *ngFor="let item of collection$ | async">
         <div class="row list-group-item">
           <span>{{ item.code }} {{ item.nom }}
-          <span class="right">Code région {{ item.region }}</span>
+          <span class="right">{{ item.region }}</span>
         </span>
         </div>
       </ng-container>

@@ -1,41 +1,45 @@
 import { Injectable } from '@angular/core';
-import { Store, Selector } from '@ngrx/store';
+import { MemoizedSelector, Store } from '@ngrx/store';
 
 import * as fromStore from './reducers';
 import { NgbrxPaginatorActions } from './reducers/ngbrx-paginator.actions';
-import { Observable } from 'rxjs';
-import { Features, FilterFunction, FilterFunctions } from './ngbrx-paginator.model';
+import { EMPTY, Observable, filter } from 'rxjs';
+import { Paginators, PaginatorParams } from './ngbrx-paginator.model';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class NgbrxPaginatorService {
-  static features: Features = {};
+  static paginators: Paginators = {};
 
   constructor(
     private store: Store
   ) {
   }
 
-  static add(key: string, allDataSelector: Selector<object, any[]>, filters: FilterFunctions<any>) {
-    NgbrxPaginatorService.features[key] = { allDataSelector, filters };
+  static add(paginator: PaginatorParams<any>) {
+    NgbrxPaginatorService.paginators[paginator.key] = { allDataSelector: paginator.allDataSelector, filters: paginator.filters };
   }
 
   setCurrent(paginatorKey: string) {
     this.store.dispatch(NgbrxPaginatorActions.setCurrentPaginator({ paginatorKey }));
   }
 
+  getFilterValues$(paginatorKey: string, filterKey: string): Observable<any> {
+    const values = NgbrxPaginatorService.paginators[paginatorKey].filters[filterKey].values;
+    if (values) {
+      return this.store.select(values);
+    }
+    return EMPTY;
+  }
+
   hasFilter(key: string) {
-    return !!NgbrxPaginatorService.features[key].filters;
+    return !!NgbrxPaginatorService.paginators[key].filters;
   }
 
   getPageItems$<M>(key: string): Observable<M[]> {
     return this.store.select(fromStore.selectPageItems<M>(key));
-  }
-
-  filterQuery$(key: string): Observable<string> {
-    return this.store.select(fromStore.selectFilterQuery(key));
   }
 
   currentFilter$(key: string): Observable<string> {
@@ -63,7 +67,7 @@ export class NgbrxPaginatorService {
   }
 
   pagination$(key: string): Observable<fromStore.Pagination> {
-    return this.store.select(fromStore.selectPagination(key));
+    return this.store.select(fromStore.SelectPagination(key));
   }
 
   pagesCount$(key: string): Observable<number> {

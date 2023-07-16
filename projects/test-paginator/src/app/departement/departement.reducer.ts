@@ -65,6 +65,19 @@ export const {
   selectTotal,
 } = departementsFeature;
 
+export const selectRegions = createSelector(
+  selectAll,
+  (departements: Departement[]) => {
+    const regions: string[] = [];
+    departements.forEach((departement: Departement) => {
+      if (regions.indexOf(departement.region) === -1) {
+        regions.push(departement.region)
+      }
+    });
+    return regions.sort();
+  }
+)
+
 export function byName(items: Departement[], query: string): Departement[] {
   return items.filter((item: Departement) => !query || item.nom.toLowerCase().indexOf(query.toLocaleLowerCase()) === 0)
 }
@@ -74,5 +87,5 @@ export function byCode(items: Departement[], query: string): Departement[] {
 }
 
 export function byRegion(items: Departement[], query: string): Departement[] {
-  return items.filter((item: Departement) => !query || item.region === query)
+  return items.filter((item: Departement) => !query || item.region.toLowerCase().indexOf(query.toLocaleLowerCase()) === 0)
 }

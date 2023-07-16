@@ -162,7 +162,7 @@ export const reducers = createReducer(
 
 export const featureSelector = createFeatureSelector<State>(paginationStateFeatureKey);
 
-export const selectPagination = (key: string) => createSelector(
+export const SelectPagination = (key: string) => createSelector(
   featureSelector,
   (state: State) => state.paginators && state.paginators[key]
 );
@@ -194,17 +194,17 @@ export const selectSelectedFilters = (key: string) => createSelector(
 
 export const selectFilteredCollection = (key: string) => createSelector(
   featureSelector,
-  NgbrxPaginatorService.features[key].allDataSelector,
+  NgbrxPaginatorService.paginators[key].allDataSelector,
   (state: State, collection: any) => {
-    const paginator = NgbrxPaginatorService.features[key];
+    const paginator = NgbrxPaginatorService.paginators[key];
     const filters = paginator.filters;
     const selectedFilters = state.paginators[key].selectedFilters;
     const stateFilters = state.paginators[key].filterQueries;
     const currentFilter = state.paginators[key].currentFilter;
     if (selectedFilters || filters) {
-      let filteredCollection = filters[currentFilter](collection, stateFilters[currentFilter]);
+      let filteredCollection = filters[currentFilter].filter(collection, stateFilters[currentFilter]);
       selectedFilters.forEach((filterKey: string) => {
-        filteredCollection = filters[filterKey](filteredCollection, stateFilters[filterKey]);
+        filteredCollection = filters[filterKey].filter(filteredCollection, stateFilters[filterKey]);
       });
       return filteredCollection;
     }
@@ -214,7 +214,7 @@ export const selectFilteredCollection = (key: string) => createSelector(
 
 export const selectPageItems = <M>(key: string) => createSelector(
   selectFilteredCollection(key),
-  selectPagination(key),
+  SelectPagination(key),
   (items: M[], pagination: Pagination) => {
     return items.slice((pagination.page - 1) * pagination.pageSize, pagination.page * pagination.pageSize)
   }
@@ -222,7 +222,7 @@ export const selectPageItems = <M>(key: string) => createSelector(
 
 export const selectPagesCount = (key: string) => createSelector(
   selectFilteredCollection(key),
-  selectPagination(key),
+  SelectPagination(key),
   (collection, pagination: Pagination) => {
     let pagesCount = Math.floor(collection.length / pagination.pageSize);
     if (pagesCount * pagination.pageSize < collection.length) {
@@ -246,7 +246,7 @@ export const selectCurrentFilterDesc = (key: string) => createSelector(
     Object.keys(queries).forEach((key: string) => {
       if (key === current || selected.indexOf(key) > -1) {
         if (queries[key]) {
-          desc.push(`${key}: ${queries[key]}`);
+          desc.push(`${key} "${queries[key]}"`);
         }
       }
     })

@@ -64,7 +64,10 @@
     </div>
   </div>
   <div class="row" *ngIf="filterKeys as filterKeys">
-    <div *ngFor="let filterKey of filterKeys; index as idx" class="col input-group">
+    <div
+      *ngFor="let filterKey of filterKeys; index as idx"
+      class="col input-group"
+    >
       <div class="input-group-text">
         <input
           class="form-check-input mt-0"
@@ -74,16 +77,35 @@
           (click)="toggleSelectedFilterKey(filterKey)"
         />
       </div>
-      <input
-        class="form-control col-md-auto"
-        [ngClass]="{'current': filterKey === currentFilter}"
-        id="filter_key_{{ idx }}"
-        type="search"
-        [placeholder]="filterKey"
-        [value]="getFilterQuery$(filterKey) | async"
+      <select
+        *ngIf="getFilterValues$(filterKey) | async as fValues; else noValues"
         (focus)="setFilterKey(filterKey)"
-        (keyup)="setFilterQuery('filter_key_' + idx)"
-      />
+        [(ngModel)]="selectedOption"
+        class="form-control col-md-auto"
+        [ngClass]="{ current: filterKey === currentFilter }"
+        id="filter_key_{{ idx }}"
+        (click)="setSelectedOption()"
+        (keyup)="setSelectedOption()"
+      >
+        <option selected value="">
+          {{ filterKey }}
+        </option>
+        <option *ngFor="let value of fValues">
+          {{ value }}
+        </option>
+      </select>
+      <ng-template #noValues>
+        <input
+          class="form-control col-md-auto"
+          [ngClass]="{ current: filterKey === currentFilter }"
+          id="filter_key_{{ idx }}"
+          type="search"
+          [placeholder]="filterKey"
+          [value]="getFilterQuery$(filterKey) | async"
+          (focus)="setFilterKey(filterKey)"
+          (keyup)="setFilterQuery('filter_key_' + idx)"
+        />
+      </ng-template>
     </div>
   </div>
 </div>
