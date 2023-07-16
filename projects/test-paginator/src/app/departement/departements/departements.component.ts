@@ -14,8 +14,6 @@ export class DepartementsComponent {
 
   constructor(
     private paginationService: NgbrxPaginatorService
-  ) {
-    this.paginationService.setCurrent(this.key);
-  }
+  ) { }
 
 }

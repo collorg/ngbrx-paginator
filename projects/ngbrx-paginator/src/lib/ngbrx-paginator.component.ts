@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { EMPTY, Observable, Subscription, map, take } from 'rxjs';
+import { EMPTY, Observable, Subscription, map, take, tap } from 'rxjs';
 import { Pagination } from './reducers';
 import { FormControl } from '@angular/forms';
 import { NgbrxPaginatorService } from './ngbrx-paginator.service';
@@ -81,6 +81,12 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
 
   getFilterValues$(filterKey: string): Observable<any> {
     return this.service.getFilterValues$(this.key, filterKey);
+  }
+
+  isFilteredValue$(filterKey: string, value: any): Observable<boolean> {
+    return this.getFilterQuery$(filterKey).pipe(
+      map((query: string) => value === query)
+    )
   }
 
   setFilterQuery(id: string) {

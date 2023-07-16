@@ -87,10 +87,13 @@
         (click)="setSelectedOption()"
         (keyup)="setSelectedOption()"
       >
-        <option selected value="">
+        <option [selected]="selectedOption === ''" value="">
           {{ filterKey }}
         </option>
-        <option *ngFor="let value of fValues">
+        <option
+          *ngFor="let value of fValues"
+          [selected]="selectedOption === value"
+        >
           {{ value }}
         </option>
       </select>
