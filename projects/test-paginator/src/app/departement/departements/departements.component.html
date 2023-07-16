@@ -6,19 +6,11 @@
         <small><small><ngbrx-paginator-filter-desc [key]="key"></ngbrx-paginator-filter-desc></small></small>
       </div>
     </h3>
-    <ngbrx-paginator
-      [key]="key"
-    ></ngbrx-paginator>
+    <ngbrx-paginator [key]="key"></ngbrx-paginator>
   </div>
   <div class="card-body">
     <div class="list-group">
-      <ng-container class="list-group-item" *ngFor="let item of collection$ | async">
-        <div class="row list-group-item">
-          <span>{{ item.code }} {{ item.nom }}
-          <span class="right">{{ item.region }}</span>
-        </span>
-        </div>
-      </ng-container>
+      <div class="list-group-item" *ngFor="let item of collection$ | async">{{ item.code }} {{ item.nom }}</div>
     </div>
   </div>
 </div>

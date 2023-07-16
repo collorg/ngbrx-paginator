@@ -1,3 +1,37 @@
+# release 0.1.0 (2023-07-16)
+
+* Add values to a filter to use a select instead of an input. (e507f62)
+
+## Breaking changes
+
+A filter is now specified by an object of type {filter: FilterFunction, values?: MemoizedSelector}. The `values`, if provided will replace the `input` with a `select` from which the user can choose the filter value.
+
+* before:
+  ```ts
+    NgbrxPaginatorModule.forFeature({
+      paginators: [{
+        key: 'Departement/Pagination',
+        filters: {
+          'Nom': fromDepartement.byName,
+          'Code': fromDepartement.byCode,
+          'Région/COM': fromDepartement.byRegion,
+        },
+      [...]
+  ```
+
+* now:
+  ```ts
+    NgbrxPaginatorModule.forFeature({
+      paginators: [{
+        key: 'Departement/Pagination',
+        filters: {
+          'Nom': { filter: fromDepartement.byName },
+          'Code': { filter: fromDepartement.byCode },
+          'Régions/COM': { filter: fromDepartement.byRegion, values: fromDepartement.selectRegions }
+        },
+      [...]
+  ```
+
 # release 0.0.15 (2023-07-14)
 
 * Rename ngbrx-paginator-selected-filter-desc to ngbrx-paginator-filter-desc. (67517e8)

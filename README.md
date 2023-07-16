@@ -39,9 +39,9 @@ import { NgbrxPaginatorModule } from 'ngbrx-paginator';
           key: 'Departement/Pagination', // must be unique for the app
           allDataSelector: fromDepartement.selectAll, // ngrx selector returning all the data set
           filters: { // Optional. You can provide more than one filter by paginator.
-            'By name': fromDepartement.byName,
-            'By Code': fromDepartement.byCode,
-            'By région': fromDepartement.byRegion,
+            'Nom': { filter: fromDepartement.byName },
+            'Code': { filter: fromDepartement.byCode },
+            'Régions/COM': { filter: fromDepartement.byRegion, values: fromDepartement.selectRegions }
           },
           pageSizeOptions: [10, 20, 30] // Optional. Defaults to [5, 10, 25, 100]
         }
@@ -54,25 +54,30 @@ import { NgbrxPaginatorModule } from 'ngbrx-paginator';
 in your component class add the attributes `key` and , and use NgbrxPaginationService to filter your collection by page:
 
 ```ts
-import { Component } from "@angular/core";
-import { Observable } from "rxjs";
-import { Departement } from "../departement.model";
-import { NgbrxPaginatorService } from "ngbrx-paginator";
+import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Departement } from '../departement.model';
+import { NgbrxPaginatorService } from 'ngbrx-paginator';
 
 @Component({
-  selector: "app-departements",
-  templateUrl: "./departements.component.html",
-  styleUrls: ["./departements.component.css"],
+  selector: 'app-departements',
+  templateUrl: './departements.component.html',
+  styleUrls: ['./departements.component.css']
 })
 export class DepartementsComponent {
-  key = "Departement/Pagination"; // same as in NgbrxPaginatorModules.forFeature
-  pageItems$: Observable<Departement[]> = this.paginationService.getPageItems$<Departement>(this.key);
+  key = 'Departement/Pagination'; // same as in NgbrxPaginatorModules.forFeature
+  collection$: Observable<Departement[]> = this.paginationService.getPageItems$<Departement>(this.key);
 
-  constructor(private paginationService: NgbrxPaginatorService) {}
+  constructor(
+    private paginationService: NgbrxPaginatorService
+  ) {
+    this.paginationService.setCurrent(this.key);
+  }
+
 }
 ```
 
-And finally, use the `ngbrx-paginator` and `ngbrx-paginator-filter-desc` components in your [template](./projects/test-paginator/src/app/departement/departements/departements.component.html):
+Finally, use the `ngbrx-paginator` component and the optional `ngbrx-paginator-filter-desc` component in your [template](./projects/test-paginator/src/app/departement/departements/departements.component.html):
 
 ```html
 <div class="card">
@@ -87,10 +92,12 @@ And finally, use the `ngbrx-paginator` and `ngbrx-paginator-filter-desc` compone
   </div>
   <div class="card-body">
     <div class="list-group">
-      <div class="list-group-item" *ngFor="let item of pageItems$ | async">{{ item.code }} {{ item.nom }}</div>
+      <div class="list-group-item" *ngFor="let item of collection$ | async">{{ item.code }} {{ item.nom }}</div>
     </div>
   </div>
 </div>
 ```
+
+`ngbrx-paginator-filter-desc`
 
 ![départements](images/departements.png)
