@@ -1,3 +1,7 @@
+# release 0.1.2 (2023-07-17)
+
+* Fix multiple init and keep the selected option when switching from one paginator to another. (1789e56)
+
 # release 0.1.1 (2023-07-16)
 
 * Remove setCurrent from departement.component.ts. (dc6c12d)
