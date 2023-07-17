@@ -27,7 +27,6 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   control = new FormControl();
   selectedFilters: string[] = [];
-  selectedOption = '';
 
   constructor(
     private service: NgbrxPaginatorService
@@ -42,11 +41,11 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
     this.filterQueries$ = this.service.filterQueries$(this.key);
     this.selectedFilters$ = this.service.selectedFilters$(this.key);
     this.hasFilter = this.service.hasFilter(this.key);
-    this.subscriptions.push(this.service.currentFilter$(this.key).subscribe((currentFilter) => this.currentFilter = currentFilter))
     this.subscriptions.push(this.filterQueries$.subscribe((filterQueries) => {
       this.filterKeys = Object.keys(filterQueries);
       this.filterQueries = filterQueries;
     }))
+    this.subscriptions.push(this.service.currentFilter$(this.key).subscribe((currentFilter) => this.currentFilter = currentFilter))
   }
 
   ngOnDestroy(): void {
@@ -97,8 +96,8 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
     }
   }
 
-  setSelectedOption() {
-    this.service.setFilterQuery(this.key, this.selectedOption);
+  setSelectedOption(value: string) {
+    this.service.setFilterQuery(this.key, value);
     this.changePage(1)
   }
 

@@ -80,20 +80,23 @@
       <select
         *ngIf="getFilterValues$(filterKey) | async as fValues; else noValues"
         (focus)="setFilterKey(filterKey)"
-        [(ngModel)]="selectedOption"
         class="form-control col-md-auto"
         [ngClass]="{ current: filterKey === currentFilter }"
         id="filter_key_{{ idx }}"
-        (click)="setSelectedOption()"
-        (keyup)="setSelectedOption()"
       >
-        <option [selected]="selectedOption === ''" value="">
+        <option
+        [selected]='filterQueries[filterKey] === ""' value=""
+        (click)="setSelectedOption('')"
+        (keyup)="setSelectedOption('')"
+>
           {{ filterKey }}
         </option>
         <option
           *ngFor="let value of fValues"
-          [selected]="selectedOption === value"
-        >
+          [selected]="filterQueries[filterKey] === value"
+          (click)="setSelectedOption(value)"
+          (keyup)="setSelectedOption(value)"
+          >
           {{ value }}
         </option>
       </select>

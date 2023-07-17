@@ -90,7 +90,9 @@ Finally, use the `ngbrx-paginator` component and the optional `ngbrx-paginator-f
   </div>
   <div class="card-body">
     <div class="list-group">
-      <div class="list-group-item" *ngFor="let item of collection$ | async">{{ item.code }} {{ item.nom }}</div>
+      <div class="list-group-item" *ngFor="let item of collection$ | async">
+        {{ item.code }} {{ item.nom }}
+      </div>
     </div>
   </div>
 </div>
