@@ -88,16 +88,16 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
     )
   }
 
-  setFilterQuery(id: string) {
-    const query = (<HTMLInputElement>document.getElementById(id))?.value;
+  setFilterQuery(event: any) {
+    const query = event.target.value;
     if (query || this.selectedFilters) {
       this.service.setFilterQuery(this.key, query);
       this.changePage(1)
     }
   }
 
-  setSelectedOption(value: string) {
-    this.service.setFilterQuery(this.key, value);
+  setSelectedOption(event: any) {
+    this.service.setFilterQuery(this.key, event.target.value);
     this.changePage(1)
   }
 

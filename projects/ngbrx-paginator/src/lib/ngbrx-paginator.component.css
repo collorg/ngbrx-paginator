@@ -7,3 +7,6 @@
 .current {
     background-color: rgb(207, 240, 248);
 }
+.block-badge {
+    width: 100vw;
+}

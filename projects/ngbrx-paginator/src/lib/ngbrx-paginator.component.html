@@ -65,8 +65,8 @@
   </div>
   <div class="row" *ngIf="filterKeys as filterKeys">
     <div
-      *ngFor="let filterKey of filterKeys; index as idx"
-      class="col input-group"
+      *ngFor="let filterKey of filterKeys"
+      class="col-auto col-md input-group"
     >
       <div class="input-group-text">
         <input
@@ -80,9 +80,9 @@
       <select
         *ngIf="getFilterValues$(filterKey) | async as fValues; else noValues"
         (focus)="setFilterKey(filterKey)"
+        (change)="setSelectedOption($event)"
         class="form-control col-md-auto"
         [ngClass]="{ current: filterKey === currentFilter }"
-        id="filter_key_{{ idx }}"
       >
         <option
         [selected]='filterQueries[filterKey] === ""' value=""
@@ -94,8 +94,6 @@
         <option
           *ngFor="let value of fValues"
           [selected]="filterQueries[filterKey] === value"
-          (click)="setSelectedOption(value)"
-          (keyup)="setSelectedOption(value)"
           >
           {{ value }}
         </option>
@@ -104,12 +102,11 @@
         <input
           class="form-control col-md-auto"
           [ngClass]="{ current: filterKey === currentFilter }"
-          id="filter_key_{{ idx }}"
           type="search"
           [placeholder]="filterKey"
           [value]="getFilterQuery$(filterKey) | async"
           (focus)="setFilterKey(filterKey)"
-          (keyup)="setFilterQuery('filter_key_' + idx)"
+          (keyup)="setFilterQuery($event)"
         />
       </ng-template>
     </div>
