@@ -1,3 +1,7 @@
+# release 0.1.3 (2023-07-18)
+
+* Use $event for inputs and select. (eecfedb)
+
 # release 0.1.2 (2023-07-17)
 
 * Fix multiple init and keep the selected option when switching from one paginator to another. (1789e56)
