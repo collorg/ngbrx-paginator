@@ -84,17 +84,13 @@
         class="form-control col-md-auto"
         [ngClass]="{ current: filterKey === currentFilter }"
       >
-        <option
-        [selected]='filterQueries[filterKey] === ""' value=""
-        (click)="setSelectedOption('')"
-        (keyup)="setSelectedOption('')"
->
+        <option [selected]="filterQueries[filterKey] === ''" value="">
           {{ filterKey }}
         </option>
         <option
           *ngFor="let value of fValues"
           [selected]="filterQueries[filterKey] === value"
-          >
+        >
           {{ value }}
         </option>
       </select>
