@@ -10,6 +10,9 @@ import { BehaviorSubject, Observable, take } from 'rxjs';
 import { NgbrxPaginatorService } from './ngbrx-paginator.service';
 import { ModuleParams, PaginatorParams } from './ngbrx-paginator.model';
 import { NgbrxPaginatorFilterDesc } from './ngbrx-paginator-filter-desc/ngbrx-paginator-filter-desc.component';
+import { SearchIconComponent } from './search-icon/search-icon.component';
+import { LockedComponent } from './locked/locked.component';
+import { UnlockedComponent } from './unlocked/unlocked.component';
 
 let paginators: PaginatorParams<any>[] = [];
 const paginatorsSubject: BehaviorSubject<PaginatorParams<any>[]> = new BehaviorSubject<PaginatorParams<any>[]>(paginators);
@@ -18,7 +21,10 @@ const paginators$: Observable<PaginatorParams<any>[]> = paginatorsSubject.asObse
 @NgModule({
   declarations: [
     NgbrxPaginatorComponent,
-    NgbrxPaginatorFilterDesc
+    NgbrxPaginatorFilterDesc,
+    SearchIconComponent,
+    LockedComponent,
+    UnlockedComponent,
   ],
   imports: [
     CommonModule,

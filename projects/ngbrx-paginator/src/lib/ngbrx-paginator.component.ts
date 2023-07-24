@@ -25,6 +25,7 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   page: number = 1;
   FILTER_PAG_REGEX = /[^0-9]/g;
   subscriptions: Subscription[] = [];
+  showFilters: boolean = false;
   control = new FormControl();
   selectedFilters: string[] = [];
 
@@ -115,4 +116,7 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
     )
   }
 
+  toggleShowFilters() {
+    this.showFilters = !this.showFilters;
+  }
 }

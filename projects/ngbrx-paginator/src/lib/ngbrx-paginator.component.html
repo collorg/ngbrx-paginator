@@ -42,7 +42,7 @@
         </ng-template>
       </ngb-pagination>
     </div>
-    <div class="col dropdown">
+    <div class="col">
       <button
         class="btn dropdown-toggle"
         id="dropdownMenuButton"
@@ -62,49 +62,65 @@
         </li>
       </ul>
     </div>
-  </div>
-  <div class="row" *ngIf="filterKeys as filterKeys">
     <div
-      *ngFor="let filterKey of filterKeys"
-      class="col-auto col-md input-group"
+      class="col d-flex justify-content-end"
+      *ngIf="filterKeys as filterKeys"
     >
-      <div class="input-group-text">
-        <input
-          class="form-check-input mt-0"
-          type="checkbox"
-          [checked]="isChecked$(filterKey) | async"
-          aria-label="Checkbox for following text input"
-          (click)="toggleSelectedFilterKey(filterKey)"
-        />
-      </div>
-      <select
-        *ngIf="getFilterValues$(filterKey) | async as fValues; else noValues"
-        (focus)="setFilterKey(filterKey)"
-        (change)="setSelectedOption($event)"
-        class="form-control col-md-auto"
-        [ngClass]="{ current: filterKey === currentFilter }"
+      <button
+        type="button"
+        (click)="toggleShowFilters()"
+        class="btn btn-light button-32"
       >
-        <option [selected]="filterQueries[filterKey] === ''" value="">
-          {{ filterKey }}
-        </option>
-        <option
-          *ngFor="let value of fValues"
-          [selected]="filterQueries[filterKey] === value"
+      <ngbrx-paginator-search-icon></ngbrx-paginator-search-icon>
+      </button>
+    </div>
+    <div *ngIf="showFilters">
+      <div class="row" *ngIf="filterKeys as filterKeys">
+        <div
+          *ngFor="let filterKey of filterKeys"
+          class="col-auto col-md input-group"
         >
-          {{ value }}
-        </option>
-      </select>
-      <ng-template #noValues>
-        <input
-          class="form-control col-md-auto"
-          [ngClass]="{ current: filterKey === currentFilter }"
-          type="search"
-          [placeholder]="filterKey"
-          [value]="getFilterQuery$(filterKey) | async"
-          (focus)="setFilterKey(filterKey)"
-          (keyup)="setFilterQuery($event)"
-        />
-      </ng-template>
+          <div class="input-group-text">
+            <div *ngIf="isChecked$(filterKey) | async; else notChecked">
+              <ngbrx-paginator-locked-filter (click)="toggleSelectedFilterKey(filterKey)"></ngbrx-paginator-locked-filter>
+            </div>
+            <ng-template #notChecked>
+              <ngbrx-paginator-unlocked-filter (click)="toggleSelectedFilterKey(filterKey)"></ngbrx-paginator-unlocked-filter>
+            </ng-template>
+          </div>
+          <select
+            *ngIf="
+              getFilterValues$(filterKey) | async as fValues;
+              else noValues
+            "
+            (focus)="setFilterKey(filterKey)"
+            (change)="setSelectedOption($event)"
+            class="form-control col-md-auto"
+            [ngClass]="{ current: filterKey === currentFilter }"
+          >
+            <option [selected]="filterQueries[filterKey] === ''" value="">
+              {{ filterKey }}
+            </option>
+            <option
+              *ngFor="let value of fValues"
+              [selected]="filterQueries[filterKey] === value"
+            >
+              {{ value }}
+            </option>
+          </select>
+          <ng-template #noValues>
+            <input
+              class="form-control col-md-auto"
+              [ngClass]="{ current: filterKey === currentFilter }"
+              type="search"
+              [placeholder]="filterKey"
+              [value]="getFilterQuery$(filterKey) | async"
+              (focus)="setFilterKey(filterKey)"
+              (keyup)="setFilterQuery($event)"
+            />
+          </ng-template>
+        </div>
+      </div>
     </div>
   </div>
 </div>
