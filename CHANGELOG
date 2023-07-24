@@ -1,3 +1,8 @@
+# release 0.1.5 (2023-07-24)
+
+* [temp fix] Force background-color for number of items in paginator filter desc. (HEAD -> main) (00cdbf6)
+* Update images for README. (9c1ad1f)
+
 # release 0.1.4 (2023-07-24)
 
 * Add icons to toggle search, lock and unlock filters. (6653056)
