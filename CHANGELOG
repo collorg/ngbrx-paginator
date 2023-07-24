@@ -1,3 +1,9 @@
+# release 0.1.4 (2023-07-24)
+
+* Add icons to toggle search, lock and unlock filters. (6653056)
+* Use button for filter descriptor. (d026f90)
+* Remove (click) and (keyup) on default option. (9dd40d7)
+
 # release 0.1.3 (2023-07-18)
 
 * Use $event for inputs and select. (eecfedb)
