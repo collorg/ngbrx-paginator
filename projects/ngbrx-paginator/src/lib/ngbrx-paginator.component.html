@@ -80,12 +80,12 @@
           *ngFor="let filterKey of filterKeys"
           class="col-auto col-md input-group"
         >
-          <div class="input-group-text">
+          <div class="input-group-text" (click)="toggleSelectedFilterKey(filterKey)">
             <div *ngIf="isChecked$(filterKey) | async; else notChecked">
-              <ngbrx-paginator-locked-filter (click)="toggleSelectedFilterKey(filterKey)"></ngbrx-paginator-locked-filter>
+              <ngbrx-paginator-locked-filter></ngbrx-paginator-locked-filter>
             </div>
             <ng-template #notChecked>
-              <ngbrx-paginator-unlocked-filter (click)="toggleSelectedFilterKey(filterKey)"></ngbrx-paginator-unlocked-filter>
+              <ngbrx-paginator-unlocked-filter></ngbrx-paginator-unlocked-filter>
             </ng-template>
           </div>
           <select
