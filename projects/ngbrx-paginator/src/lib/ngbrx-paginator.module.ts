@@ -8,15 +8,15 @@ import * as fromPaginationState from './reducers';
 import { NgbrxPaginatorActions } from './reducers/ngbrx-paginator.actions';
 import { BehaviorSubject, Observable, take } from 'rxjs';
 import { NgbrxPaginatorService } from './ngbrx-paginator.service';
-import { ModuleParams, PaginatorParams } from './ngbrx-paginator.model';
+import { Paginators } from './ngbrx-paginator.model';
 import { NgbrxPaginatorFilterDesc } from './ngbrx-paginator-filter-desc/ngbrx-paginator-filter-desc.component';
 import { SearchIconComponent } from './search-icon/search-icon.component';
 import { LockedComponent } from './locked/locked.component';
 import { UnlockedComponent } from './unlocked/unlocked.component';
 
-let paginators: PaginatorParams<any>[] = [];
-const paginatorsSubject: BehaviorSubject<PaginatorParams<any>[]> = new BehaviorSubject<PaginatorParams<any>[]>(paginators);
-const paginators$: Observable<PaginatorParams<any>[]> = paginatorsSubject.asObservable();
+let paginators: Paginators = {};
+const paginatorsSubject: BehaviorSubject<Paginators> = new BehaviorSubject<Paginators>(paginators);
+const paginators$: Observable<Paginators> = paginatorsSubject.asObservable();
 
 @NgModule({
   declarations: [
@@ -46,7 +46,7 @@ export class NgbrxPaginatorModule {
     };
   }
 
-  static forFeature(options: ModuleParams): ModuleWithProviders<NgbrxPaginatorModule> {
+  static forFeature(options: Paginators): ModuleWithProviders<NgbrxPaginatorModule> {
     Array.prototype.push.apply(paginators, options.paginators);
     paginatorsSubject.next(paginators);
     return {
@@ -66,12 +66,10 @@ export class NgbrxPaginatorModule {
   }
 
   addFeature(paginator: PaginatorParams<any>) {
-    if (paginator.key) {
-      if (Object.keys(NgbrxPaginatorService.paginators).indexOf(paginator.key) === -1) {
-        this.store.dispatch(NgbrxPaginatorActions.initPaginator({ paginator }));
-        NgbrxPaginatorService.add(paginator);
-      }
-    }
+    Object.keys(paginator).forEach((key: string) => {
+      this.store.dispatch(NgbrxPaginatorActions.initPaginator({ paginator[key] }));
+      NgbrxPaginatorService.add(paginator);
+    })
   }
 
 }

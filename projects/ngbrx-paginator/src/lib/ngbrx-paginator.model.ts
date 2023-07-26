@@ -14,14 +14,6 @@ export interface Paginator<D> {
   pageSizeOptions?: number[]
 }
 
-export interface PaginatorParams<D> extends Paginator<D> {
-  key: string,
-}
-
-export interface ModuleParams {
-  paginators: PaginatorParams<any>[]
-}
-
 export interface Paginators {
   [key: string]: Paginator<any>
 }

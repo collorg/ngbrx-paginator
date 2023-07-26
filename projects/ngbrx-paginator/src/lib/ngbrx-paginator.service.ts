@@ -4,7 +4,7 @@ import { MemoizedSelector, Store } from '@ngrx/store';
 import * as fromStore from './reducers';
 import { NgbrxPaginatorActions } from './reducers/ngbrx-paginator.actions';
 import { EMPTY, Observable, filter } from 'rxjs';
-import { Paginators, PaginatorParams } from './ngbrx-paginator.model';
+import { Paginators } from './ngbrx-paginator.model';
 
 
 @Injectable({

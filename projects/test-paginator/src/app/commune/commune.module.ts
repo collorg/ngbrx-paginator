@@ -13,8 +13,7 @@ import { CommuneRoutingModule } from './commune-routing.module';
   imports: [
     CommonModule,
     NgbrxPaginatorModule.forFeature({
-      paginators: [{
-        key: 'Commune/Pagination',
+      'Commune/Pagination': {
         filters: {
           'Code': { filter: fromCommune.byCode },
           'Nom': { filter: fromCommune.byName },
@@ -22,7 +21,7 @@ import { CommuneRoutingModule } from './commune-routing.module';
           'Population <': { filter: fromCommune.byPopulationLesserThan }
         },
         allDataSelector: fromCommune.selectAll
-      }]
+      }
     }),
     StoreModule.forFeature(fromCommune.communesFeature),
     CommuneRoutingModule
