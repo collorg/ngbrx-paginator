@@ -1,3 +1,57 @@
+# release 0.2.0 (2023-07-26)
+
+* Update README. (d62e594)
+* [BREAKING CHANGE] Modify the structure of NgbrxPaginatorModule.forFeature parameter. (152f9fa)
+* Remove unused code. (main) (7f02fc4)
+
+## Breaking changes
+
+The object passed to `NgbrxPaginatorModule.forFeature` has changed. Properties `paginators` and `key` have been removed:
+
+* before:
+  ```ts
+    NgbrxPaginatorModule.forFeature({
+      paginators: [ // you can have as many paginators as you need per module
+        {
+          // Mandatory
+          key: 'Departement/Pagination', // must be unique for the app
+          allDataSelector: fromDepartement.selectAll, // ngrx selector returning all the data set
+
+          // Optional
+          filters: { // You can provide more than one filter by paginator.
+            'Nom': { filter: fromDepartement.byName },
+            'Code': { filter: fromDepartement.byCode },
+            'Régions/COM': {
+              filter: fromDepartement.byRegion,
+              values: fromDepartement.selectRegions // Optional: provide select values
+            }
+          },
+          pageSizeOptions: [10, 20, 30] // Defaults to [5, 10, 25, 100]
+        }
+      ]
+    }),
+  ```
+* after:
+  ```ts
+    NgbrxPaginatorModule.forFeature({
+      'Departement/Pagination': // The name of the paginator must be unique for the application.
+      {
+        allDataSelector: fromDepartement.selectAll, // @ngrx selector returning all the data set
+
+        // Optional
+        filters: { // You can provide more than one filter by paginator.
+          'Nom': { filter: fromDepartement.byName },
+          'Code': { filter: fromDepartement.byCode },
+          'Régions/COM': {
+            filter: fromDepartement.byRegion,
+            values: fromDepartement.selectRegions // Optional: provide select values
+          }
+        },
+        pageSizeOptions: [10, 20, 30] // Defaults to [5, 10, 25, 100]
+      } 
+    }),
+  ```
+
 # release 0.1.6 (2023-07-25)
 
 * Move toggleSelectedFilterKey click event one element up in the template. (5607a30)
