@@ -65,7 +65,7 @@ export const reducers = createReducer(
         pagination.filterQueries = filterQueries;
       }
       pagination.pageSize = pagination.pageSizeOptions[0];
-      paginators[action.paginator.key] = pagination;
+      paginators[action.key] = pagination;
       newState.paginators = paginators;
       return newState;
     }

@@ -8,15 +8,15 @@ import * as fromPaginationState from './reducers';
 import { NgbrxPaginatorActions } from './reducers/ngbrx-paginator.actions';
 import { BehaviorSubject, Observable, take } from 'rxjs';
 import { NgbrxPaginatorService } from './ngbrx-paginator.service';
-import { Paginators } from './ngbrx-paginator.model';
+import { Paginator, Paginators } from './ngbrx-paginator.model';
 import { NgbrxPaginatorFilterDesc } from './ngbrx-paginator-filter-desc/ngbrx-paginator-filter-desc.component';
 import { SearchIconComponent } from './search-icon/search-icon.component';
 import { LockedComponent } from './locked/locked.component';
 import { UnlockedComponent } from './unlocked/unlocked.component';
 
-let paginators: Paginators = {};
-const paginatorsSubject: BehaviorSubject<Paginators> = new BehaviorSubject<Paginators>(paginators);
-const paginators$: Observable<Paginators> = paginatorsSubject.asObservable();
+let paginators: Paginators<any> = {};
+const paginatorsSubject: BehaviorSubject<Paginators<any>> = new BehaviorSubject<Paginators<any>>(paginators);
+const paginators$: Observable<Paginators<any>> = paginatorsSubject.asObservable();
 
 @NgModule({
   declarations: [
@@ -46,8 +46,8 @@ export class NgbrxPaginatorModule {
     };
   }
 
-  static forFeature(options: Paginators): ModuleWithProviders<NgbrxPaginatorModule> {
-    Array.prototype.push.apply(paginators, options.paginators);
+  static forFeature(options: Paginators<any>): ModuleWithProviders<NgbrxPaginatorModule> {
+    Object.assign(paginators, options);
     paginatorsSubject.next(paginators);
     return {
       ngModule: NgbrxPaginatorModule
@@ -57,19 +57,17 @@ export class NgbrxPaginatorModule {
   constructor(
     private store: Store,
   ) {
-      paginators$.pipe(
-        take(1)
-      ).subscribe(
-        (paginators: PaginatorParams<any>[]) => paginators.forEach((paginator: PaginatorParams<any>) => this.addFeature(paginator))
-      )
+    paginators$.pipe(
+      take(1)
+    ).subscribe(
+      (paginators: Paginators<any>) => Object.keys(paginators).forEach((key: string) => this.addFeature(key, paginators[key]))
+    )
 
   }
 
-  addFeature(paginator: PaginatorParams<any>) {
-    Object.keys(paginator).forEach((key: string) => {
-      this.store.dispatch(NgbrxPaginatorActions.initPaginator({ paginator[key] }));
-      NgbrxPaginatorService.add(paginator);
-    })
+  addFeature(key: string, paginator: Paginator<any>) {
+    this.store.dispatch(NgbrxPaginatorActions.initPaginator({ key, paginator }));
+    NgbrxPaginatorService.add(key, paginator);
   }
 
 }

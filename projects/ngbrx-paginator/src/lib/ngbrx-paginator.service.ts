@@ -4,22 +4,22 @@ import { MemoizedSelector, Store } from '@ngrx/store';
 import * as fromStore from './reducers';
 import { NgbrxPaginatorActions } from './reducers/ngbrx-paginator.actions';
 import { EMPTY, Observable, filter } from 'rxjs';
-import { Paginators } from './ngbrx-paginator.model';
+import { Paginator, Paginators } from './ngbrx-paginator.model';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class NgbrxPaginatorService {
-  static paginators: Paginators = {};
+  static paginators: Paginators<any> = {};
 
   constructor(
     private store: Store
   ) {
   }
 
-  static add(paginator: PaginatorParams<any>) {
-    NgbrxPaginatorService.paginators[paginator.key] = { allDataSelector: paginator.allDataSelector, filters: paginator.filters };
+  static add(key: string, paginator: Paginator<any>) {
+    NgbrxPaginatorService.paginators[key] = { allDataSelector: paginator.allDataSelector, filters: paginator.filters };
   }
 
   setCurrent(paginatorKey: string) {

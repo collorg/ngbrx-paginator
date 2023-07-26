@@ -14,6 +14,6 @@ export interface Paginator<D> {
   pageSizeOptions?: number[]
 }
 
-export interface Paginators {
-  [key: string]: Paginator<any>
+export interface Paginators<D> {
+  [key: string]: Paginator<D>
 }
