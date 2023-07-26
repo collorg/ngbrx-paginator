@@ -38,30 +38,27 @@ import { NgbrxPaginatorModule } from 'ngbrx-paginator';
   imports: [
     [...]
     NgbrxPaginatorModule.forFeature({
-      paginators: [ // you can have as many paginators as you need per module
-        {
-          // Mandatory
-          key: 'Departement/Pagination', // must be unique for the app
-          allDataSelector: fromDepartement.selectAll, // ngrx selector returning all the data set
+      'Departement/Pagination': // The name of the paginator must be unique for the application.
+      {
+        allDataSelector: fromDepartement.selectAll, // @ngrx selector returning all the data set
 
-          // Optional
-          filters: { // You can provide more than one filter by paginator.
-            'Nom': { filter: fromDepartement.byName },
-            'Code': { filter: fromDepartement.byCode },
-            'Régions/COM': {
-              filter: fromDepartement.byRegion,
-              values: fromDepartement.selectRegions // Optional: provide select values
-            }
-          },
-          pageSizeOptions: [10, 20, 30] // Defaults to [5, 10, 25, 100]
-        }
-      ]
+        // Optional
+        filters: { // You can provide more than one filter by paginator.
+          'Nom': { filter: fromDepartement.byName },
+          'Code': { filter: fromDepartement.byCode },
+          'Régions/COM': {
+            filter: fromDepartement.byRegion,
+            values: fromDepartement.selectRegions // Optional: provide select values
+          }
+        },
+        pageSizeOptions: [10, 20, 30] // Defaults to [5, 10, 25, 100]
+      } 
     }),
     [...]
   ],
 ```
 
-in your component class add the attributes `key` and , and use `NgbrxPaginationService` to paginate/filter your collection by page:
+in your component class add the attributes `key` and , and use `NgbrxPaginationService` to paginate/filter your collection:
 
 ```ts
 import { Component } from '@angular/core';
