@@ -1,15 +1,19 @@
-# NgbrxPaginator (BETA)
+# NgbrxPaginator
 
 You have an application that uses ngrx to store your data.
-NgbrxPaginator provides you easy reactive pagination with multiple filters that can be combined.
+NgbrxPaginator gives you a really easy way to paginate your data with filters.
+
+This package is in **BETA** and is developped with angular@16, ngrx@16 and ng-bootstrap@15.
+
+The code is rather simple and if you want to join, you are more than welcome.
+
+**This package does not deal with backend pagination.**
+
 
 ![communes](images/communes.png)
 
-This package does not deal with backend pagination.
 
-### Demo
-
-https://collorg.github.io/ngbrx-paginator-demo
+### Demo https://collorg.github.io/ngbrx-paginator-demo
 
 ### Installation
 
@@ -21,7 +25,7 @@ ngbrx-paginator depends on [ngrx](https://ngrx.io/) and [ng-bootstrap](https://n
 
 ## Usage
 
-The example code is extracted from the [departement](./projects/test-paginator/src/app/departement) module
+The sample code is extracted from the [departement](./projects/test-paginator/src/app/departement) module of the test application.
 
 Add the `NgbrxPaginatorModule` in your [departement.module.ts](./projects/test-paginator/src/app/departement/departement.module.ts) dependencies:
 
@@ -36,14 +40,20 @@ import { NgbrxPaginatorModule } from 'ngbrx-paginator';
     NgbrxPaginatorModule.forFeature({
       paginators: [ // you can have as many paginators as you need per module
         {
+          // Mandatory
           key: 'Departement/Pagination', // must be unique for the app
           allDataSelector: fromDepartement.selectAll, // ngrx selector returning all the data set
-          filters: { // Optional. You can provide more than one filter by paginator.
+
+          // Optional
+          filters: { // You can provide more than one filter by paginator.
             'Nom': { filter: fromDepartement.byName },
             'Code': { filter: fromDepartement.byCode },
-            'Régions/COM': { filter: fromDepartement.byRegion, values: fromDepartement.selectRegions }
+            'Régions/COM': {
+              filter: fromDepartement.byRegion,
+              values: fromDepartement.selectRegions // Optional: provide select values
+            }
           },
-          pageSizeOptions: [10, 20, 30] // Optional. Defaults to [5, 10, 25, 100]
+          pageSizeOptions: [10, 20, 30] // Defaults to [5, 10, 25, 100]
         }
       ]
     }),
@@ -51,7 +61,7 @@ import { NgbrxPaginatorModule } from 'ngbrx-paginator';
   ],
 ```
 
-in your component class add the attributes `key` and , and use NgbrxPaginationService to filter your collection by page:
+in your component class add the attributes `key` and , and use `NgbrxPaginationService` to paginate/filter your collection by page:
 
 ```ts
 import { Component } from '@angular/core';
@@ -66,29 +76,30 @@ import { NgbrxPaginatorService } from 'ngbrx-paginator';
 })
 export class DepartementsComponent {
   key = 'Departement/Pagination'; // same as in NgbrxPaginatorModules.forFeature
+  // replace: collection$: Observable<Departement[]> = this.fromDepartement.selectAll; with:
   collection$: Observable<Departement[]> = this.paginationService.getPageItems$<Departement>(this.key);
 
   constructor(
+    // inject NgbrxPaginatorService
     private paginationService: NgbrxPaginatorService
   ) { }
 
 }
 ```
 
-Finally, use the `ngbrx-paginator` component and the optional `ngbrx-paginator-filter-desc` component in your [template](./projects/test-paginator/src/app/departement/departements/departements.component.html):
+Finally, add the `ngbrx-paginator` component and the optional `ngbrx-paginator-filter-desc` component in your [template](./projects/test-paginator/src/app/departement/departements/departements.component.html):
 
 ```html
 <div class="card">
   <div class="card-header sticky-top">
     <h3>
       Liste des départements
-      <div class="right">
-        <small><small><ngbrx-paginator-filter-desc [key]="key"></ngbrx-paginator-filter-desc></small></small>
-      </div>
     </h3>
+    <!-- ngbrx-paginator provides the pagination with the optional filters -->
     <ngbrx-paginator [key]="key"></ngbrx-paginator>
   </div>
   <div class="card-body">
+    <!-- optional --> <ngbrx-paginator-filter-desc [key]="key"></ngbrx-paginator-filter-desc>
     <div class="list-group">
       <div class="list-group-item" *ngFor="let item of collection$ | async">
         {{ item.code }} {{ item.nom }}
@@ -97,7 +108,5 @@ Finally, use the `ngbrx-paginator` component and the optional `ngbrx-paginator-f
   </div>
 </div>
 ```
-
-`ngbrx-paginator-filter-desc`
 
 ![départements](images/departements.png)

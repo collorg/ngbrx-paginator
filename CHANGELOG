@@ -1,3 +1,7 @@
+# release 0.1.6 (2023-07-25)
+
+* Move toggleSelectedFilterKey click event one element up in the template. (5607a30)
+
 # release 0.1.5 (2023-07-24)
 
 * [temp fix] Force background-color for number of items in paginator filter desc. (HEAD -> main) (00cdbf6)
