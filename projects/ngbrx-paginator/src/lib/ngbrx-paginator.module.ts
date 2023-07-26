@@ -50,10 +50,7 @@ export class NgbrxPaginatorModule {
     Array.prototype.push.apply(paginators, options.paginators);
     paginatorsSubject.next(paginators);
     return {
-      ngModule: NgbrxPaginatorModule,
-      providers: [
-        { provide: 'PAGINATORS', useValue: options.paginators },
-      ]
+      ngModule: NgbrxPaginatorModule
     };
   }
 
