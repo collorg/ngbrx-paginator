@@ -14,8 +14,6 @@ export class CommunesComponent {
 
   constructor(
     private paginationService: NgbrxPaginatorService
-  ) {
-    this.paginationService.setCurrent(this.key);
-  }
+  ) { }
 
 }

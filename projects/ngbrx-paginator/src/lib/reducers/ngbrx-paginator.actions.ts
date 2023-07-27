@@ -5,7 +5,6 @@ export const NgbrxPaginatorActions = createActionGroup({
   source: 'Pagination/API',
   events: {
     'Init Paginator': props<{ key: string, paginator: Paginator<any> }>(),
-    'Set Current Paginator': props<{paginatorKey: string}>(),
     'Set Page': props<{ key: string, page: number }>(),
     'Set Page Size': props<{ key: string, pageSize: number }>(),
     'Set Page Size Options': props<{ key: string, pageSizeOptions: number[] }>(),

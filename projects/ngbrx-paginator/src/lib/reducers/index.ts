@@ -84,12 +84,6 @@ export const reducers = createReducer(
       return updateSate(nState, paginations, action.key, pagination)
     }
   ),
-  on(NgbrxPaginatorActions.setCurrentPaginator,
-    (state, action) => {
-      const nState = { ...state };
-      nState.currentPaginator = action.paginatorKey;
-      return nState;
-    }),
   on(NgbrxPaginatorActions.setPage,
     (state, action) => {
       const { nState, paginations, pagination } = cloneStateWithPaginator(state, action.key);

@@ -22,10 +22,6 @@ export class NgbrxPaginatorService {
     NgbrxPaginatorService.paginators[key] = { allDataSelector: paginator.allDataSelector, filters: paginator.filters };
   }
 
-  setCurrent(paginatorKey: string) {
-    this.store.dispatch(NgbrxPaginatorActions.setCurrentPaginator({ paginatorKey }));
-  }
-
   getFilterValues$(paginatorKey: string, filterKey: string): Observable<any> {
     const values = NgbrxPaginatorService.paginators[paginatorKey].filters[filterKey].values;
     if (values) {
