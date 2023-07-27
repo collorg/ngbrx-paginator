@@ -28,12 +28,12 @@ export const initialPagination: Pagination = {
 
 export interface NgbrxPagination {
   currentPaginator: string,
-  paginators: { [keys: string]: Pagination }
+  paginations: { [keys: string]: Pagination }
 }
 
 export const initialNgbrxPagination: NgbrxPagination = {
   currentPaginator: '',
-  paginators: {}
+  paginations: {}
 }
 
 export const paginationStateFeatureKey = 'NgbrxPaginatorState';
@@ -43,16 +43,32 @@ export interface State extends NgbrxPagination {
 
 export const initialState: State = {
   currentPaginator: '',
-  paginators: {}
+  paginations: {}
+}
+
+function cloneState(state: State) {
+  return { nState: { ...state }, paginations: { ...state.paginations } };
+}
+
+function cloneStateWithPaginator(state: State, paginatorKey: string) {
+  const { nState, paginations } = cloneState(state);
+  return { nState, paginations, pagination: { ...paginations[paginatorKey] } }
+}
+
+function updateSate(state: State, paginations: { [key: string]: Pagination}, key?: string, pagination?: Pagination): State {
+  if (key && pagination) {
+    paginations[key] = pagination;
+  }
+  state.paginations = paginations;
+  return state;
 }
 
 export const reducers = createReducer(
   initialState,
   on(NgbrxPaginatorActions.initPaginator,
     (state, action) => {
-      const newState = { ...state };
+      const { nState, paginations } = cloneState(state);
       const pagination = { ...initialPagination };
-      const paginators = { ...state.paginators };
       if (action.paginator.pageSizeOptions) {
         pagination.pageSizeOptions = action.paginator.pageSizeOptions;
       }
@@ -65,71 +81,51 @@ export const reducers = createReducer(
         pagination.filterQueries = filterQueries;
       }
       pagination.pageSize = pagination.pageSizeOptions[0];
-      paginators[action.key] = pagination;
-      newState.paginators = paginators;
-      return newState;
+      return updateSate(nState, paginations, action.key, pagination)
     }
   ),
   on(NgbrxPaginatorActions.setCurrentPaginator,
     (state, action) => {
-      const newState = { ...state };
-      newState.currentPaginator = action.paginatorKey;
-      return newState;
+      const nState = { ...state };
+      nState.currentPaginator = action.paginatorKey;
+      return nState;
     }),
   on(NgbrxPaginatorActions.setPage,
     (state, action) => {
-      const newState = { ...state }
-      const paginators = { ...state.paginators }
-      const pagination = { ...state.paginators[action.key] }
+      const { nState, paginations, pagination } = cloneStateWithPaginator(state, action.key);
       pagination.page = action.page;
-      paginators[action.key] = pagination;
-      newState.paginators = paginators;
-      return newState;
+      return updateSate(nState, paginations, action.key, pagination)
     }
   ),
   on(NgbrxPaginatorActions.setPageSizeOptions,
     (state, action) => {
-      const newState = { ...state }
-      const paginators = { ...state.paginators }
-      const pagination = { ...state.paginators[action.key] }
+      const { nState, paginations, pagination } = cloneStateWithPaginator(state, action.key);
       pagination.pageSizeOptions = action.pageSizeOptions;
       pagination.page = 0;
-      paginators[action.key] = pagination;
-      newState.paginators = paginators;
-      return newState;
+      return updateSate(nState, paginations, action.key, pagination)
     }
   ),
   on(NgbrxPaginatorActions.setPageSize,
     (state, action) => {
-      const newState = { ...state };
-      const paginators = { ...state.paginators }
-      const pagination = { ...state.paginators[action.key] };
+      const { nState, paginations, pagination } = cloneStateWithPaginator(state, action.key);
       const oldPageSize = pagination.pageSize;
       const oldPage = pagination.page;
       let newPage = Math.trunc((oldPageSize / action.pageSize) * oldPage - (oldPageSize / action.pageSize)) + 1;
       pagination.pageSize = action.pageSize;
       pagination.page = newPage;
-      paginators[action.key] = pagination;
-      newState.paginators = paginators;
-      return newState;
+      return updateSate(nState, paginations, action.key, pagination)
     }
   ),
   on(NgbrxPaginatorActions.setCurrentFilter,
     (state, action) => {
-      const newState = { ...state };
-      const paginators = { ...state.paginators };
-      const pagination = { ...state.paginators[action.key] };
+      const { nState, paginations, pagination } = cloneStateWithPaginator(state, action.key);
       pagination.currentFilter = action.filterKey;
-      paginators[action.key] = pagination;
-      newState.paginators = paginators;
-      return newState;
+      return updateSate(nState, paginations, action.key, pagination)
     }
   ),
   on(NgbrxPaginatorActions.selectFilter,
     (state, action) => {
-      const newState = { ...state };
-      const paginators = { ...state.paginators };
-      const pagination = { ...state.paginators[action.key] };
+      const { nState, paginations, pagination } = cloneStateWithPaginator(state, action.key);
       const selectedFilters = [...pagination.selectedFilters]
       const index = selectedFilters.indexOf(action.filterKey);
       if (index === -1) {
@@ -138,24 +134,18 @@ export const reducers = createReducer(
         selectedFilters.splice(index, 1);
       }
       pagination.selectedFilters = selectedFilters;
-      paginators[action.key] = pagination;
-      newState.paginators = paginators;
-      return newState;
+      return updateSate(nState, paginations, action.key, pagination)
     }),
   on(NgbrxPaginatorActions.setFilterQuery,
     (state, action) => {
-      const newState = { ...state };
-      const paginators = { ...state.paginators };
-      const pagination = { ...state.paginators[action.key] };
-      const filterQueries = { ...state.paginators[action.key].filterQueries }
+      const { nState, paginations, pagination } = cloneStateWithPaginator(state, action.key);
+      const filterQueries = { ...state.paginations[action.key].filterQueries }
       if (action.filterQuery !== filterQueries[pagination.currentFilter]) {
         pagination.page = 1;
         filterQueries[pagination.currentFilter] = action.filterQuery;
         pagination.filterQueries = filterQueries;
-        paginators[action.key] = pagination;
-        newState.paginators = paginators;
       }
-      return newState;
+      return updateSate(nState, paginations, action.key, pagination)
     }
   )
 )
@@ -164,32 +154,32 @@ export const featureSelector = createFeatureSelector<State>(paginationStateFeatu
 
 export const SelectPagination = (key: string) => createSelector(
   featureSelector,
-  (state: State) => state.paginators && state.paginators[key]
+  (state: State) => state.paginations && state.paginations[key]
 );
 
 
 export const selectCurrentFilter = (key: string) => createSelector(
   featureSelector,
-  (state: State) => state.paginators && state.paginators[key] && state.paginators[key].currentFilter || ''
+  (state: State) => state.paginations && state.paginations[key] && state.paginations[key].currentFilter || ''
 );
 
 export const selectFilterQuery = (key: string) => createSelector(
   featureSelector,
   (state: State) => {
-    const filters = state.paginators[key].filterQueries;
-    const currentFilter = state.paginators[key].currentFilter;
+    const filters = state.paginations[key].filterQueries;
+    const currentFilter = state.paginations[key].currentFilter;
     return filters[currentFilter];
   }
 );
 
 export const selectFilterQueries = (key: string) => createSelector(
   featureSelector,
-  (state: State) => state.paginators && state.paginators[key] && state.paginators[key].filterQueries || []
+  (state: State) => state.paginations && state.paginations[key] && state.paginations[key].filterQueries || []
 );
 
 export const selectSelectedFilters = (key: string) => createSelector(
   featureSelector,
-  (state: State) => state.paginators && state.paginators[key] && state.paginators[key].selectedFilters || []
+  (state: State) => state.paginations && state.paginations[key] && state.paginations[key].selectedFilters || []
 );
 
 export const selectFilteredCollection = (key: string) => createSelector(
@@ -198,9 +188,9 @@ export const selectFilteredCollection = (key: string) => createSelector(
   (state: State, collection: any) => {
     const paginator = NgbrxPaginatorService.paginators[key];
     const filters = paginator.filters;
-    const selectedFilters = state.paginators[key].selectedFilters;
-    const stateFilters = state.paginators[key].filterQueries;
-    const currentFilter = state.paginators[key].currentFilter;
+    const selectedFilters = state.paginations[key].selectedFilters;
+    const stateFilters = state.paginations[key].filterQueries;
+    const currentFilter = state.paginations[key].currentFilter;
     if (selectedFilters || filters) {
       let filteredCollection = filters[currentFilter].filter(collection, stateFilters[currentFilter]);
       selectedFilters.forEach((filterKey: string) => {
