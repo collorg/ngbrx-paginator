@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { MemoizedSelector, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 
 import * as fromStore from './reducers';
 import { NgbrxPaginatorActions } from './reducers/ngbrx-paginator.actions';
-import { EMPTY, Observable, filter } from 'rxjs';
-import { Paginator, Paginators } from './ngbrx-paginator.model';
+import { EMPTY, Observable } from 'rxjs';
+import { Pagination, Paginator, Paginators } from './ngbrx-paginator.model';
 
 
 @Injectable({
@@ -62,7 +62,7 @@ export class NgbrxPaginatorService {
     return this.store.select<M>(fromStore.selectFilteredCollection(key));
   }
 
-  pagination$(key: string): Observable<fromStore.Pagination> {
+  pagination$(key: string): Observable<Pagination> {
     return this.store.select(fromStore.SelectPagination(key));
   }
 

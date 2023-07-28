@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { EMPTY, Observable, Subscription, map, take, tap } from 'rxjs';
-import { Pagination } from './reducers';
+import { EMPTY, Observable, Subscription, map } from 'rxjs';
+import { Pagination } from './ngbrx-paginator.model';
 import { FormControl } from '@angular/forms';
 import { NgbrxPaginatorService } from './ngbrx-paginator.service';
 
