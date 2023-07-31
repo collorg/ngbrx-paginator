@@ -65,9 +65,9 @@ export const reducers = createReducer(
       if (filters) {
         const filterQueries: string[] = []
         filters.forEach(_ => filterQueries.push(''))
-        pagination.filters = iPagination && iPagination.filters || filters;
-        pagination.currentFilter = iPagination && iPagination.currentFilter || 0;
-        pagination.filterQueries = iPagination && iPagination.filterQueries || filterQueries;
+        pagination.filters = iPagination && iPagination.filters.length && iPagination.filters || filters;
+        pagination.currentFilter = iPagination && iPagination.currentFilter > -1 && iPagination.currentFilter || 0;
+        pagination.filterQueries = iPagination && iPagination.filterQueries.length && iPagination.filterQueries || filterQueries;
       }
       pagination.pageSize = iPagination && iPagination.pageSize || pagination.pageSizeOptions[0];
       return updateSate(nState, paginations, action.key, pagination)
