@@ -4,34 +4,47 @@ import { Store } from '@ngrx/store';
 import * as fromStore from './reducers';
 import { NgbrxPaginatorActions } from './reducers/ngbrx-paginator.actions';
 import { EMPTY, Observable } from 'rxjs';
-import { Pagination, Paginator, Paginators } from './ngbrx-paginator.model';
+import { Pagination, Paginators, SPaginators } from './ngbrx-paginator.model';
 
+const sp = new SPaginators();
 
 @Injectable({
   providedIn: 'root'
 })
 export class NgbrxPaginatorService {
-  static paginators: Paginators<any> = {};
 
   constructor(
     private store: Store
   ) {
   }
 
-  static add(key: string, paginator: Paginator<any>) {
-    NgbrxPaginatorService.paginators[key] = { allDataSelector: paginator.allDataSelector, filters: paginator.filters };
+  initPaginators(paginators: Paginators<any>) {
+    sp.paginators = paginators;
+    Object.keys(paginators).forEach((key) => 
+    this.store.dispatch(NgbrxPaginatorActions.initPaginator({key, paginator: paginators[key]}))
+    )
+  }
+
+  static get paginators() {
+    return sp.paginators
   }
 
   getFilterValues$(paginatorKey: string, filterKey: string): Observable<any> {
-    const values = NgbrxPaginatorService.paginators[paginatorKey].filters[filterKey].values;
+    if (!sp.paginators) {
+      return EMPTY;
+    }
+    const values = sp.paginators[paginatorKey].filters[filterKey].values;
     if (values) {
       return this.store.select(values);
     }
     return EMPTY;
   }
 
-  hasFilter(key: string) {
-    return !!NgbrxPaginatorService.paginators[key].filters;
+  hasFilter(key: string): boolean {
+    if (sp.paginators[key]) {
+      return !!sp.paginators[key].filters;
+    }
+    return false;
   }
 
   getPageItems$<M>(key: string): Observable<M[]> {

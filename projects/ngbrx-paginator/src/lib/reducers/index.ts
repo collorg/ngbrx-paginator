@@ -5,9 +5,8 @@ import {
   on
 } from '@ngrx/store';
 import { NgbrxPaginatorActions } from './ngbrx-paginator.actions';
+import { Pagination, initialPagination, SPaginators } from '../ngbrx-paginator.model';
 import { NgbrxPaginatorService } from '../ngbrx-paginator.service';
-import { Pagination, initialPagination } from '../ngbrx-paginator.model';
-
 
 export interface NgbrxPagination {
   currentPaginator: string,
@@ -172,17 +171,19 @@ export const selectFilteredCollection = (key: string) => createSelector(
   (state: State, collection: any) => {
     const paginator = NgbrxPaginatorService.paginators[key];
     const filters = paginator.filters;
-    const stateFilters: string[] = state.paginations[key].filters;
-    const selectedFilters = state.paginations[key].selectedFilters;
-    const filterQueries = state.paginations[key].filterQueries;
-    const currentFilterIdx = state.paginations[key].currentFilter;
-    const currentFilter = stateFilters[currentFilterIdx];
-    if (currentFilterIdx > -1 || selectedFilters || filters) {
-      let filteredCollection = filters[currentFilter].filter(collection, filterQueries[currentFilterIdx]);
-      selectedFilters.forEach((index: number) => {
-        filteredCollection = filters[stateFilters[index]].filter(filteredCollection, filterQueries[index]);
-      });
-      return filteredCollection;
+    if (state.paginations[key]) {
+      const stateFilters: string[] = state.paginations[key].filters;
+      const selectedFilters = state.paginations[key].selectedFilters;
+      const filterQueries = state.paginations[key].filterQueries;
+      const currentFilterIdx = state.paginations[key].currentFilter;
+      const currentFilter = stateFilters[currentFilterIdx];
+      if (currentFilterIdx > -1 || selectedFilters || filters) {
+        let filteredCollection = filters[currentFilter].filter(collection, filterQueries[currentFilterIdx]);
+        selectedFilters.forEach((index: number) => {
+          filteredCollection = filters[stateFilters[index]].filter(filteredCollection, filterQueries[index]);
+        });
+        return filteredCollection;
+      }
     }
     return collection;
   }
@@ -192,7 +193,10 @@ export const selectPageItems = <M>(key: string) => createSelector(
   selectFilteredCollection(key),
   SelectPagination(key),
   (items: M[], pagination: Pagination) => {
-    return items.slice((pagination.page - 1) * pagination.pageSize, pagination.page * pagination.pageSize)
+    if (pagination) {
+      return items.slice((pagination.page - 1) * pagination.pageSize, pagination.page * pagination.pageSize)
+    }
+    return items;
   }
 )
 

@@ -37,3 +37,17 @@ export interface Paginator<D> {
 export interface Paginators<D> {
   [key: string]: Paginator<D>
 }
+
+export class SPaginators {
+  static paginators: Paginators<any> = {};
+  constructor() { }
+
+  set paginators(paginators: Paginators<any>) {
+    SPaginators.paginators = paginators;
+  }
+
+  get paginators(): Paginators<any> {
+    return SPaginators.paginators;
+  }
+
+}
