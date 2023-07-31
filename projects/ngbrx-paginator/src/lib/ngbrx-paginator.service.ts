@@ -12,7 +12,7 @@ const sp = new SPaginators();
   providedIn: 'root'
 })
 export class NgbrxPaginatorService {
-
+  dejaVu: string[] = [];
   constructor(
     private store: Store
   ) {
@@ -20,9 +20,12 @@ export class NgbrxPaginatorService {
 
   initPaginators(paginators: Paginators<any>) {
     sp.paginators = paginators;
-    Object.keys(paginators).forEach((key) => 
-    this.store.dispatch(NgbrxPaginatorActions.initPaginator({key, paginator: paginators[key]}))
-    )
+    Object.keys(paginators).forEach((key) => {
+      if (this.dejaVu.indexOf(key) === -1) {
+        this.store.dispatch(NgbrxPaginatorActions.initPaginator({ key, paginator: paginators[key] }));
+        this.dejaVu.push(key);
+      }
+    })
   }
 
   static get paginators() {
