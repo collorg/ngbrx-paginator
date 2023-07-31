@@ -5,8 +5,8 @@ import {
   on
 } from '@ngrx/store';
 import { NgbrxPaginatorActions } from './ngbrx-paginator.actions';
-import { Pagination, initialPagination, SPaginators } from '../ngbrx-paginator.model';
-import { NgbrxPaginatorService } from '../ngbrx-paginator.service';
+import { Pagination, initialPagination } from '../ngbrx-paginator.model';
+import { NgbrxPaginatorService, previousState } from '../ngbrx-paginator.service';
 
 export interface NgbrxPagination {
   currentPaginator: string,
@@ -42,6 +42,7 @@ function updateSate(state: State, paginations: { [key: string]: Pagination}, key
     paginations[key] = pagination;
   }
   state.paginations = paginations;
+  window.localStorage.setItem('ngbrx-paginator', JSON.stringify(state.paginations))
   return state;
 }
 
@@ -50,7 +51,13 @@ export const reducers = createReducer(
   on(NgbrxPaginatorActions.initPaginator,
     (state, action) => {
       const { nState, paginations } = cloneState(state);
-      const pagination = { ...initialPagination };
+      let iPagination = initialPagination;
+      if (previousState) {
+        if (Object.keys(previousState).indexOf(action.key) > -1) {
+          iPagination = previousState[action.key];
+        }
+      }
+      const pagination = { ...iPagination };
       if (action.paginator.pageSizeOptions) {
         pagination.pageSizeOptions = action.paginator.pageSizeOptions;
       }
@@ -58,11 +65,11 @@ export const reducers = createReducer(
       if (filters) {
         const filterQueries: string[] = []
         filters.forEach(_ => filterQueries.push(''))
-        pagination.filters = filters;
-        pagination.currentFilter = 0;
-        pagination.filterQueries = filterQueries;
+        pagination.filters = iPagination && iPagination.filters || filters;
+        pagination.currentFilter = iPagination && iPagination.currentFilter || 0;
+        pagination.filterQueries = iPagination && iPagination.filterQueries || filterQueries;
       }
-      pagination.pageSize = pagination.pageSizeOptions[0];
+      pagination.pageSize = iPagination && iPagination.pageSize || pagination.pageSizeOptions[0];
       return updateSate(nState, paginations, action.key, pagination)
     }
   ),

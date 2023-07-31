@@ -105,8 +105,9 @@
               {{ filterKey }}
             </option>
             <option
-              *ngFor="let value of fValues"
+              *ngFor="let value of fValues; index as valueIdx"
               [selected]="filterQueries[filterIdx] === value"
+              [value]="value"
             >
               {{ value }}
             </option>

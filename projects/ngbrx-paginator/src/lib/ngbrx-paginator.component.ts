@@ -51,6 +51,7 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
     }))
     this.subscriptions.push(
       this.service.currentFilter$(this.key).subscribe((currentFilter) => this.currentFilter = currentFilter))
+    this.subscriptions.push(this.filterQueries$.subscribe((filterQueries: string[]) => this.filterQueries = filterQueries));
   }
 
   ngOnDestroy(): void {

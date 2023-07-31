@@ -7,16 +7,24 @@ import { EMPTY, Observable } from 'rxjs';
 import { Pagination, Paginators, SPaginators } from './ngbrx-paginator.model';
 
 const sp = new SPaginators();
+export const previousState: { [key: string]: Pagination } | null = getLocalStorage();
+
+function getLocalStorage(): { [key: string]: Pagination } | null {
+  const ls = window.localStorage.getItem('ngbrx-paginator');
+  if (ls) {
+    return JSON.parse(ls)
+  }
+  return null;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class NgbrxPaginatorService {
   dejaVu: string[] = [];
-  constructor(
-    private store: Store
-  ) {
+  constructor(private store: Store) {
   }
+
 
   initPaginators(paginators: Paginators<any>) {
     sp.paginators = paginators;
