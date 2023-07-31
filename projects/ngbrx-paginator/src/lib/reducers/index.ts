@@ -55,12 +55,12 @@ export const reducers = createReducer(
       if (action.paginator.pageSizeOptions) {
         pagination.pageSizeOptions = action.paginator.pageSizeOptions;
       }
-      const filters = action.paginator.filters;
+      const filters = Object.keys(action.paginator.filters);
       if (filters) {
-        const filterQueries: { [key: string]: string } = {};
-        const filterKeys: string[] = Object.keys(filters);
-        pagination.currentFilter = filterKeys[0];
-        filterKeys.forEach((key: string) => filterQueries[key] = '')
+        const filterQueries: string[] = []
+        filters.forEach(_ => filterQueries.push(''))
+        pagination.filters = filters;
+        pagination.currentFilter = 0;
         pagination.filterQueries = filterQueries;
       }
       pagination.pageSize = pagination.pageSizeOptions[0];
@@ -96,7 +96,7 @@ export const reducers = createReducer(
   on(NgbrxPaginatorActions.setCurrentFilter,
     (state, action) => {
       const { nState, paginations, pagination } = cloneStateWithPaginator(state, action.key);
-      pagination.currentFilter = action.filterKey;
+      pagination.currentFilter = action.filterIdx;
       return updateSate(nState, paginations, action.key, pagination)
     }
   ),
@@ -104,9 +104,10 @@ export const reducers = createReducer(
     (state, action) => {
       const { nState, paginations, pagination } = cloneStateWithPaginator(state, action.key);
       const selectedFilters = [...pagination.selectedFilters]
-      const index = selectedFilters.indexOf(action.filterKey);
-      if (index === -1) {
-        selectedFilters.push(action.filterKey);
+      const index = action.filterIdx;
+      const isSelected: number = pagination.selectedFilters.indexOf(index);
+      if (isSelected === -1) {
+        selectedFilters.push(index);
       } else {
         selectedFilters.splice(index, 1);
       }
@@ -116,8 +117,9 @@ export const reducers = createReducer(
   on(NgbrxPaginatorActions.setFilterQuery,
     (state, action) => {
       const { nState, paginations, pagination } = cloneStateWithPaginator(state, action.key);
-      const filterQueries = { ...state.paginations[action.key].filterQueries }
-      if (action.filterQuery !== filterQueries[pagination.currentFilter]) {
+      const filterQueries = [ ...state.paginations[action.key].filterQueries ]
+      const filterIdx = pagination.currentFilter;
+      if (filterIdx > -1 && action.filterQuery !== filterQueries[filterIdx]) {
         pagination.page = 1;
         filterQueries[pagination.currentFilter] = action.filterQuery;
         pagination.filterQueries = filterQueries;
@@ -137,7 +139,7 @@ export const SelectPagination = (key: string) => createSelector(
 
 export const selectCurrentFilter = (key: string) => createSelector(
   featureSelector,
-  (state: State) => state.paginations && state.paginations[key] && state.paginations[key].currentFilter || ''
+  (state: State) => state.paginations && state.paginations[key] && state.paginations[key].currentFilter
 );
 
 export const selectFilterQuery = (key: string) => createSelector(
@@ -154,6 +156,11 @@ export const selectFilterQueries = (key: string) => createSelector(
   (state: State) => state.paginations && state.paginations[key] && state.paginations[key].filterQueries || []
 );
 
+export const selectFilters = (key: string) => createSelector(
+  featureSelector,
+  (state: State) => state.paginations && state.paginations[key] && state.paginations[key].filters || []
+);
+
 export const selectSelectedFilters = (key: string) => createSelector(
   featureSelector,
   (state: State) => state.paginations && state.paginations[key] && state.paginations[key].selectedFilters || []
@@ -165,13 +172,15 @@ export const selectFilteredCollection = (key: string) => createSelector(
   (state: State, collection: any) => {
     const paginator = NgbrxPaginatorService.paginators[key];
     const filters = paginator.filters;
+    const stateFilters: string[] = state.paginations[key].filters;
     const selectedFilters = state.paginations[key].selectedFilters;
-    const stateFilters = state.paginations[key].filterQueries;
-    const currentFilter = state.paginations[key].currentFilter;
-    if (selectedFilters || filters) {
-      let filteredCollection = filters[currentFilter].filter(collection, stateFilters[currentFilter]);
-      selectedFilters.forEach((filterKey: string) => {
-        filteredCollection = filters[filterKey].filter(filteredCollection, stateFilters[filterKey]);
+    const filterQueries = state.paginations[key].filterQueries;
+    const currentFilterIdx = state.paginations[key].currentFilter;
+    const currentFilter = stateFilters[currentFilterIdx];
+    if (currentFilterIdx > -1 || selectedFilters || filters) {
+      let filteredCollection = filters[currentFilter].filter(collection, filterQueries[currentFilterIdx]);
+      selectedFilters.forEach((index: number) => {
+        filteredCollection = filters[stateFilters[index]].filter(filteredCollection, filterQueries[index]);
       });
       return filteredCollection;
     }
@@ -205,15 +214,16 @@ export const selectNumberOfFilteredItems = (key: string) => createSelector(
 )
 
 export const selectCurrentFilterDesc = (key: string) => createSelector(
+  selectFilters(key),
   selectCurrentFilter(key),
   selectSelectedFilters(key),
   selectFilterQueries(key),
-  (current: string, selected: string[], queries: { [key: string]: string }) => {
+  (filters: string[], current: number, selected: number[], queries: string[]) => {
     let desc: string[] = [];
-    Object.keys(queries).forEach((key: string) => {
-      if (key === current || selected.indexOf(key) > -1) {
-        if (queries[key]) {
-          desc.push(`${key} "${queries[key]}"`);
+    queries.forEach((query: string, index: number) => {
+      if (index === current || selected.indexOf(index) > -1) {
+        if (queries[index]) {
+          desc.push(`${filters[index]} "${query}"`);
         }
       }
     })

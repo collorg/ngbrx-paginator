@@ -15,19 +15,21 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   collection$: Observable<any[]> = EMPTY;
   pagination$: Observable<Pagination> = EMPTY;
   pagesCount$: Observable<number> = EMPTY;
-  currentFilter$: Observable<string> = EMPTY;
-  filterQueries$: Observable<{ [key: string]: string }> = EMPTY;
-  selectedFilters$: Observable<string[]> = EMPTY;
+  filters$: Observable<string[]> = EMPTY;
+  currentFilter$: Observable<number> = EMPTY;
+  filterQueries$: Observable<string[]> = EMPTY;
+  selectedFilters$: Observable<number[]> = EMPTY;
   filterKeys: string[] = [];
-  currentFilter: string = '';
-  filterQueries: { [key: string]: string } = {};
+  currentFilter: number = -1;
+  filterQueries: string[] = [];
   hasFilter: boolean = false;
   page: number = 1;
   FILTER_PAG_REGEX = /[^0-9]/g;
   subscriptions: Subscription[] = [];
   showFilters: boolean = false;
   control = new FormControl();
-  selectedFilters: string[] = [];
+  selectedFilters: number[] = [];
+  filters: string[] = [];
 
   constructor(
     private service: NgbrxPaginatorService
@@ -36,17 +38,18 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.collection$ = this.service.filteredCollection$(this.key);
+    this.filters$ = this.service.filters$(this.key);
     this.pagination$ = this.service.pagination$(this.key);
     this.pagesCount$ = this.service.pagesCount$(this.key);
     this.currentFilter$ = this.service.currentFilter$(this.key);
     this.filterQueries$ = this.service.filterQueries$(this.key);
     this.selectedFilters$ = this.service.selectedFilters$(this.key);
     this.hasFilter = this.service.hasFilter(this.key);
-    this.subscriptions.push(this.filterQueries$.subscribe((filterQueries) => {
-      this.filterKeys = Object.keys(filterQueries);
-      this.filterQueries = filterQueries;
+    this.subscriptions.push(this.filters$.subscribe((filters) => {
+      this.filters = filters;
     }))
-    this.subscriptions.push(this.service.currentFilter$(this.key).subscribe((currentFilter) => this.currentFilter = currentFilter))
+    this.subscriptions.push(
+      this.service.currentFilter$(this.key).subscribe((currentFilter) => this.currentFilter = currentFilter))
   }
 
   ngOnDestroy(): void {
@@ -69,22 +72,22 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
     input.value = input.value.replace(this.FILTER_PAG_REGEX, '');
   }
 
-  getFilterQuery$(filterKey: string): Observable<string> {
+  getFilterQuery$(filterIdx: number): Observable<string> {
     return this.filterQueries$.pipe(
-      map((filterQueries: { [key: string]: string }) => filterQueries[filterKey])
+      map((filterQueries: string[]) => filterQueries[filterIdx])
     )
   }
 
-  setCurrentFilter(filterKey: string) {
-    this.service.setCurrentFilter(this.key, filterKey);
+  setCurrentFilter(filterIdx: number) {
+    this.service.setCurrentFilter(this.key, filterIdx);
   }
 
   getFilterValues$(filterKey: string): Observable<any> {
     return this.service.getFilterValues$(this.key, filterKey);
   }
 
-  isFilteredValue$(filterKey: string, value: any): Observable<boolean> {
-    return this.getFilterQuery$(filterKey).pipe(
+  isFilteredValue$(filterIdx: number, value: any): Observable<boolean> {
+    return this.getFilterQuery$(filterIdx).pipe(
       map((query: string) => value === query)
     )
   }
@@ -102,17 +105,17 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
     this.changePage(1)
   }
 
-  setFilterKey(filterKey: string) {
-    this.service.setCurrentFilter(this.key, filterKey);
+  setFilterKey(filterIdx: number) {
+    this.service.setCurrentFilter(this.key, filterIdx);
   }
 
-  toggleSelectedFilterKey(filterKey: string) {
-    this.service.selectFilter(this.key, filterKey);
+  toggleSelectedFilterKey(filterIdx: number) {
+    this.service.selectFilter(this.key, filterIdx);
   }
 
-  isChecked$(filterKey: string): Observable<string> {
+  isChecked$(filterIdx: number): Observable<string> {
     return this.selectedFilters$.pipe(
-      map((selectedFilters: string[]) => selectedFilters.indexOf(filterKey) > -1 && 'checked' || '')
+      map((selectedFilters: number[]) => selectedFilters.indexOf(filterIdx) > -1 && 'checked' || '')
     )
   }
 

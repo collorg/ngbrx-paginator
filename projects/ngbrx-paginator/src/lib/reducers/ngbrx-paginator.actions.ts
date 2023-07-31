@@ -8,9 +8,9 @@ export const NgbrxPaginatorActions = createActionGroup({
     'Set Page': props<{ key: string, page: number }>(),
     'Set Page Size': props<{ key: string, pageSize: number }>(),
     'Set Page Size Options': props<{ key: string, pageSizeOptions: number[] }>(),
-    'Set Current Filter': props<{key: string, filterKey: string}>(),
-    'Select Filter': props<{key: string, filterKey: string}>(),
-    'Unselect Filter': props<{key: string, filterKey: string}>(),
+    'Set Current Filter': props<{key: string, filterIdx: number}>(),
+    'Select Filter': props<{key: string, filterIdx: number}>(),
+    'Unselect Filter': props<{key: string, filterIdx: number}>(),
     'Set Filter Query': props<{ key: string, filterQuery: string }>()
   }
 });

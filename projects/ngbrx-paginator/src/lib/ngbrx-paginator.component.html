@@ -64,24 +64,27 @@
     </div>
     <div
       class="col d-flex justify-content-end"
-      *ngIf="filterKeys as filterKeys"
+      *ngIf="filters$ | async as filters"
     >
       <button
         type="button"
         (click)="toggleShowFilters()"
         class="btn btn-light button-32"
       >
-      <ngbrx-paginator-search-icon></ngbrx-paginator-search-icon>
+        <ngbrx-paginator-search-icon></ngbrx-paginator-search-icon>
       </button>
     </div>
     <div *ngIf="showFilters">
-      <div class="row" *ngIf="filterKeys as filterKeys">
+      <div class="row" *ngIf="filters$ | async as filterKeys">
         <div
-          *ngFor="let filterKey of filterKeys"
+          *ngFor="let filterKey of filterKeys; index as filterIdx"
           class="col-auto col-md input-group"
         >
-          <div class="input-group-text" (click)="toggleSelectedFilterKey(filterKey)">
-            <div *ngIf="isChecked$(filterKey) | async; else notChecked">
+          <div
+            class="input-group-text"
+            (click)="toggleSelectedFilterKey(filterIdx)"
+          >
+            <div *ngIf="isChecked$(filterIdx) | async; else notChecked">
               <ngbrx-paginator-locked-filter></ngbrx-paginator-locked-filter>
             </div>
             <ng-template #notChecked>
@@ -93,17 +96,17 @@
               getFilterValues$(filterKey) | async as fValues;
               else noValues
             "
-            (focus)="setFilterKey(filterKey)"
+            (focus)="setFilterKey(filterIdx)"
             (change)="setSelectedOption($event)"
             class="form-control col-md-auto"
-            [ngClass]="{ current: filterKey === currentFilter }"
+            [ngClass]="{ current: filterIdx === currentFilter }"
           >
-            <option [selected]="filterQueries[filterKey] === ''" value="">
+            <option [selected]="filterQueries[filterIdx] === ''" value="">
               {{ filterKey }}
             </option>
             <option
               *ngFor="let value of fValues"
-              [selected]="filterQueries[filterKey] === value"
+              [selected]="filterQueries[filterIdx] === value"
             >
               {{ value }}
             </option>
@@ -111,11 +114,11 @@
           <ng-template #noValues>
             <input
               class="form-control col-md-auto"
-              [ngClass]="{ current: filterKey === currentFilter }"
+              [ngClass]="{ current: filterIdx === currentFilter }"
               type="search"
               [placeholder]="filterKey"
-              [value]="getFilterQuery$(filterKey) | async"
-              (focus)="setFilterKey(filterKey)"
+              [value]="getFilterQuery$(filterIdx) | async"
+              (focus)="setFilterKey(filterIdx)"
               (keyup)="setFilterQuery($event)"
             />
           </ng-template>

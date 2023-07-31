@@ -3,18 +3,20 @@ import { MemoizedSelector, Selector } from "@ngrx/store";
 export interface Pagination {
   page: number;
   pageSize: number;
-  currentFilter: string;
-  selectedFilters: string[];
-  filterQueries: { [key: string]: string };
+  filters: string[];
+  currentFilter: number;
+  selectedFilters: number[];
+  filterQueries: string[];
   pageSizeOptions: number[];
 }
 
 export const initialPagination: Pagination = {
   page: 1,
   pageSize: 0,
-  currentFilter: '',
+  filters: [],
+  currentFilter: -1,
   selectedFilters: [],
-  filterQueries: {},
+  filterQueries: [],
   pageSizeOptions: [5, 10, 25, 100]
 }
 
