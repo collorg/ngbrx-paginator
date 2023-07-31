@@ -1,3 +1,14 @@
+# release 0.2.1 (2023-07-31)
+
+* Store pagination to localStorage. (ebf4e9c)
+* Fix. Keep page number when switching from one paginator to another. (16ac821)
+* Avoid multiple init of a paginator. (87bb51b)
+* Add SPaginators class. (ec3673a)
+* [refactor] Add filters to Pagination. (4f5daca)
+* Move Pagination and initialPagination to ngbrx-paginator.model. (fd02056)
+* Remove unused Set Current Paginator action. (ca76eeb)
+* Use helper functions in ngbrx-paginator's reducer. (8e60769)
+
 # release 0.2.0 (2023-07-26)
 
 * Update README. (d62e594)
