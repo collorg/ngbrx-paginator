@@ -37,7 +37,7 @@ function cloneStateWithPaginator(state: State, paginatorKey: string) {
   return { nState, paginations, pagination: { ...paginations[paginatorKey] } }
 }
 
-function updateSate(state: State, paginations: { [key: string]: Pagination}, key?: string, pagination?: Pagination): State {
+function updateSate(state: State, paginations: { [key: string]: Pagination }, key?: string, pagination?: Pagination): State {
   if (key && pagination) {
     paginations[key] = pagination;
   }
@@ -51,17 +51,19 @@ export const reducers = createReducer(
   on(NgbrxPaginatorActions.initPaginator,
     (state, action) => {
       const { nState, paginations } = cloneState(state);
+      const filters = Object.keys(action.paginator.filters);
+      const refFilters = [...filters].sort()
       let iPagination = initialPagination;
       if (previousState) {
         if (Object.keys(previousState).indexOf(action.key) > -1) {
-          iPagination = previousState[action.key];
+          const previousFilters = [...previousState[action.key].filters].sort()
+          const pPagination = previousState[action.key];
+          if (previousFilters.join('|') === refFilters.join('|')) {
+            iPagination = pPagination;
+          }
         }
       }
       const pagination = { ...iPagination };
-      if (action.paginator.pageSizeOptions) {
-        pagination.pageSizeOptions = action.paginator.pageSizeOptions;
-      }
-      const filters = Object.keys(action.paginator.filters);
       if (filters) {
         const filterQueries: string[] = []
         filters.forEach(_ => filterQueries.push(''))
@@ -69,7 +71,10 @@ export const reducers = createReducer(
         pagination.currentFilter = iPagination && iPagination.currentFilter > -1 && iPagination.currentFilter || 0;
         pagination.filterQueries = iPagination && iPagination.filterQueries.length && iPagination.filterQueries || filterQueries;
       }
-      pagination.pageSize = iPagination && iPagination.pageSize || pagination.pageSizeOptions[0];
+      if (action.paginator.pageSizeOptions) {
+        pagination.pageSizeOptions = action.paginator.pageSizeOptions;
+      }
+      pagination.pageSize = iPagination &&  (pagination.pageSizeOptions.indexOf(pagination.pageSize) > -1 && iPagination.pageSize) || pagination.pageSizeOptions[0];
       return updateSate(nState, paginations, action.key, pagination)
     }
   ),
@@ -123,7 +128,7 @@ export const reducers = createReducer(
   on(NgbrxPaginatorActions.setFilterQuery,
     (state, action) => {
       const { nState, paginations, pagination } = cloneStateWithPaginator(state, action.key);
-      const filterQueries = [ ...state.paginations[action.key].filterQueries ]
+      const filterQueries = [...state.paginations[action.key].filterQueries]
       const filterIdx = pagination.currentFilter;
       if (filterIdx > -1 && action.filterQuery !== filterQueries[filterIdx]) {
         pagination.page = 1;
