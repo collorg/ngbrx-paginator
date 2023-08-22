@@ -1,7 +1,7 @@
  
 {
   "name": "ngbrx-paginator",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "license": "MIT",
   "keywords": [
     "angular",
@@ -17,7 +17,7 @@
   "peerDependencies": {
     "@ngrx/store": "^16.0.0",
     "@angular/localize": "^16.0.0",
-    "@ng-bootstrap/ng-bootstrap": "15.0.1",
+    "@ng-bootstrap/ng-bootstrap": "^15.0.1",
     "@popperjs/core": "~2.11.8"
   }
 }
