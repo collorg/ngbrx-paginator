@@ -69,7 +69,7 @@ export const reducers = createReducer(
       if (filters) {
         const filterQueries: string[] = [];
         filters.forEach(_ => filterQueries.push(''));
-        pagination.activatedFilters = iPagination && iPagination.activatedFilters.length && iPagination.activatedFilters || activatedFilters;
+        pagination.activatedFilters = iPagination && iPagination.activatedFilters && iPagination.activatedFilters.length && iPagination.activatedFilters || activatedFilters;
         pagination.filters = iPagination && iPagination.filters.length && iPagination.filters || filters;
         pagination.currentFilter = iPagination && iPagination.currentFilter > -1 && iPagination.currentFilter || 0;
         pagination.filterQueries = iPagination && iPagination.filterQueries.length && iPagination.filterQueries || filterQueries;
