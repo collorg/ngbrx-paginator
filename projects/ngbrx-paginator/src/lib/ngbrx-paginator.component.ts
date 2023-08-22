@@ -124,4 +124,9 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   toggleShowFilters() {
     this.showFilters = !this.showFilters;
   }
+
+  isActivated$(filterIdx: number) {
+    return this.service.isActivated$(this.key, filterIdx)
+  }
+
 }

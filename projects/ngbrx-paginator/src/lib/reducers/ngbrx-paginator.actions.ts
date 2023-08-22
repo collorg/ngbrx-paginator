@@ -11,6 +11,7 @@ export const NgbrxPaginatorActions = createActionGroup({
     'Set Current Filter': props<{key: string, filterIdx: number}>(),
     'Select Filter': props<{key: string, filterIdx: number}>(),
     'Unselect Filter': props<{key: string, filterIdx: number}>(),
-    'Set Filter Query': props<{ key: string, filterQuery: string }>()
+    'Set Filter Query': props<{ key: string, filterQuery: string }>(),
+    'Toggle Activated Filter': props<{key: string, filterIdx: number}>(),
   }
 });

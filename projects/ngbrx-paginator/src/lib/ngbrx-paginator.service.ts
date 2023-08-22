@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 
 import * as fromStore from './reducers';
 import { NgbrxPaginatorActions } from './reducers/ngbrx-paginator.actions';
-import { EMPTY, Observable } from 'rxjs';
+import { EMPTY, Observable, map } from 'rxjs';
 import { Pagination, Paginators, SPaginators } from './ngbrx-paginator.model';
 
 const sp = new SPaginators();
@@ -64,6 +64,10 @@ export class NgbrxPaginatorService {
 
   filters$(key: string): Observable<string[]> {
     return this.store.select(fromStore.selectFilters(key));
+  }
+
+  activatedFilters$(key: string): Observable<number[]> {
+    return this.store.select(fromStore.selectActivatedFilters(key));
   }
 
   currentFilter$(key: string): Observable<number> {
@@ -127,4 +131,13 @@ export class NgbrxPaginatorService {
     this.store.dispatch(NgbrxPaginatorActions.unselectFilter({ key, filterIdx }))
   }
 
+  toggleActivatedFilter(key: string, filterIdx: number) {
+    this.store.dispatch(NgbrxPaginatorActions.toggleActivatedFilter({key, filterIdx}))
+  }
+
+  isActivated$(key: string, filterIdx: number): Observable<boolean> {
+    return this.activatedFilters$(key).pipe(
+      map((filters: number[]) => filters.indexOf(filterIdx) !== -1)
+    )
+  }
 }

@@ -1,0 +1,13 @@
+.current {
+    font-weight: bold;
+}
+.inactivated {
+    text-decoration: line-through;  
+    color: red;
+}
+.selected {
+    text-decoration: underline;
+}
+.selected.inactivated {
+    text-decoration: underline line-through;
+}

@@ -66,6 +66,9 @@
       class="col d-flex justify-content-end"
       *ngIf="filters$ | async as filters"
     >
+      <ngbrx-paginator-filter-selector
+        [key]="key"
+      ></ngbrx-paginator-filter-selector>
       <button
         type="button"
         (click)="toggleShowFilters()"
@@ -76,54 +79,56 @@
     </div>
     <div *ngIf="showFilters">
       <div class="row" *ngIf="filters$ | async as filterKeys">
-        <div
-          *ngFor="let filterKey of filterKeys; index as filterIdx"
-          class="col-auto col-md input-group"
-        >
+        <ng-container *ngFor="let filterKey of filterKeys; index as filterIdx">
           <div
-            class="input-group-text"
-            (click)="toggleSelectedFilterKey(filterIdx)"
+            class="col-auto col-md input-group"
+            *ngIf="isActivated$(filterIdx) | async"
           >
-            <div *ngIf="isChecked$(filterIdx) | async; else notChecked">
-              <ngbrx-paginator-locked-filter></ngbrx-paginator-locked-filter>
-            </div>
-            <ng-template #notChecked>
-              <ngbrx-paginator-unlocked-filter></ngbrx-paginator-unlocked-filter>
-            </ng-template>
-          </div>
-          <select
-            *ngIf="
-              getFilterValues$(filterKey) | async as fValues;
-              else noValues
-            "
-            (focus)="setFilterKey(filterIdx)"
-            (change)="setSelectedOption($event)"
-            class="form-control col-md-auto"
-            [ngClass]="{ current: filterIdx === currentFilter }"
-          >
-            <option [selected]="filterQueries[filterIdx] === ''" value="">
-              {{ filterKey }}
-            </option>
-            <option
-              *ngFor="let value of fValues; index as valueIdx"
-              [selected]="filterQueries[filterIdx] === value"
-              [value]="value"
+            <div
+              class="input-group-text"
+              (click)="toggleSelectedFilterKey(filterIdx)"
             >
-              {{ value }}
-            </option>
-          </select>
-          <ng-template #noValues>
-            <input
+              <div *ngIf="isChecked$(filterIdx) | async; else notChecked">
+                <ngbrx-paginator-locked-filter></ngbrx-paginator-locked-filter>
+              </div>
+              <ng-template #notChecked>
+                <ngbrx-paginator-unlocked-filter></ngbrx-paginator-unlocked-filter>
+              </ng-template>
+            </div>
+            <select
+              *ngIf="
+                getFilterValues$(filterKey) | async as fValues;
+                else noValues
+              "
+              (focus)="setFilterKey(filterIdx)"
+              (change)="setSelectedOption($event)"
               class="form-control col-md-auto"
               [ngClass]="{ current: filterIdx === currentFilter }"
-              type="search"
-              [placeholder]="filterKey"
-              [value]="getFilterQuery$(filterIdx) | async"
-              (focus)="setFilterKey(filterIdx)"
-              (keyup)="setFilterQuery($event)"
-            />
-          </ng-template>
-        </div>
+            >
+              <option [selected]="filterQueries[filterIdx] === ''" value="">
+                {{ filterKey }}
+              </option>
+              <option
+                *ngFor="let value of fValues; index as valueIdx"
+                [selected]="filterQueries[filterIdx] === value"
+                [value]="value"
+              >
+                {{ value }}
+              </option>
+            </select>
+            <ng-template #noValues>
+              <input
+                class="form-control col-md-auto"
+                [ngClass]="{ current: filterIdx === currentFilter }"
+                type="search"
+                [placeholder]="filterKey"
+                [value]="getFilterQuery$(filterIdx) | async"
+                (focus)="setFilterKey(filterIdx)"
+                (keyup)="setFilterQuery($event)"
+              />
+            </ng-template>
+          </div>
+        </ng-container>
       </div>
     </div>
   </div>

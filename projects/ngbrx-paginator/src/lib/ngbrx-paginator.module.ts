@@ -12,6 +12,7 @@ import { NgbrxPaginatorFilterDesc } from './ngbrx-paginator-filter-desc/ngbrx-pa
 import { SearchIconComponent } from './search-icon/search-icon.component';
 import { LockedComponent } from './locked/locked.component';
 import { UnlockedComponent } from './unlocked/unlocked.component';
+import { NgbrxPaginatorFilterSelectorComponent } from './ngbrx-paginator-filter-selector/ngbrx-paginator-filter-selector.component';
 
 let paginators: Paginators<any> = {};
 const paginatorsSubject: BehaviorSubject<Paginators<any>> = new BehaviorSubject<Paginators<any>>(paginators);
@@ -24,6 +25,7 @@ const paginators$: Observable<Paginators<any>> = paginatorsSubject.asObservable(
     SearchIconComponent,
     LockedComponent,
     UnlockedComponent,
+    NgbrxPaginatorFilterSelectorComponent,
   ],
   imports: [
     CommonModule,
