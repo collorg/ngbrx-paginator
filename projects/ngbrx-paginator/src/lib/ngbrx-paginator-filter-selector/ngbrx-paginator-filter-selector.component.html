@@ -1,25 +1,23 @@
 <div class="dropdown">
   <button
-    class="btn dropdown-toggle"
+    class="btn btn-outline-primary dropdown-toggle"
     type="button"
     data-bs-toggle="dropdown"
     aria-expanded="false"
   >
-    Activated filters ({{(activatedFilters$ | async)?.length}}/{{(filters$ | async)?.length}})
+    Activated filters ({{ (activatedFilters$ | async)?.length }}/{{
+      (filters$ | async)?.length
+    }})
   </button>
-  <ul class="dropdown-menu">
-    <li>
-      <a
-        class="dropdown-item"
-        *ngFor="let filterName of filters$ | async; index as filterIdx"
-        (click)="toggleActivation(filterIdx)"
-        ><span
-        [ngClass]="{
-          'current': isCurrent(filterIdx) === true,
-          'inactivated': isActivated(filterIdx) === false,
-          'selected': isSelected(filterIdx) === true
-        }">{{ filterName }}</span>
-      </a>
+  <ul class="dropdown-menu row">
+    <li
+      class="dropdown-item"
+      *ngFor="let filterName of filters$ | async; index as filterIdx"
+      (click)="toggleActivation(filterIdx)"
+      [ngClass]="{inactivated: isActivated(filterIdx) === false}"
+    >
+      {{ filterName }}:
+      <b>{{ query(filterIdx) }}</b>
     </li>
   </ul>
 </div>

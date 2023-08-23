@@ -18,7 +18,6 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   filters$: Observable<string[]> = EMPTY;
   currentFilter$: Observable<number> = EMPTY;
   filterQueries$: Observable<string[]> = EMPTY;
-  selectedFilters$: Observable<number[]> = EMPTY;
   filterKeys: string[] = [];
   currentFilter: number = -1;
   filterQueries: string[] = [];
@@ -28,7 +27,6 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   showFilters: boolean = false;
   control = new FormControl();
-  selectedFilters: number[] = [];
   filters: string[] = [];
 
   constructor(
@@ -43,7 +41,6 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
     this.pagesCount$ = this.service.pagesCount$(this.key);
     this.currentFilter$ = this.service.currentFilter$(this.key);
     this.filterQueries$ = this.service.filterQueries$(this.key);
-    this.selectedFilters$ = this.service.selectedFilters$(this.key);
     this.hasFilter = this.service.hasFilter(this.key);
     this.subscriptions.push(this.pagination$.subscribe((pagination) => this.page = pagination.page))
     this.subscriptions.push(this.filters$.subscribe((filters) => {
@@ -96,10 +93,8 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
 
   setFilterQuery(event: any) {
     const query = event.target.value;
-    if (query || this.selectedFilters) {
-      this.service.setFilterQuery(this.key, query);
-      this.changePage(1)
-    }
+    this.service.setFilterQuery(this.key, query);
+    this.changePage(1)
   }
 
   setSelectedOption(event: any) {
@@ -109,16 +104,6 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
 
   setFilterKey(filterIdx: number) {
     this.service.setCurrentFilter(this.key, filterIdx);
-  }
-
-  toggleSelectedFilterKey(filterIdx: number) {
-    this.service.selectFilter(this.key, filterIdx);
-  }
-
-  isChecked$(filterIdx: number): Observable<string> {
-    return this.selectedFilters$.pipe(
-      map((selectedFilters: number[]) => selectedFilters.indexOf(filterIdx) > -1 && 'checked' || '')
-    )
   }
 
   toggleShowFilters() {

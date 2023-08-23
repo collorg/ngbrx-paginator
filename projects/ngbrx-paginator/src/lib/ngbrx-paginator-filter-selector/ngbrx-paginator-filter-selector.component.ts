@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbrxPaginatorService } from '../ngbrx-paginator.service';
-import { EMPTY, Observable, take, takeLast } from 'rxjs';
+import { EMPTY, Observable, take } from 'rxjs';
 
 @Component({
   selector: 'ngbrx-paginator-filter-selector',
@@ -12,8 +12,8 @@ export class NgbrxPaginatorFilterSelectorComponent implements OnInit {
 
   filters$: Observable<string[]> = EMPTY;
   currentFilter$: Observable<number> = EMPTY;
-  selectedFilters$: Observable<number[]> = EMPTY;
   activatedFilters$: Observable<number[]> = EMPTY;
+  filterQueries$: Observable<string[]> = EMPTY;
   filterName: string = '';
 
   constructor(
@@ -24,7 +24,7 @@ export class NgbrxPaginatorFilterSelectorComponent implements OnInit {
     this.filters$ = this.service.filters$(this.key);
     this.currentFilter$ = this.service.currentFilter$(this.key);
     this.activatedFilters$ = this.service.activatedFilters$(this.key);
-    this.selectedFilters$ = this.service.selectedFilters$(this.key);
+    this.filterQueries$ = this.service.filterQueries$(this.key);
   }
 
   toggleActivation(filterIdx: number) {
@@ -39,13 +39,13 @@ export class NgbrxPaginatorFilterSelectorComponent implements OnInit {
 
   isCurrent(filterIdx: number): boolean {
     let isCurrent = false;
-    this.service.currentFilter$(this.key).pipe(take(1)).subscribe((current) => isCurrent = current === filterIdx);
+    this.currentFilter$.pipe(take(1)).subscribe((current) => isCurrent = current === filterIdx);
     return isCurrent;
   }
 
-  isSelected(filterIdx: number) {
-    let isActivated = false;
-    this.service.selectedFilters$(this.key).pipe(take(1)).subscribe((filters: number[]) => isActivated = filters.indexOf(filterIdx) !== -1);
-    return isActivated;
+  query(filterIdx: number): string {
+    let query = '';
+    this.filterQueries$.pipe(take(1)).subscribe((queries: string[]) => query = queries[filterIdx]);
+    return query;
   }
 }

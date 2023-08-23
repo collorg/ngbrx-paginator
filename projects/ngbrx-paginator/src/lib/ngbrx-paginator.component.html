@@ -66,13 +66,9 @@
       class="col d-flex justify-content-end"
       *ngIf="filters$ | async as filters"
     >
-      <button
-        type="button"
+      <ngbrx-paginator-search-icon
         (click)="toggleShowFilters()"
-        class="btn btn-light button-32"
-      >
-        <ngbrx-paginator-search-icon></ngbrx-paginator-search-icon>
-      </button>
+      ></ngbrx-paginator-search-icon>
     </div>
     <div *ngIf="showFilters">
       <ngbrx-paginator-filter-selector
@@ -84,17 +80,6 @@
             class="col-auto col-md input-group"
             *ngIf="isActivated$(filterIdx) | async"
           >
-            <div
-              class="input-group-text"
-              (click)="toggleSelectedFilterKey(filterIdx)"
-            >
-              <div *ngIf="isChecked$(filterIdx) | async; else notChecked">
-                <ngbrx-paginator-locked-filter></ngbrx-paginator-locked-filter>
-              </div>
-              <ng-template #notChecked>
-                <ngbrx-paginator-unlocked-filter></ngbrx-paginator-unlocked-filter>
-              </ng-template>
-            </div>
             <select
               *ngIf="
                 getFilterValues$(filterKey) | async as fValues;
@@ -102,8 +87,7 @@
               "
               (focus)="setFilterKey(filterIdx)"
               (change)="setSelectedOption($event)"
-              class="form-control col-md-auto"
-              [ngClass]="{ current: filterIdx === currentFilter }"
+              class="form-control col-md-auto mb-3"
             >
               <option [selected]="filterQueries[filterIdx] === ''" value="">
                 {{ filterKey }}
@@ -117,15 +101,17 @@
               </option>
             </select>
             <ng-template #noValues>
-              <input
-                class="form-control col-md-auto"
-                [ngClass]="{ current: filterIdx === currentFilter }"
-                type="search"
-                [placeholder]="filterKey"
-                [value]="getFilterQuery$(filterIdx) | async"
-                (focus)="setFilterKey(filterIdx)"
-                (keyup)="setFilterQuery($event)"
-              />
+              <div class="form-floating mb-3 col-md-auto">
+                <input
+                  class="form-control"
+                  [id]="filterKey"
+                  type="search"
+                  [value]="getFilterQuery$(filterIdx) | async"
+                  (focus)="setFilterKey(filterIdx)"
+                  (keyup)="setFilterQuery($event)"
+                />
+                <label [for]="filterKey">{{ filterKey }}</label>
+              </div>
             </ng-template>
           </div>
         </ng-container>

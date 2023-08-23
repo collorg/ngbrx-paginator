@@ -114,19 +114,6 @@ export const reducers = createReducer(
       return updateSate(nState, paginations, action.key, pagination)
     }
   ),
-  on(NgbrxPaginatorActions.selectFilter,
-    (state, action) => {
-      const { nState, paginations, pagination } = cloneStateWithPaginator(state, action.key);
-      const selectedFilters = [...pagination.selectedFilters]
-      const selectedIdx: number = pagination.selectedFilters.indexOf(action.filterIdx);
-      if (selectedIdx === -1) {
-        selectedFilters.push(action.filterIdx);
-      } else {
-        selectedFilters.splice(selectedIdx, 1);
-      }
-      pagination.selectedFilters = selectedFilters;
-      return updateSate(nState, paginations, action.key, pagination)
-    }),
   on(NgbrxPaginatorActions.setFilterQuery,
     (state, action) => {
       const { nState, paginations, pagination } = cloneStateWithPaginator(state, action.key);
@@ -192,11 +179,6 @@ export const selectActivatedFilters = (key: string) => createSelector(
   (state: State) => state.paginations && state.paginations[key] && state.paginations[key].activatedFilters || []
 );
 
-export const selectSelectedFilters = (key: string) => createSelector(
-  featureSelector,
-  (state: State) => state.paginations && state.paginations[key] && state.paginations[key].selectedFilters || []
-);
-
 export const selectFilteredCollection = (key: string) => createSelector(
   featureSelector,
   NgbrxPaginatorService.paginators[key].allDataSelector,
@@ -206,25 +188,15 @@ export const selectFilteredCollection = (key: string) => createSelector(
     const pagination = state.paginations[key];
     if (pagination) {
       const stateFilters: string[] = pagination.filters;
-      const selectedFilters = pagination.selectedFilters;
       const activatedFilters = pagination.activatedFilters;
       const filterQueries = pagination.filterQueries;
-      const currentFilterIdx = pagination.currentFilter;
-      const currentFilter = stateFilters[currentFilterIdx];
-      let filteredCollection: any[] = [];
-      if (currentFilterIdx > -1 || selectedFilters || filters) {
-        if (activatedFilters.indexOf(currentFilterIdx) !== -1) {
-          filteredCollection = filters[currentFilter].filter(collection, filterQueries[currentFilterIdx]);
-        } else {
-          filteredCollection = collection;
+      let filteredCollection: any[] = collection;
+      filterQueries.forEach((query: string, index: number) => {
+        if (query !== '' && activatedFilters.indexOf(index) !== -1) {
+          filteredCollection = filters[stateFilters[index]].filter(filteredCollection, query);
         }
-        selectedFilters.forEach((index: number) => {
-          if (activatedFilters.indexOf(index) !== -1) {
-            filteredCollection = filters[stateFilters[index]].filter(filteredCollection, filterQueries[index]);
-          }
-        });
-        return filteredCollection;
-      }
+      })
+      return filteredCollection;
     }
     return collection;
   }
@@ -260,27 +232,14 @@ export const selectNumberOfFilteredItems = (key: string) => createSelector(
 
 export const selectCurrentFilterDesc = (key: string) => createSelector(
   selectFilters(key),
-  selectCurrentFilter(key),
-  selectSelectedFilters(key),
   selectFilterQueries(key),
   selectActivatedFilters(key),
-  (filters: string[], current: number, selected: number[], queries: string[], activatedFilters: number[]) => {
+  (filters: string[], queries: string[], activatedFilters: number[]) => {
     let desc: string[] = [];
     queries.forEach((query: string, index: number) => {
-      if (index === current || selected.indexOf(index) > -1) {
-        if (queries[index]) {
-          let filterDesc = `${filters[index]} "${query}"`;
-          if (activatedFilters.indexOf(index) === -1) {
-            filterDesc = `<s>${filterDesc}</s>`;
-          }
-          if (selected.indexOf(index) !== -1) {
-            filterDesc = `<u>${filterDesc}</u>`;
-          }
-          if (index === current) {
-            filterDesc = `<b>${filterDesc}</b>`;
-          }
-          desc.push(filterDesc);
-        }
+      if (query && activatedFilters.indexOf(index) !== -1) {
+        let filterDesc = `${filters[index]} '<b>${query}</b>'`;
+        desc.push(filterDesc);
       }
     })
     return desc.join(' & ')

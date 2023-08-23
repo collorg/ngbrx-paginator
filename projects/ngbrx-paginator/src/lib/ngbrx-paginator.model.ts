@@ -5,7 +5,6 @@ export interface Pagination {
   pageSize: number;
   filters: string[];
   currentFilter: number;
-  selectedFilters: number[];
   activatedFilters: number[];
   filterQueries: string[];
   pageSizeOptions: number[];
@@ -16,7 +15,6 @@ export const initialPagination: Pagination = {
   pageSize: 0,
   filters: [],
   currentFilter: -1,
-  selectedFilters: [],
   activatedFilters: [],
   filterQueries: [],
   pageSizeOptions: [5, 10, 25, 100]

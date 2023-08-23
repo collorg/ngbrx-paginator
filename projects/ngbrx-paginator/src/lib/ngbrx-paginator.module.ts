@@ -10,8 +10,6 @@ import { NgbrxPaginatorService } from './ngbrx-paginator.service';
 import { Paginators } from './ngbrx-paginator.model';
 import { NgbrxPaginatorFilterDesc } from './ngbrx-paginator-filter-desc/ngbrx-paginator-filter-desc.component';
 import { SearchIconComponent } from './search-icon/search-icon.component';
-import { LockedComponent } from './locked/locked.component';
-import { UnlockedComponent } from './unlocked/unlocked.component';
 import { NgbrxPaginatorFilterSelectorComponent } from './ngbrx-paginator-filter-selector/ngbrx-paginator-filter-selector.component';
 
 let paginators: Paginators<any> = {};
@@ -23,8 +21,6 @@ const paginators$: Observable<Paginators<any>> = paginatorsSubject.asObservable(
     NgbrxPaginatorComponent,
     NgbrxPaginatorFilterDesc,
     SearchIconComponent,
-    LockedComponent,
-    UnlockedComponent,
     NgbrxPaginatorFilterSelectorComponent,
   ],
   imports: [
