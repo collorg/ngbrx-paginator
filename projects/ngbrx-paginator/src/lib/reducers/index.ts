@@ -65,7 +65,11 @@ export const reducers = createReducer(
       }
       const pagination = { ...iPagination };
       const activatedFilters: number[] = [];
-      filters.forEach((filter) => activatedFilters.push(filters.indexOf(filter)));
+      filters.forEach((filter, index) => {
+        if (!action.paginator.filters[filter].inactivate) {
+          activatedFilters.push(index);
+        }
+      });
       if (filters) {
         const filterQueries: string[] = [];
         filters.forEach(_ => filterQueries.push(''));

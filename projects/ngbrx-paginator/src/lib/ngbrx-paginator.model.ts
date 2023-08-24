@@ -25,7 +25,7 @@ export interface FilterFunction<D> {
 }
 
 export interface FilterFunctions<D> {
-  [key: string]: { filter: FilterFunction<D>, values?: MemoizedSelector<object, any> }
+  [key: string]: { filter: FilterFunction<D>, values?: MemoizedSelector<object, any>, inactivate?: boolean }
 }
 
 export interface Paginator<D> {

@@ -15,7 +15,7 @@ import { NgbrxPaginatorModule } from 'ngbrx-paginator';
       'Departement/Pagination': {
         filters: {
           'Nom': { filter: fromDepartement.byName },
-          'Code': { filter: fromDepartement.byCode },
+          'Code': { filter: fromDepartement.byCode, inactivate: true },
           'Régions/COM': { filter: fromDepartement.byRegion, values: fromDepartement.selectRegions }
         },
         allDataSelector: fromDepartement.selectAll,

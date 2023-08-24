@@ -17,8 +17,8 @@ import { CommuneRoutingModule } from './commune-routing.module';
         filters: {
           'Code': { filter: fromCommune.byCode },
           'Nom': { filter: fromCommune.byName },
-          'Population >': { filter: fromCommune.byPopulationGreaterThan },
-          'Population <': { filter: fromCommune.byPopulationLesserThan }
+          'Population >': { filter: fromCommune.byPopulationGreaterThan, inactivate: true },
+          'Population <': { filter: fromCommune.byPopulationLesserThan, inactivate: true }
         },
         allDataSelector: fromCommune.selectAll
       }
