@@ -13,7 +13,7 @@ import { CommuneRoutingModule } from './commune-routing.module';
   imports: [
     CommonModule,
     NgbrxPaginatorModule.forFeature({
-      'Commune/Pagination': {
+      'Communes': {
         filters: {
           'Code': { filter: fromCommune.byCode },
           'Nom': { filter: fromCommune.byName },

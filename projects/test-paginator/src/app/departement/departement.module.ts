@@ -12,7 +12,7 @@ import { NgbrxPaginatorModule } from 'ngbrx-paginator';
   imports: [
     CommonModule,
     NgbrxPaginatorModule.forFeature({
-      'Departement/Pagination': {
+      'Departements': {
         filters: {
           'Nom': { filter: fromDepartement.byName },
           'Code': { filter: fromDepartement.byCode, inactivate: true },

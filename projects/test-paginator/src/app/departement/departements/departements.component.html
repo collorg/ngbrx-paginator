@@ -1,10 +1,16 @@
 <div class="card">
   <div class="card-header sticky-top">
-    <h3 clas="row">
-      <span class="col-md">Liste des départements</span>
-      <ngbrx-paginator-filter-desc class="right" [key]="key"></ngbrx-paginator-filter-desc>
-    </h3>
-    <ngbrx-paginator [key]="key"></ngbrx-paginator>
+    <div class="row">
+      <h3 class="col-auto">Liste des départements</h3>
+      <div class="col">
+        <ngbrx-paginator-filter-desc
+          class="right badge text-bg-light"
+          [key]="paginationKey"
+          [showNumberOfItems]="false"
+        ></ngbrx-paginator-filter-desc>
+      </div>
+    </div>
+    <ngbrx-paginator [key]="paginationKey"></ngbrx-paginator>
   </div>
   <div class="card-body">
     <div class="list-group">

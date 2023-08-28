@@ -1,4 +1,4 @@
-import { MemoizedSelector, createFeature, createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
+import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { Departement } from './departement.model';
 import { DepartementActions } from './departement.actions';

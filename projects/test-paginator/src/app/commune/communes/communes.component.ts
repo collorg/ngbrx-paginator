@@ -9,8 +9,8 @@ import { NgbrxPaginatorService } from 'ngbrx-paginator';
   styleUrls: ['./communes.component.css']
 })
 export class CommunesComponent {
-  key = 'Commune/Pagination';
-  collection$: Observable<Commune[]> = this.paginationService.getPageItems$<Commune>(this.key);
+  paginationKey = 'Communes';
+  collection$: Observable<Commune[]> = this.paginationService.getPageItems$<Commune>(this.paginationKey);
 
   constructor(
     private paginationService: NgbrxPaginatorService

@@ -32,9 +32,9 @@ function cloneState(state: State) {
   return { nState: { ...state }, paginations: { ...state.paginations } };
 }
 
-function cloneStateWithPaginator(state: State, paginatorKey: string) {
+function cloneStateWithPaginator(state: State, paginationKey: string) {
   const { nState, paginations } = cloneState(state);
-  return { nState, paginations, pagination: { ...paginations[paginatorKey] } }
+  return { nState, paginations, pagination: { ...paginations[paginationKey] } }
 }
 
 function updateSate(state: State, paginations: { [key: string]: Pagination }, key?: string, pagination?: Pagination): State {
@@ -232,20 +232,4 @@ export const selectPagesCount = (key: string) => createSelector(
 export const selectNumberOfFilteredItems = (key: string) => createSelector(
   selectFilteredCollection(key),
   (collection) => collection.length
-)
-
-export const selectCurrentFilterDesc = (key: string) => createSelector(
-  selectFilters(key),
-  selectFilterQueries(key),
-  selectActivatedFilters(key),
-  (filters: string[], queries: string[], activatedFilters: number[]) => {
-    let desc: string[] = [];
-    queries.forEach((query: string, index: number) => {
-      if (query && activatedFilters.indexOf(index) !== -1) {
-        let filterDesc = `${filters[index]} '<b>${query}</b>'`;
-        desc.push(filterDesc);
-      }
-    })
-    return desc.join(' & ')
-  }
 )

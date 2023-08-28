@@ -40,11 +40,11 @@ export class NgbrxPaginatorService {
     return sp.paginators
   }
 
-  getFilterValues$(paginatorKey: string, filterKey: string): Observable<any> {
+  getFilterValues$(paginationKey: string, filterKey: string): Observable<any> {
     if (!sp.paginators) {
       return EMPTY;
     }
-    const values = sp.paginators[paginatorKey].filters[filterKey].values;
+    const values = sp.paginators[paginationKey].filters[filterKey].values;
     if (values) {
       return this.store.select(values);
     }
@@ -76,10 +76,6 @@ export class NgbrxPaginatorService {
 
   filterQueries$(key: string): Observable<string[]> {
     return this.store.select(fromStore.selectFilterQueries(key));
-  }
-
-  currentFiltersDesc$(key: string): Observable<string> {
-    return this.store.select(fromStore.selectCurrentFilterDesc(key))
   }
 
   numberOfFilteredItems$(key: string): Observable<number> {
