@@ -1,9 +1,17 @@
 <div class="container">
-    <div class="btn">
-        <a [routerLink]="['departements']">Départements</a>
-    </div>
-    <div class="btn">
-        <a [routerLink]="['communes']">Communes</a>
+    <button class="btn btn-primary text-bg-light" [routerLink]="['departements']">
+        Départements
+    </button>
+    <button class="btn btn-primary text-bg-light" [routerLink]="['communes']">
+        Communes
+    </button>
+    <div *ngFor="let paginatorKey of paginatorKeys$ | async" class="row">
+        <div class="col">
+            {{ paginatorKey }}
+        </div>
+        <div class="col">
+            <ngbrx-paginator-filter-desc [key]="paginatorKey"></ngbrx-paginator-filter-desc>
+        </div>
     </div>
     <router-outlet></router-outlet>
 </div>

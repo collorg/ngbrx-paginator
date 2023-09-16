@@ -1,14 +1,16 @@
 <span *ngIf="filters$ | async as filters">
   <span *ngFor="let filter of filters; index as idx">
     <span *ngIf="queries$ | async as queries">
-      <span *ngIf="isActivated$(key, idx) | async">
+      <span *ngIf="values$ | async as values">
+        <span *ngIf="isActivated$(key, idx) | async">
         <span *ngIf="queries[idx] as query">
-          {{ filter }}: '{{ query }}'
+          {{ filter }}: '<span class="text-primary">{{ values[idx] || query }}</span>'
           <span *ngIf="idx < filters.length - 1 && query && (isActivated$(key, idx + 1) | async) && queries[idx  + 1]">
             &
           </span>
         </span>
       </span>
+    </span>
     </span>
   </span>
 </span>

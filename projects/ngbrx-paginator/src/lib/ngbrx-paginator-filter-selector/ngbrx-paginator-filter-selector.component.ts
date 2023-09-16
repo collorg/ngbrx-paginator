@@ -48,4 +48,7 @@ export class NgbrxPaginatorFilterSelectorComponent implements OnInit {
     this.filterQueries$.pipe(take(1)).subscribe((queries: string[]) => query = queries[filterIdx]);
     return query;
   }
+
+  filterValue$ = (filterIdx: number) => this.service.filterValue$(this.key, filterIdx);
+
 }

@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 
 import * as fromStore from './reducers';
 import { NgbrxPaginatorActions } from './reducers/ngbrx-paginator.actions';
-import { EMPTY, Observable, map } from 'rxjs';
+import { EMPTY, Observable, filter, map, mergeMap } from 'rxjs';
 import { Pagination, Paginators, SPaginators } from './ngbrx-paginator.model';
 
 const sp = new SPaginators();
@@ -29,19 +29,32 @@ export class NgbrxPaginatorService {
   initPaginators(paginators: Paginators<any>) {
     sp.paginators = paginators;
     Object.keys(paginators).forEach((key) => {
-      if (this.dejaVu.indexOf(key) === -1) {
+      if (this.dejaVu.indexOf(key) === -1) { // && paginators[key].multi !== true) {
         this.store.dispatch(NgbrxPaginatorActions.initPaginator({ key, paginator: paginators[key] }));
         this.dejaVu.push(key);
       }
     })
   }
 
+  initPaginator(key: string, suffix: string) {
+    const paginator = sp.paginators[key];
+    key = `${key}-${suffix}`
+    if (this.dejaVu.indexOf(key) === -1) {
+      this.store.dispatch(NgbrxPaginatorActions.initPaginator({ key, paginator }));
+      this.dejaVu.push(key);
+    }
+  }
+
   static get paginators() {
     return sp.paginators
   }
 
+  get paginatorKeys$(): Observable<string[]> {
+    return this.store.select(fromStore.selectPaginatorKeys)
+  }
+
   getFilterValues$(paginationKey: string, filterKey: string): Observable<any> {
-    if (!sp.paginators) {
+    if (!sp.paginators || !sp.paginators[paginationKey] || !sp.paginators[paginationKey].filters || !sp.paginators[paginationKey].filters[filterKey]) {
       return EMPTY;
     }
     const values = sp.paginators[paginationKey].filters[filterKey].values;
@@ -78,6 +91,20 @@ export class NgbrxPaginatorService {
     return this.store.select(fromStore.selectFilterQueries(key));
   }
 
+  filterValues$(key: string): Observable<string[]> {
+    return this.store.select(fromStore.selectFilterValues(key));
+  }
+
+  filterValue$(key: string, idx: number): Observable<string> {
+    return this.filterValues$(key).pipe(
+      mergeMap((values: string[]) => this.filterQueries$(key).pipe(
+        map((queries: string[]) => {
+          return values[idx] && values[idx] || queries[idx]
+        }))
+      )
+    )
+  }
+
   numberOfFilteredItems$(key: string): Observable<number> {
     return this.store.select(fromStore.selectNumberOfFilteredItems(key));
   }
@@ -111,12 +138,13 @@ export class NgbrxPaginatorService {
     this.store.dispatch(NgbrxPaginatorActions.setCurrentFilter({ key, filterIdx }))
   }
 
-  setFilterQuery(key: string, filterQuery: string) {
-    this.store.dispatch(NgbrxPaginatorActions.setFilterQuery({ key, filterQuery }));
+  setFilterQuery(key: string, filterQuery: string, value?: string) {
+    value = value || '';
+    this.store.dispatch(NgbrxPaginatorActions.setFilterQuery({ key, value, filterQuery }));
   }
 
   toggleActivatedFilter(key: string, filterIdx: number) {
-    this.store.dispatch(NgbrxPaginatorActions.toggleActivatedFilter({key, filterIdx}))
+    this.store.dispatch(NgbrxPaginatorActions.toggleActivatedFilter({ key, filterIdx }))
   }
 
   isActivated$(key: string, filterIdx: number): Observable<boolean> {

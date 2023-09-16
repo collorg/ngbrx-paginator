@@ -12,6 +12,7 @@ export class NgbrxPaginatorFilterDesc implements OnInit {
   @Input() showNumberOfItems = true;
   filters$: Observable<string[]> = EMPTY;
   queries$: Observable<string[]> = EMPTY;
+  values$: Observable<string[]> = EMPTY;
   actviatedFilters$: Observable<number[]> = EMPTY;
   numberOfItems$: Observable<number> = EMPTY;
 
@@ -22,6 +23,7 @@ export class NgbrxPaginatorFilterDesc implements OnInit {
   ngOnInit(): void {
     this.filters$ = this.service.filters$(this.key);
     this.queries$ = this.service.filterQueries$(this.key);
+    this.values$ = this.service.filterValues$(this.key);
     this.numberOfItems$ = this.service.numberOfFilteredItems$(this.key);
     this.actviatedFilters$ = this.service.activatedFilters$(this.key);
   }

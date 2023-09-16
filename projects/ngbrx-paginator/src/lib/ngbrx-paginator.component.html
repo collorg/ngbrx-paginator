@@ -89,15 +89,15 @@
               (change)="setSelectedOption($event)"
               class="form-control col-md-auto mb-3"
             >
-              <option [selected]="filterQueries[filterIdx] === ''" value="">
+              <option [selected]="filterQueries[filterIdx] === ''" value="{}">
                 {{ filterKey }}
               </option>
               <option
-                *ngFor="let value of fValues; index as valueIdx"
-                [selected]="filterQueries[filterIdx] === value"
-                [value]="value"
+                *ngFor="let entry of fValues | keyvalue; index as valueIdx"
+                [selected]="filterQueries[filterIdx] === entry.key"
+                [value]="stringify(entry)"
               >
-                {{ value }}
+                {{ entry.value }}
               </option>
             </select>
             <ng-template #noValues>

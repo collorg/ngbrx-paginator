@@ -95,7 +95,7 @@ import { NgbrxPaginatorModule } from 'ngbrx-paginator';
           },
           'Régions/COM': {
             filter: fromDepartement.byRegion,
-            values: fromDepartement.selectRegions // Optional: provides the select values
+            values: fromDepartement.selectRegions // Optional: provides an observable of the select values object.
           }
         },
         pageSizeOptions: [10, 20, 30] // Defaults to [5, 10, 25, 100]
@@ -114,7 +114,7 @@ Each paginator is an object identified by a unique name in the application with 
   Each filter is identified by a key which will be used as a placeholder for the input or the default value for the select. To each key is associated an object with the following properties:
 
   * `filter`: a filter function that takes two parameters `(items: Data[], query: string)` and returns `Data[]`;
-  * `values`: (optional) a MemoizedSelector. If provided, a HTML select element is displayed with the values instead of the input.
+  * `values`: (optional) a MemoizedSelector. If provided, a HTML select element is displayed with the values instead of the input. The object's type is: { [key: string]: string;[key: number]: string }.
   * `inactivate`: (optional) boolean. If set to true the filter is inactivated when the paginator is loaded for the first time.
 * `pageSizeOptions?`: (optional) defaults to [5, 10, 25, 100].
 

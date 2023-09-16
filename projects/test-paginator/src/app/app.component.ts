@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { DepartementActions } from './departement/departement.actions';
-import { CommuneActions } from './commune/commune.actions';
 import { departements } from './data/departements';
-import { communes } from './data/communes'
+import { NgbrxPaginatorService } from 'ngbrx-paginator';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -12,11 +12,12 @@ import { communes } from './data/communes'
 })
 export class AppComponent {
   title = 'test-paginator';
+  paginatorKeys$: Observable<string[]> = this.paginationService.paginatorKeys$;
 
   constructor(
-    private store: Store
+    private store: Store,
+    private paginationService: NgbrxPaginatorService
   ) {
     this.store.dispatch(DepartementActions.loadDepartements({departements}));
-    this.store.dispatch(CommuneActions.loadCommunes({communes}));
   }
 }

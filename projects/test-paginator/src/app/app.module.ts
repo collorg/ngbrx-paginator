@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 
@@ -8,16 +7,14 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
 import { DepartementModule } from './departement/departement.module';
-import { CommuneModule } from './commune/commune.module';
+import { NgbrxPaginatorModule } from 'ngbrx-paginator';
 
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
-    CommuneModule,
     DepartementModule,
-    CommonModule,
     BrowserModule,
     AppRoutingModule,
     StoreModule.forRoot(),
@@ -32,6 +29,7 @@ import { CommuneModule } from './commune/commune.module';
         persist: true
       }
     }),
+    NgbrxPaginatorModule
   ],
   providers: [],
   bootstrap: [AppComponent]

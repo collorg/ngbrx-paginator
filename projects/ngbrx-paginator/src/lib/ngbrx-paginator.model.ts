@@ -7,6 +7,7 @@ export interface Pagination {
   currentFilter: number;
   activatedFilters: number[];
   filterQueries: string[];
+  filterValues: string[];
   pageSizeOptions: number[];
 }
 
@@ -17,6 +18,7 @@ export const initialPagination: Pagination = {
   currentFilter: -1,
   activatedFilters: [],
   filterQueries: [],
+  filterValues: [],
   pageSizeOptions: [5, 10, 25, 100]
 }
 
@@ -30,6 +32,7 @@ export interface FilterFunctions<D> {
 
 export interface Paginator<D> {
   allDataSelector: Selector<object, D[]>,
+  multi?: boolean,
   filters: FilterFunctions<D>,
   pageSizeOptions?: number[]
 }

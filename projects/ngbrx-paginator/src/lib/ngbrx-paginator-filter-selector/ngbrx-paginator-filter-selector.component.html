@@ -17,7 +17,7 @@
       [ngClass]="{inactivated: isActivated(filterIdx) === false}"
     >
       {{ filterName }}:
-      <b>{{ query(filterIdx) }}</b>
+      <b>{{ filterValue$(filterIdx) | async }}</b>
     </li>
   </ul>
 </div>

@@ -72,11 +72,13 @@ export const reducers = createReducer(
       });
       if (filters) {
         const filterQueries: string[] = [];
-        filters.forEach(_ => filterQueries.push(''));
+        const filterValues: string[] = [];
+        filters.forEach(_ => {filterQueries.push(''), filterValues.push('')});
         pagination.activatedFilters = iPagination && iPagination.activatedFilters && iPagination.activatedFilters.length && iPagination.activatedFilters || activatedFilters;
         pagination.filters = iPagination && iPagination.filters.length && iPagination.filters || filters;
-        pagination.currentFilter = iPagination && iPagination.currentFilter > -1 && iPagination.currentFilter || 0;
-        pagination.filterQueries = iPagination && iPagination.filterQueries.length && iPagination.filterQueries || filterQueries;
+        pagination.currentFilter = iPagination && iPagination.currentFilter && iPagination.currentFilter > -1 && iPagination.currentFilter || 0;
+        pagination.filterQueries = iPagination && iPagination.filterQueries && iPagination.filterQueries.length && iPagination.filterQueries || filterQueries;
+        pagination.filterValues = iPagination && iPagination.filterValues && iPagination.filterValues.length && iPagination.filterValues || filterValues;
       }
       if (action.paginator.pageSizeOptions) {
         pagination.pageSizeOptions = action.paginator.pageSizeOptions;
@@ -122,11 +124,14 @@ export const reducers = createReducer(
     (state, action) => {
       const { nState, paginations, pagination } = cloneStateWithPaginator(state, action.key);
       const filterQueries = [...state.paginations[action.key].filterQueries]
+      const filterValues = [...state.paginations[action.key].filterValues]
       const filterIdx = pagination.currentFilter;
       if (filterIdx > -1 && action.filterQuery !== filterQueries[filterIdx]) {
         pagination.page = 1;
         filterQueries[pagination.currentFilter] = action.filterQuery;
+        filterValues[pagination.currentFilter] = action.value || '';
         pagination.filterQueries = filterQueries;
+        pagination.filterValues = filterValues;
       }
       return updateSate(nState, paginations, action.key, pagination)
     }),
@@ -171,6 +176,11 @@ export const selectFilterQuery = (key: string) => createSelector(
 export const selectFilterQueries = (key: string) => createSelector(
   featureSelector,
   (state: State) => state.paginations && state.paginations[key] && state.paginations[key].filterQueries || []
+);
+
+export const selectFilterValues = (key: string) => createSelector(
+  featureSelector,
+  (state: State) => state.paginations && state.paginations[key] && state.paginations[key].filterValues || []
 );
 
 export const selectFilters = (key: string) => createSelector(
@@ -232,4 +242,9 @@ export const selectPagesCount = (key: string) => createSelector(
 export const selectNumberOfFilteredItems = (key: string) => createSelector(
   selectFilteredCollection(key),
   (collection) => collection.length
+)
+
+export const selectPaginatorKeys = createSelector(
+  featureSelector,
+  (state: State) => Object.keys(state.paginations)
 )

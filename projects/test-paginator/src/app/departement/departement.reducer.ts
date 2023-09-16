@@ -74,7 +74,9 @@ export const selectRegions = createSelector(
         regions.push(departement.region)
       }
     });
-    return regions.sort();
+    const dRegions: { [key: string]: string;[key: number]: string } = {}
+    regions.sort().forEach((region: string) => dRegions[region] = region);
+    return dRegions;
   }
 )
 
