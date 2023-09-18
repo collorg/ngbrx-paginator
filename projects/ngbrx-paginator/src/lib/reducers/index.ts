@@ -195,7 +195,7 @@ export const selectActivatedFilters = (key: string) => createSelector(
 
 export const selectFilteredCollection = (key: string) => createSelector(
   featureSelector,
-  NgbrxPaginatorService.paginators[key].allDataSelector,
+  NgbrxPaginatorService.paginators[key].dataSelector,
   (state: State, collection: any) => {
     const paginator = NgbrxPaginatorService.paginators[key];
     const filters = paginator.filters;

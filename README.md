@@ -84,7 +84,7 @@ import { NgbrxPaginatorModule } from 'ngbrx-paginator';
     NgbrxPaginatorModule.forFeature({
       'Departement/Pagination': // The name of the paginator must be unique for the application.
       {
-        allDataSelector: fromDepartement.selectAll, // @ngrx selector returning all the data set
+        dataSelector: fromDepartement.selectAll, // @ngrx selector returning all the data set
 
         // Optional
         filters: { // You can provide more than one filter by paginator.
@@ -108,7 +108,7 @@ import { NgbrxPaginatorModule } from 'ngbrx-paginator';
 The object provided to the forFeature static method discribes the paginators for this module.
 Each paginator is an object identified by a unique name in the application with the following properties:
     
-* `allDataSelector`: the ngrx selector that returns the observable of your data set;
+* `dataSelector`: the ngrx selector that returns the observable of your data set;
 * `filters?`: (optional) an object of type `{ [key: string]: { filter, values?, inactivate? } }`.
 
   Each filter is identified by a key which will be used as a placeholder for the input or the default value for the select. To each key is associated an object with the following properties:

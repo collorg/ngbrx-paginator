@@ -18,7 +18,7 @@ import { NgbrxPaginatorModule } from 'ngbrx-paginator';
           'Code': { filter: fromDepartement.byCode, inactivate: true },
           'Régions/COM': { filter: fromDepartement.byRegion, values: fromDepartement.selectRegions }
         },
-        allDataSelector: fromDepartement.selectAll,
+        dataSelector: fromDepartement.selectAll,
         pageSizeOptions: [10, 20, 30]
       }
     }),

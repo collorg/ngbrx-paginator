@@ -31,8 +31,8 @@ export interface FilterFunctions<D> {
 }
 
 export interface Paginator<D> {
-  allDataSelector: Selector<object, D[]>,
-  multi?: boolean,
+  dataSelector: Selector<object, D[]>,
+  id?: string,
   filters: FilterFunctions<D>,
   pageSizeOptions?: number[]
 }

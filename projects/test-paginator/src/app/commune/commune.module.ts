@@ -20,7 +20,7 @@ import { CommuneRoutingModule } from './commune-routing.module';
           'Population >': { filter: fromCommune.byPopulationGreaterThan, inactivate: true },
           'Population <': { filter: fromCommune.byPopulationLesserThan, inactivate: true }
         },
-        allDataSelector: fromCommune.selectAll
+        dataSelector: fromCommune.selectAll
       }
     }),
     StoreModule.forFeature(fromCommune.communesFeature),
