@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { EMPTY, Observable, Subscription, map, skipWhile, take } from 'rxjs';
+import { EMPTY, Observable, Subscription, map } from 'rxjs';
 import { Pagination } from './ngbrx-paginator.model';
 import { FormControl } from '@angular/forms';
 import { NgbrxPaginatorService } from './ngbrx-paginator.service';
@@ -38,6 +38,7 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.service.initPaginator(this.key, this.suffix);
     this.collection$ = this.service.filteredCollection$(this.key);
     this.filters$ = this.service.filters$(this.key);
     this.pagination$ = this.service.pagination$(this.key);

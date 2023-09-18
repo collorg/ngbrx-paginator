@@ -28,17 +28,24 @@ export class NgbrxPaginatorService {
 
   initPaginators(paginators: Paginators<any>) {
     sp.paginators = paginators;
-    Object.keys(paginators).forEach((key) => {
-      if (this.dejaVu.indexOf(key) === -1) { // && paginators[key].multi !== true) {
-        this.store.dispatch(NgbrxPaginatorActions.initPaginator({ key, paginator: paginators[key] }));
-        this.dejaVu.push(key);
-      }
-    })
+    // Object.keys(paginators).forEach((key) => {
+    //   if (this.dejaVu.indexOf(key) === -1) { // && paginators[key].multi !== true) {
+    //     this.store.dispatch(NgbrxPaginatorActions.initPaginator({ key, paginator: paginators[key] }));
+    //     this.dejaVu.push(key);
+    //   }
+    // })
   }
 
-  initPaginator(key: string, suffix: string) {
+  getKey(key: string, suffix?: string) {
+    if (!suffix) {
+      return key;
+    }
+    return `${key}-${suffix}`
+  }
+
+  initPaginator(key: string, suffix?: string) {
     const paginator = sp.paginators[key];
-    key = `${key}-${suffix}`
+    key = this.getKey(key, suffix);
     if (this.dejaVu.indexOf(key) === -1) {
       this.store.dispatch(NgbrxPaginatorActions.initPaginator({ key, paginator }));
       this.dejaVu.push(key);
@@ -64,34 +71,34 @@ export class NgbrxPaginatorService {
     return EMPTY;
   }
 
-  hasFilter(key: string): boolean {
+  hasFilter(key: string, suffix?: string): boolean {
     if (sp.paginators[key]) {
       return !!sp.paginators[key].filters;
     }
     return false;
   }
 
-  getPageItems$<M>(key: string): Observable<M[]> {
+  getPageItems$<M>(key: string, suffix?: string): Observable<M[]> {
     return this.store.select(fromStore.selectPageItems<M>(key));
   }
 
-  filters$(key: string): Observable<string[]> {
+  filters$(key: string, suffix?: string): Observable<string[]> {
     return this.store.select(fromStore.selectFilters(key));
   }
 
-  activatedFilters$(key: string): Observable<number[]> {
+  activatedFilters$(key: string, suffix?: string): Observable<number[]> {
     return this.store.select(fromStore.selectActivatedFilters(key));
   }
 
-  currentFilter$(key: string): Observable<number> {
+  currentFilter$(key: string, suffix?: string): Observable<number> {
     return this.store.select(fromStore.selectCurrentFilter(key));
   }
 
-  filterQueries$(key: string): Observable<string[]> {
+  filterQueries$(key: string, suffix?: string): Observable<string[]> {
     return this.store.select(fromStore.selectFilterQueries(key));
   }
 
-  filterValues$(key: string): Observable<string[]> {
+  filterValues$(key: string, suffix?: string): Observable<string[]> {
     return this.store.select(fromStore.selectFilterValues(key));
   }
 
@@ -105,19 +112,19 @@ export class NgbrxPaginatorService {
     )
   }
 
-  numberOfFilteredItems$(key: string): Observable<number> {
+  numberOfFilteredItems$(key: string, suffix?: string): Observable<number> {
     return this.store.select(fromStore.selectNumberOfFilteredItems(key));
   }
 
-  filteredCollection$<M>(key: string): Observable<M> {
+  filteredCollection$<M>(key: string, suffix?: string): Observable<M> {
     return this.store.select<M>(fromStore.selectFilteredCollection(key));
   }
 
-  pagination$(key: string): Observable<Pagination> {
+  pagination$(key: string, suffix?: string): Observable<Pagination> {
     return this.store.select(fromStore.SelectPagination(key));
   }
 
-  pagesCount$(key: string): Observable<number> {
+  pagesCount$(key: string, suffix?: string): Observable<number> {
     return this.store.select(fromStore.selectPagesCount(key));
   }
 
