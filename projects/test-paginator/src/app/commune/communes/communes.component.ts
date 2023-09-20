@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Commune } from '../commune.model';
 import { NgbrxPaginatorService } from 'ngbrx-paginator';
+import { Commune } from '../commune.model';
 import { Store } from '@ngrx/store';
-import { CommuneActions } from '../commune.actions';
-import { communes } from '../../data/communes';
 
+import * as fromStore from '../commune.reducer';
+import { CommuneService } from '../commune.service';
 
 @Component({
   selector: 'app-communes',
@@ -14,13 +14,15 @@ import { communes } from '../../data/communes';
 })
 export class CommunesComponent {
   paginationKey = 'Communes';
-  collection$: Observable<Commune[]> = this.paginationService.getPageItems$<Commune>(this.paginationKey);
+  collection$: Observable<Commune[]> = this.store.select(fromStore.selectAll);
+  paginatedCollection$: Observable<Commune[]> = this.paginationService.setPaginator<Commune>(this.paginationKey, this.collection$);
 
   constructor(
     private paginationService: NgbrxPaginatorService,
-    private store: Store
+    private store: Store,
+    private service: CommuneService
   ) {
-    this.store.dispatch(CommuneActions.loadCommunes({communes}));
+    this.service.load();
   }
 
 }

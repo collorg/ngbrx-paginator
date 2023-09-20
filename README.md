@@ -84,8 +84,6 @@ import { NgbrxPaginatorModule } from 'ngbrx-paginator';
     NgbrxPaginatorModule.forFeature({
       'Departement/Pagination': // The name of the paginator must be unique for the application.
       {
-        dataSelector: fromDepartement.selectAll, // @ngrx selector returning all the data set
-
         // Optional
         filters: { // You can provide more than one filter by paginator.
           'Nom': { filter: fromDepartement.byName },
@@ -108,7 +106,6 @@ import { NgbrxPaginatorModule } from 'ngbrx-paginator';
 The object provided to the forFeature static method discribes the paginators for this module.
 Each paginator is an object identified by a unique name in the application with the following properties:
     
-* `dataSelector`: the ngrx selector that returns the observable of your data set;
 * `filters?`: (optional) an object of type `{ [key: string]: { filter, values?, inactivate? } }`.
 
   Each filter is identified by a key which will be used as a placeholder for the input or the default value for the select. To each key is associated an object with the following properties:
@@ -123,6 +120,9 @@ You have done the most important part of the job. Now, in your component class, 
 ```ts
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import * as fromStore from '../departement.reducer';
+
 import { Departement } from '../departement.model';
 import { NgbrxPaginatorService } from 'ngbrx-paginator';
 
@@ -133,10 +133,11 @@ import { NgbrxPaginatorService } from 'ngbrx-paginator';
 })
 export class DepartementsComponent {
   key = 'Departement/Pagination'; // same as in NgbrxPaginatorModules.forFeature
-  // replace: collection$: Observable<Departement[]> = this.fromDepartement.selectAll; with:
-  collection$: Observable<Departement[]> = this.paginationService.getPageItems$<Departement>(this.key);
+  collection$: Observable<Departement[]> = this.fromDepartement.selectAll;
+  paginatedCollection$: Observable<Departement[]> = this.paginationService.setPaginator(this.key);
 
   constructor(
+    private store: Store<fromStore.State>,
     // inject NgbrxPaginatorService
     private paginationService: NgbrxPaginatorService
   ) { }
@@ -157,7 +158,7 @@ Finally, add the `ngbrx-paginator` component and the optional `ngbrx-paginator-f
   </div>
   <div class="card-body">
     <div class="list-group">
-      <div class="list-group-item" *ngFor="let item of collection$ | async">
+      <div class="list-group-item" *ngFor="let item of paginatedCollection$ | async"> <!-- replace collection$ -->
         {{ item.code }} {{ item.nom }}
       </div>
     </div>

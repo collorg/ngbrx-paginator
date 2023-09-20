@@ -7,6 +7,7 @@ import {
 import { NgbrxPaginatorActions } from './ngbrx-paginator.actions';
 import { Pagination, initialPagination } from '../ngbrx-paginator.model';
 import { NgbrxPaginatorService, previousState } from '../ngbrx-paginator.service';
+import { Observable, take } from 'rxjs';
 
 export interface NgbrxPagination {
   currentPaginator: string,
@@ -48,7 +49,7 @@ function updateSate(state: State, paginations: { [key: string]: Pagination }, ke
 
 export const reducers = createReducer(
   initialState,
-  on(NgbrxPaginatorActions.initPaginator,
+  on(NgbrxPaginatorActions.setPaginator,
     (state, action) => {
       const { nState, paginations } = cloneState(state);
       const filters = Object.keys(action.paginator.filters);
@@ -193,31 +194,37 @@ export const selectActivatedFilters = (key: string) => createSelector(
   (state: State) => state.paginations && state.paginations[key] && state.paginations[key].activatedFilters || []
 );
 
-export const selectFilteredCollection = (key: string) => createSelector(
+export const selectFilteredCollection = <M>(key: string, data$: Observable<M[]>) => createSelector(
   featureSelector,
-  NgbrxPaginatorService.paginators[key].dataSelector,
-  (state: State, collection: any) => {
-    const paginator = NgbrxPaginatorService.paginators[key];
-    const filters = paginator.filters;
-    const pagination = state.paginations[key];
-    if (pagination) {
-      const stateFilters: string[] = pagination.filters;
-      const activatedFilters = pagination.activatedFilters;
-      const filterQueries = pagination.filterQueries;
-      let filteredCollection: any[] = collection;
-      filterQueries.forEach((query: string, index: number) => {
-        if (query !== '' && activatedFilters.indexOf(index) !== -1) {
-          filteredCollection = filters[stateFilters[index]].filter(filteredCollection, query);
+  (state: State) => {
+    let collection: M[] = [];
+    data$.pipe(
+      take(1)
+    ).subscribe((data: M[]) => {
+      collection = data;
+      if (Object.keys(NgbrxPaginatorService.paginators).includes(key)) {
+        const filters = NgbrxPaginatorService.paginators[key].filters;
+        const pagination = state.paginations[key];
+        if (pagination) {
+          const stateFilters: string[] = pagination.filters;
+          const activatedFilters = pagination.activatedFilters;
+          const filterQueries = pagination.filterQueries;
+          let filteredCollection: M[] = collection;
+          filterQueries.forEach((query: string, index: number) => {
+            if (query !== '' && activatedFilters.indexOf(index) !== -1) {
+              filteredCollection = filters[stateFilters[index]].filter(filteredCollection, query);
+            }
+          })
+          collection = filteredCollection;
         }
-      })
-      return filteredCollection;
-    }
+      }
+    })
     return collection;
   }
 );
 
-export const selectPageItems = <M>(key: string) => createSelector(
-  selectFilteredCollection(key),
+export const selectPageItems = <M>(key: string, data$: Observable<M[]>) => createSelector(
+  selectFilteredCollection(key, data$),
   SelectPagination(key),
   (items: M[], pagination: Pagination) => {
     if (pagination) {
@@ -227,8 +234,8 @@ export const selectPageItems = <M>(key: string) => createSelector(
   }
 )
 
-export const selectPagesCount = (key: string) => createSelector(
-  selectFilteredCollection(key),
+export const selectPagesCount = <M>(key: string, data$: Observable<M[]>) => createSelector(
+  selectFilteredCollection(key, data$),
   SelectPagination(key),
   (collection, pagination: Pagination) => {
     let pagesCount = Math.floor(collection.length / pagination.pageSize);
@@ -239,8 +246,8 @@ export const selectPagesCount = (key: string) => createSelector(
   }
 )
 
-export const selectNumberOfFilteredItems = (key: string) => createSelector(
-  selectFilteredCollection(key),
+export const selectNumberOfFilteredItems = <M>(key: string, data$: Observable<M[]>) => createSelector(
+  selectFilteredCollection(key, data$),
   (collection) => collection.length
 )
 

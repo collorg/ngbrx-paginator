@@ -13,6 +13,7 @@ import { NgbrxPaginatorService } from './ngbrx-paginator.service';
 export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   @Input({ required: true }) key: string = '';
   @Input() suffix: string | undefined;
+  fullKey = this.key;
   collection$: Observable<any[]> = EMPTY;
   pagination$: Observable<Pagination> = EMPTY;
   pagesCount$: Observable<number> = EMPTY;
@@ -38,19 +39,19 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.service.initPaginator(this.key, this.suffix);
-    this.collection$ = this.service.filteredCollection$(this.key);
-    this.filters$ = this.service.filters$(this.key);
-    this.pagination$ = this.service.pagination$(this.key);
-    this.pagesCount$ = this.service.pagesCount$(this.key);
-    this.currentFilter$ = this.service.currentFilter$(this.key);
-    this.filterQueries$ = this.service.filterQueries$(this.key);
-    this.filterValues$ = this.service.filterValues$(this.key);
-    this.hasFilter = this.service.hasFilter(this.key);
+    this.fullKey = this.service.getKey(this.key, this.suffix);
+    this.collection$ = this.service.filteredCollection$(this.fullKey);
+    this.filters$ = this.service.filters$(this.fullKey);
+    this.pagination$ = this.service.pagination$(this.fullKey);
+    this.pagesCount$ = this.service.pagesCount$(this.fullKey);
+    this.currentFilter$ = this.service.currentFilter$(this.fullKey);
+    this.filterQueries$ = this.service.filterQueries$(this.fullKey);
+    this.filterValues$ = this.service.filterValues$(this.fullKey);
+    this.hasFilter = this.service.hasFilter(this.fullKey);
     this.subscriptions.push(this.pagination$.subscribe((pagination) => this.page = pagination.page))
     this.subscriptions.push(this.filters$.subscribe((filters) => this.filters = filters))
     this.subscriptions.push(
-      this.service.currentFilter$(this.key).subscribe((currentFilter) => this.currentFilter = currentFilter))
+      this.service.currentFilter$(this.fullKey).subscribe((currentFilter) => this.currentFilter = currentFilter))
     this.subscriptions.push(this.filterQueries$.subscribe((filterQueries: string[]) => this.filterQueries = filterQueries));
   }
 
@@ -59,7 +60,7 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   }
 
   changePage(page: number) {
-    this.page = this.service.setPage(this.key, page)
+    this.page = this.service.setPage(this.fullKey, page)
   }
 
   setPage(page: string) {
@@ -67,7 +68,7 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   }
 
   setPageSize(pageSize: number) {
-    this.service.setPageSize(this.key, pageSize);
+    this.service.setPageSize(this.fullKey, pageSize);
   }
 
   formatInput(input: HTMLInputElement) {
@@ -82,7 +83,7 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
 
   setCurrentFilter(filterIdx: number) {
     this.filterIdx = filterIdx;
-    this.service.setCurrentFilter(this.key, filterIdx);
+    this.service.setCurrentFilter(this.fullKey, filterIdx);
   }
 
 
@@ -93,20 +94,20 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   }
 
   setFilterQuery(event: any) {
-    this.service.setFilterQuery(this.key, event.target.value);
+    this.service.setFilterQuery(this.fullKey, event.target.value);
     this.changePage(1)
   }
 
   setSelectedOption(event: any) {
     let value = '';
     const val = JSON.parse(event.target.value)
-    this.service.setFilterQuery(this.key, val.key, val.value);
+    this.service.setFilterQuery(this.fullKey, val.key, val.value);
     this.changePage(1)
   }
 
   setFilterKey(filterIdx: number) {
     this.filterIdx = filterIdx;
-    this.service.setCurrentFilter(this.key, filterIdx);
+    this.service.setCurrentFilter(this.fullKey, filterIdx);
   }
 
   toggleShowFilters() {
@@ -114,16 +115,14 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   }
 
   isActivated$(filterIdx: number) {
-    return this.service.isActivated$(this.key, filterIdx)
+    return this.service.isActivated$(this.fullKey, filterIdx)
   }
 
   stringify(object: any) {
-    const res = JSON.stringify(object)
-    // console.log('XXX', res)
-    return res
+    return JSON.stringify(object)
   }
 
-  getFilterValues$ = (filterKey: string): Observable<any> => this.service.getFilterValues$(this.key, filterKey);
-  filterValue$ = (filterIdx: number) => this.service.filterValue$(this.key, filterIdx);
+  getFilterValues$ = (filterKey: string): Observable<any> => this.service.getFilterValues$(this.fullKey, filterKey);
+  filterValue$ = (filterIdx: number) => this.service.filterValue$(this.fullKey, filterIdx);
 
 }

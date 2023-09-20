@@ -6,15 +6,15 @@
         <ngbrx-paginator-filter-desc
           class="right badge text-bg-light"
           [key]="paginationKey"
-          [showNumberOfItems]="false"
+          [suffix]="suffix"
         ></ngbrx-paginator-filter-desc>
       </div>
     </div>
-    <ngbrx-paginator [key]="paginationKey"></ngbrx-paginator>
+    <ngbrx-paginator [key]="paginationKey" [suffix]="suffix"></ngbrx-paginator>
   </div>
   <div class="card-body">
     <div class="list-group">
-      <div class="list-group-item" *ngFor="let item of collection$ | async">
+      <div class="list-group-item" *ngFor="let item of paginatedCollection$ | async">
         {{ item.code }} {{ item.nom }}
       </div>
     </div>

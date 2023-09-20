@@ -73,6 +73,7 @@
     <div *ngIf="showFilters">
       <ngbrx-paginator-filter-selector
         [key]="key"
+        [suffix]="suffix"
       ></ngbrx-paginator-filter-selector>
       <div class="row" *ngIf="filters$ | async as filterKeys">
         <ng-container *ngFor="let filterKey of filterKeys; index as filterIdx">

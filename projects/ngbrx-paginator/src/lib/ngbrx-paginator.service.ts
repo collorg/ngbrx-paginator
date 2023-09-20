@@ -3,10 +3,11 @@ import { Store } from '@ngrx/store';
 
 import * as fromStore from './reducers';
 import { NgbrxPaginatorActions } from './reducers/ngbrx-paginator.actions';
-import { EMPTY, Observable, filter, map, mergeMap } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, concatMap, filter, map, mergeMap, of, switchMap, take } from 'rxjs';
 import { Pagination, Paginators, SPaginators } from './ngbrx-paginator.model';
 
 const sp = new SPaginators();
+
 export const previousState: { [key: string]: Pagination } | null = getLocalStorage();
 
 function getLocalStorage(): { [key: string]: Pagination } | null {
@@ -21,43 +22,46 @@ function getLocalStorage(): { [key: string]: Pagination } | null {
   providedIn: 'root'
 })
 export class NgbrxPaginatorService {
-  dejaVu: string[] = [];
-  constructor(private store: Store) {
-  }
+  #paginatorKeys: string[] = [];
+  #paginatorKeysSubject: BehaviorSubject<string[]> = new BehaviorSubject(this.#paginatorKeys);
+  paginatorKeys$: Observable<string[]> = this.#paginatorKeysSubject.asObservable();
+
+  constructor(private store: Store) { }
 
 
   initPaginators(paginators: Paginators<any>) {
-    sp.paginators = paginators;
-    // Object.keys(paginators).forEach((key) => {
-    //   if (this.dejaVu.indexOf(key) === -1) { // && paginators[key].multi !== true) {
-    //     this.store.dispatch(NgbrxPaginatorActions.initPaginator({ key, paginator: paginators[key] }));
-    //     this.dejaVu.push(key);
-    //   }
-    // })
+    const pag = { ...sp.paginators }
+    Object.keys(paginators).forEach((key) => {
+      if (!Object.keys(pag).includes(key)) {
+        pag[key] = paginators[key]
+      }
+    })
+    sp.paginators = pag;
   }
 
-  getKey(key: string, suffix?: string) {
-    if (!suffix) {
-      return key;
+  getKey(key: string, suffix?: string): string {
+    if (!!suffix) {
+      return `${key}-${suffix}`;
     }
-    return `${key}-${suffix}`
+    return key;
   }
 
-  initPaginator(key: string, suffix?: string) {
-    const paginator = sp.paginators[key];
-    key = this.getKey(key, suffix);
-    if (this.dejaVu.indexOf(key) === -1) {
-      this.store.dispatch(NgbrxPaginatorActions.initPaginator({ key, paginator }));
-      this.dejaVu.push(key);
+  setPaginator<M>(key: string, data$: Observable<any[]>, suffix?: string): Observable<M[]> {
+    const newPaginators = { ...sp.paginators }
+    let paginator = { ...sp.paginators[key] };
+    key = this.getKey(key, suffix)
+    if (!this.#paginatorKeys.includes(key)) {
+      this.store.dispatch(NgbrxPaginatorActions.setPaginator({ key, paginator }));
+      newPaginators[key] = { ...paginator, data$ };
+      this.#paginatorKeys.push(key);
+      this.#paginatorKeysSubject.next(this.#paginatorKeys);
+      sp.paginators = newPaginators;
     }
+    return this.getPageItems$(key);
   }
 
   static get paginators() {
     return sp.paginators
-  }
-
-  get paginatorKeys$(): Observable<string[]> {
-    return this.store.select(fromStore.selectPaginatorKeys)
   }
 
   getFilterValues$(paginationKey: string, filterKey: string): Observable<any> {
@@ -71,34 +75,49 @@ export class NgbrxPaginatorService {
     return EMPTY;
   }
 
-  hasFilter(key: string, suffix?: string): boolean {
+  hasKey$(key: string): Observable<boolean> {
+    return this.paginatorKeys$.pipe(
+      map((paginatorKeys: string[]) => !!paginatorKeys.includes(key))
+    )
+  }
+
+  #getData$<M>(key: string): Observable<M[]> {
+    return this.hasKey$(key).pipe(
+      filter((hasKey) => hasKey),
+      switchMap((hasKey: boolean) => hasKey && sp.paginators[key].data$ || EMPTY)
+    )
+  }
+
+  hasFilter(key: string): boolean {
     if (sp.paginators[key]) {
       return !!sp.paginators[key].filters;
     }
     return false;
   }
 
-  getPageItems$<M>(key: string, suffix?: string): Observable<M[]> {
-    return this.store.select(fromStore.selectPageItems<M>(key));
+  getPageItems$<M>(paginatorKey: string): Observable<M[]> {
+    return this.#getData$<M>(paginatorKey).pipe(
+      switchMap(data => this.store.select(fromStore.selectPageItems<M>(paginatorKey, of(data))))
+    )
   }
 
-  filters$(key: string, suffix?: string): Observable<string[]> {
+  filters$(key: string): Observable<string[]> {
     return this.store.select(fromStore.selectFilters(key));
   }
 
-  activatedFilters$(key: string, suffix?: string): Observable<number[]> {
+  activatedFilters$(key: string): Observable<number[]> {
     return this.store.select(fromStore.selectActivatedFilters(key));
   }
 
-  currentFilter$(key: string, suffix?: string): Observable<number> {
+  currentFilter$(key: string): Observable<number> {
     return this.store.select(fromStore.selectCurrentFilter(key));
   }
 
-  filterQueries$(key: string, suffix?: string): Observable<string[]> {
+  filterQueries$(key: string): Observable<string[]> {
     return this.store.select(fromStore.selectFilterQueries(key));
   }
 
-  filterValues$(key: string, suffix?: string): Observable<string[]> {
+  filterValues$(key: string): Observable<string[]> {
     return this.store.select(fromStore.selectFilterValues(key));
   }
 
@@ -112,20 +131,26 @@ export class NgbrxPaginatorService {
     )
   }
 
-  numberOfFilteredItems$(key: string, suffix?: string): Observable<number> {
-    return this.store.select(fromStore.selectNumberOfFilteredItems(key));
+  numberOfFilteredItems$<M>(paginatorKey: string): Observable<number> {
+    return this.#getData$<M>(paginatorKey).pipe(
+      switchMap(data$ => this.store.select(fromStore.selectNumberOfFilteredItems(paginatorKey, of(data$))))
+    )
   }
 
-  filteredCollection$<M>(key: string, suffix?: string): Observable<M> {
-    return this.store.select<M>(fromStore.selectFilteredCollection(key));
+  filteredCollection$<M>(paginatorKey: string): Observable<M[]> {
+    return this.#getData$<M>(paginatorKey).pipe(
+      switchMap(data$ => this.store.select(fromStore.selectFilteredCollection(paginatorKey, of(data$))))
+    )
   }
 
-  pagination$(key: string, suffix?: string): Observable<Pagination> {
+  pagination$(key: string): Observable<Pagination> {
     return this.store.select(fromStore.SelectPagination(key));
   }
 
-  pagesCount$(key: string, suffix?: string): Observable<number> {
-    return this.store.select(fromStore.selectPagesCount(key));
+  pagesCount$<M>(paginatorKey: string): Observable<number> {
+    return this.#getData$<M>(paginatorKey).pipe(
+      switchMap(data$ => this.store.select(fromStore.selectPagesCount(paginatorKey, of(data$))))
+    )
   }
 
   setPage(key: string, page: number): number {

@@ -9,7 +9,8 @@ import { EMPTY, Observable, take } from 'rxjs';
 })
 export class NgbrxPaginatorFilterSelectorComponent implements OnInit {
   @Input({ required: true }) key: string = '';
-
+  @Input() suffix: string | undefined = '';
+  fullKey = '';
   filters$: Observable<string[]> = EMPTY;
   currentFilter$: Observable<number> = EMPTY;
   activatedFilters$: Observable<number[]> = EMPTY;
@@ -21,19 +22,20 @@ export class NgbrxPaginatorFilterSelectorComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.filters$ = this.service.filters$(this.key);
-    this.currentFilter$ = this.service.currentFilter$(this.key);
-    this.activatedFilters$ = this.service.activatedFilters$(this.key);
-    this.filterQueries$ = this.service.filterQueries$(this.key);
+    this.fullKey = this.service.getKey(this.key, this.suffix);
+    this.filters$ = this.service.filters$(this.fullKey);
+    this.currentFilter$ = this.service.currentFilter$(this.fullKey);
+    this.activatedFilters$ = this.service.activatedFilters$(this.fullKey);
+    this.filterQueries$ = this.service.filterQueries$(this.fullKey);
   }
 
   toggleActivation(filterIdx: number) {
-    this.service.toggleActivatedFilter(this.key, filterIdx)
+    this.service.toggleActivatedFilter(this.fullKey, filterIdx)
   }
 
   isActivated(filterIdx: number): boolean {
     let isActivated = false;
-    this.service.isActivated$(this.key, filterIdx).pipe(take(1)).subscribe((activated) => isActivated = activated);
+    this.service.isActivated$(this.fullKey, filterIdx).pipe(take(1)).subscribe((activated) => isActivated = activated);
     return isActivated;
   }
 
@@ -49,6 +51,6 @@ export class NgbrxPaginatorFilterSelectorComponent implements OnInit {
     return query;
   }
 
-  filterValue$ = (filterIdx: number) => this.service.filterValue$(this.key, filterIdx);
+  filterValue$ = (filterIdx: number) => this.service.filterValue$(this.fullKey, filterIdx);
 
 }

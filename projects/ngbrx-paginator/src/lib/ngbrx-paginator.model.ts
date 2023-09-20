@@ -1,4 +1,5 @@
 import { MemoizedSelector, Selector } from "@ngrx/store";
+import { Observable } from "rxjs";
 
 export interface Pagination {
   page: number;
@@ -31,10 +32,9 @@ export interface FilterFunctions<D> {
 }
 
 export interface Paginator<D> {
-  dataSelector: Selector<object, D[]>,
-  id?: string,
   filters: FilterFunctions<D>,
   pageSizeOptions?: number[]
+  data$?: Observable<D[]>,
 }
 
 export interface Paginators<D> {

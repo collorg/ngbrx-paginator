@@ -81,7 +81,9 @@ export const selectRegions = createSelector(
 )
 
 export function byName(items: Departement[], query: string): Departement[] {
-  return items.filter((item: Departement) => !query || item.nom.toLowerCase().indexOf(query.toLocaleLowerCase()) === 0)
+  const depts = items.filter((item: Departement) => !query || item.nom.toLowerCase().indexOf(query.toLocaleLowerCase()) === 0);
+  console.log('departements fitrés', depts)
+  return depts;
 }
 
 export function byCode(items: Departement[], query: string): Departement[] {

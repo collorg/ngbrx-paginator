@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+
 import { Departement } from '../departement.model';
 import { NgbrxPaginatorService } from 'ngbrx-paginator';
+import * as fromStore from '../departement.reducer';
+import { DepartementService } from '../departement.service';
 
 @Component({
   selector: 'app-departements',
@@ -10,10 +14,16 @@ import { NgbrxPaginatorService } from 'ngbrx-paginator';
 })
 export class DepartementsComponent {
   paginationKey = 'Departements';
-  collection$: Observable<Departement[]> = this.paginationService.getPageItems$<Departement>(this.paginationKey);
+  suffix = 'xyz';
+  collection$: Observable<Departement[]> = this.store.select(fromStore.selectAll);
+  paginatedCollection$: Observable<Departement[]> = this.paginationService.setPaginator<Departement>(this.paginationKey, this.collection$, this.suffix);
 
   constructor(
-    private paginationService: NgbrxPaginatorService
-  ) { }
+    private paginationService: NgbrxPaginatorService,
+    private service: DepartementService,
+    private store: Store<fromStore.State>
+  ) {
+    this.service.load();
+  }
 
 }

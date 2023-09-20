@@ -9,6 +9,8 @@ import { EMPTY, Observable } from 'rxjs';
 })
 export class NgbrxPaginatorFilterDesc implements OnInit {
   @Input({ required: true }) key: string = '';
+  @Input() suffix: string | undefined = '';
+  fullKey = '';
   @Input() showNumberOfItems = true;
   filters$: Observable<string[]> = EMPTY;
   queries$: Observable<string[]> = EMPTY;
@@ -21,11 +23,12 @@ export class NgbrxPaginatorFilterDesc implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.filters$ = this.service.filters$(this.key);
-    this.queries$ = this.service.filterQueries$(this.key);
-    this.values$ = this.service.filterValues$(this.key);
-    this.numberOfItems$ = this.service.numberOfFilteredItems$(this.key);
-    this.actviatedFilters$ = this.service.activatedFilters$(this.key);
+    this.fullKey = this.service.getKey(this.key, this.suffix);
+    this.filters$ = this.service.filters$(this.fullKey);
+    this.queries$ = this.service.filterQueries$(this.fullKey);
+    this.values$ = this.service.filterValues$(this.fullKey);
+    this.numberOfItems$ = this.service.numberOfFilteredItems$(this.fullKey);
+    this.actviatedFilters$ = this.service.activatedFilters$(this.fullKey);
   }
 
   isActivated$ = (key: string, idx: number) => this.service.isActivated$(key, idx);

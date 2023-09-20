@@ -2,10 +2,10 @@
   <span *ngFor="let filter of filters; index as idx">
     <span *ngIf="queries$ | async as queries">
       <span *ngIf="values$ | async as values">
-        <span *ngIf="isActivated$(key, idx) | async">
+        <span *ngIf="isActivated$(fullKey, idx) | async">
         <span *ngIf="queries[idx] as query">
           {{ filter }}: '<span class="text-primary">{{ values[idx] || query }}</span>'
-          <span *ngIf="idx < filters.length - 1 && query && (isActivated$(key, idx + 1) | async) && queries[idx  + 1]">
+          <span *ngIf="idx < filters.length - 1 && query && (isActivated$(fullKey, idx + 1) | async) && queries[idx  + 1]">
             &
           </span>
         </span>
