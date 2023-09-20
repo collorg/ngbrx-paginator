@@ -1,3 +1,25 @@
+# release 0.3.0 (2023-09-20)
+
+* Replace suffix with extension. (13200e5)
+* [BREAKING CHANGE] dataSelector removed from NgbrxPaginatorModule.forFeature paginator argument. Allow reuse of a paginator. (938ddc3)
+* [BREAKING CHANGE] Rename allDataSelector by dataSelector. (3058e57)
+* Move initialization of the paginator into ngbrx-paginator component. (936543d)
+* [breaking change] The values of a filter must be of type: { [key: string]: string;[key: number]: string }. (39ac042)
+* refactor filter description component. (b110675)
+
+## Breaking changes
+
+### 
+
+* The object provided to the forFeature static method has changed:
+  * it now takes only two optional attributes: `filters` and `pageSizeOptions`: `allDataSelector` has been removed;
+  * the optional `values` are now of type: `{ [key: string]: string;[key: number]: string }`. It was previously a list.
+
+* The paginator is initialized in the component with `NgbrxPaginatorService.setPaginator<M>(key: string, data$: Observable<M[]>, extension?: string): Observable<M[]>`.
+  This method returns the paginated data observable (see the example in the README.)
+* `NgbrxPaginatorComponent` now takes an optional input `extension` to allow multiple usage of the same paginator in different contexts.
+  `NgbrxPaginatorDescComponent` has also this new optional input.
+
 # release 0.2.7 (2023-08-23)
 
 * Add inactivate option to filter. (48db418)

@@ -103,7 +103,7 @@ import { NgbrxPaginatorModule } from 'ngbrx-paginator';
   ],
 ```
 
-The object provided to the forFeature static method discribes the paginators for this module.
+The object provided to the forFeature static method describes the paginators for this module.
 Each paginator is an object identified by a unique name in the application with the following properties:
     
 * `filters?`: (optional) an object of type `{ [key: string]: { filter, values?, inactivate? } }`.
