@@ -12,7 +12,7 @@ import { NgbrxPaginatorService } from './ngbrx-paginator.service';
 })
 export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   @Input({ required: true }) key: string = '';
-  @Input() suffix: string | undefined;
+  @Input() extension: string | undefined;
   fullKey = this.key;
   collection$: Observable<any[]> = EMPTY;
   pagination$: Observable<Pagination> = EMPTY;
@@ -39,7 +39,7 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.fullKey = this.service.getKey(this.key, this.suffix);
+    this.fullKey = this.service.getKey(this.key, this.extension);
     this.collection$ = this.service.filteredCollection$(this.fullKey);
     this.filters$ = this.service.filters$(this.fullKey);
     this.pagination$ = this.service.pagination$(this.fullKey);

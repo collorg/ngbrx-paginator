@@ -9,7 +9,7 @@ import { EMPTY, Observable } from 'rxjs';
 })
 export class NgbrxPaginatorFilterDesc implements OnInit {
   @Input({ required: true }) key: string = '';
-  @Input() suffix: string | undefined = '';
+  @Input() extension: string | undefined = '';
   fullKey = '';
   @Input() showNumberOfItems = true;
   filters$: Observable<string[]> = EMPTY;
@@ -23,7 +23,7 @@ export class NgbrxPaginatorFilterDesc implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.fullKey = this.service.getKey(this.key, this.suffix);
+    this.fullKey = this.service.getKey(this.key, this.extension);
     this.filters$ = this.service.filters$(this.fullKey);
     this.queries$ = this.service.filterQueries$(this.fullKey);
     this.values$ = this.service.filterValues$(this.fullKey);

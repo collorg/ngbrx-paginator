@@ -39,17 +39,17 @@ export class NgbrxPaginatorService {
     sp.paginators = pag;
   }
 
-  getKey(key: string, suffix?: string): string {
-    if (!!suffix) {
-      return `${key}-${suffix}`;
+  getKey(key: string, extension?: string): string {
+    if (!!extension) {
+      return `${key}-${extension}`;
     }
     return key;
   }
 
-  setPaginator<M>(key: string, data$: Observable<any[]>, suffix?: string): Observable<M[]> {
+  setPaginator<M>(key: string, data$: Observable<any[]>, extension?: string): Observable<M[]> {
     const newPaginators = { ...sp.paginators }
     let paginator = { ...sp.paginators[key] };
-    key = this.getKey(key, suffix)
+    key = this.getKey(key, extension)
     if (!this.#paginatorKeys.includes(key)) {
       this.store.dispatch(NgbrxPaginatorActions.setPaginator({ key, paginator }));
       newPaginators[key] = { ...paginator, data$ };

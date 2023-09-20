@@ -14,9 +14,9 @@ import { DepartementService } from '../departement.service';
 })
 export class DepartementsComponent {
   paginationKey = 'Departements';
-  suffix = 'xyz';
+  extension = 'xyz';
   collection$: Observable<Departement[]> = this.store.select(fromStore.selectAll);
-  paginatedCollection$: Observable<Departement[]> = this.paginationService.setPaginator<Departement>(this.paginationKey, this.collection$, this.suffix);
+  paginatedCollection$: Observable<Departement[]> = this.paginationService.setPaginator<Departement>(this.paginationKey, this.collection$, this.extension);
 
   constructor(
     private paginationService: NgbrxPaginatorService,
