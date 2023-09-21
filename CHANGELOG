@@ -1,3 +1,7 @@
+# release 0.3.1 (2023-09-21)
+
+* [ngbrx-paginator-component] Fix order in select values (remove keyvalue pipe). (e481912)
+
 # release 0.3.0 (2023-09-20)
 
 * Replace suffix with extension. (13200e5)
