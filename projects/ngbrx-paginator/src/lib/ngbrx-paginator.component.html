@@ -94,7 +94,7 @@
                 {{ filterKey }}
               </option>
               <option
-                *ngFor="let entry of fValues | keyvalue; index as valueIdx"
+                *ngFor="let entry of getEntries(fValues); index as valueIdx"
                 [selected]="filterQueries[filterIdx] === entry.key"
                 [value]="stringify(entry)"
               >

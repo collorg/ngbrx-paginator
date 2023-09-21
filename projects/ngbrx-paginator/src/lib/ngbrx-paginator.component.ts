@@ -125,4 +125,11 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   getFilterValues$ = (filterKey: string): Observable<any> => this.service.getFilterValues$(this.fullKey, filterKey);
   filterValue$ = (filterIdx: number) => this.service.filterValue$(this.fullKey, filterIdx);
 
+  getEntries(values: {[key: string]: string}): {key: string, value: string}[] {
+    const res: {key: string, value: string}[] = [];
+    Object.keys(values).forEach(
+      (key: string) => res.push({key, value: values[key]})
+    )
+    return res;
+  }
 }
