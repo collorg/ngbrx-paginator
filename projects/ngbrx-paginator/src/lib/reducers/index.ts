@@ -7,7 +7,7 @@ import {
 import { NgbrxPaginatorActions } from './ngbrx-paginator.actions';
 import { Pagination, initialPagination } from '../ngbrx-paginator.model';
 import { NgbrxPaginatorService, previousState } from '../ngbrx-paginator.service';
-import { Observable, take } from 'rxjs';
+import { Observable, first, take } from 'rxjs';
 
 export interface NgbrxPagination {
   currentPaginator: string,
@@ -199,7 +199,7 @@ export const selectFilteredCollection = <M>(key: string, data$: Observable<M[]>)
   (state: State) => {
     let collection: M[] = [];
     data$.pipe(
-      take(1)
+      first()
     ).subscribe((data: M[]) => {
       collection = data;
       if (Object.keys(NgbrxPaginatorService.paginators).includes(key)) {
@@ -254,4 +254,9 @@ export const selectNumberOfFilteredItems = <M>(key: string, data$: Observable<M[
 export const selectPaginatorKeys = createSelector(
   featureSelector,
   (state: State) => Object.keys(state.paginations)
+)
+
+export const selectUndefined = createSelector(
+  featureSelector,
+  () => undefined
 )

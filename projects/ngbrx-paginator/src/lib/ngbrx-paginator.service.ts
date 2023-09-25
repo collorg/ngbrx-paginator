@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 
 import * as fromStore from './reducers';
 import { NgbrxPaginatorActions } from './reducers/ngbrx-paginator.actions';
-import { BehaviorSubject, EMPTY, Observable, concatMap, filter, map, mergeMap, of, switchMap, take } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, distinctUntilChanged, filter, map, mergeMap, of, switchMap } from 'rxjs';
 import { Pagination, Paginators, SPaginators } from './ngbrx-paginator.model';
 
 const sp = new SPaginators();
@@ -65,14 +65,14 @@ export class NgbrxPaginatorService {
   }
 
   getFilterValues$(paginationKey: string, filterKey: string): Observable<any> {
-    if (!sp.paginators || !sp.paginators[paginationKey] || !sp.paginators[paginationKey].filters || !sp.paginators[paginationKey].filters[filterKey]) {
-      return EMPTY;
-    }
-    const values = sp.paginators[paginationKey].filters[filterKey].values;
-    if (values) {
-      return this.store.select(values);
-    }
-    return EMPTY;
+    return this.store.select((
+      sp.paginators && sp.paginators[paginationKey] &&
+      sp.paginators[paginationKey].filters &&
+      sp.paginators[paginationKey].filters[filterKey] &&
+      sp.paginators[paginationKey].filters[filterKey].values) ||
+      fromStore.selectUndefined).pipe(
+        distinctUntilChanged()
+      );
   }
 
   hasKey$(key: string): Observable<boolean> {

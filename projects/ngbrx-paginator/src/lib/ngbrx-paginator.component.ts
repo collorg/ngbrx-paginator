@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { EMPTY, Observable, Subscription, map } from 'rxjs';
 import { Pagination } from './ngbrx-paginator.model';
 import { FormControl } from '@angular/forms';
@@ -8,7 +8,8 @@ import { NgbrxPaginatorService } from './ngbrx-paginator.service';
 @Component({
   selector: 'ngbrx-paginator',
   templateUrl: './ngbrx-paginator.component.html',
-  styleUrls: ['./ngbrx-paginator.component.css']
+  styleUrls: ['./ngbrx-paginator.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   @Input({ required: true }) key: string = '';
