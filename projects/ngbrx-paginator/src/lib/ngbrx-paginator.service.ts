@@ -52,7 +52,7 @@ export class NgbrxPaginatorService {
     key = this.getKey(key, extension)
     if (!this.#paginatorKeys.includes(key)) {
       this.store.dispatch(NgbrxPaginatorActions.setPaginator({ key, paginator }));
-      newPaginators[key] = { ...paginator, data$ };
+      newPaginators[key] = { ...paginator, data$: data$.pipe(map((data: any[]) => data)) };
       this.#paginatorKeys.push(key);
       this.#paginatorKeysSubject.next(this.#paginatorKeys);
       sp.paginators = newPaginators;
