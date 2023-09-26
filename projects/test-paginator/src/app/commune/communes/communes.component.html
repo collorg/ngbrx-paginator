@@ -1,19 +1,21 @@
 <div class="card">
   <div class="card-header sticky-top">
     <div class="row">
-      <h3 class="col-auto">Liste des communes</h3>
-      <div class="col">
-        <ngbrx-paginator-filter-desc
-          class="right badge text-bg-light"
-          [key]="paginationKey"
-        ></ngbrx-paginator-filter-desc>
-      </div>
+      <h1 class="col-auto">Liste des communes</h1>
     </div>
     <ngbrx-paginator [key]="paginationKey"></ngbrx-paginator>
+    <h3>
+      <ngbrx-paginator-filter-desc
+        [key]="paginationKey"
+      ></ngbrx-paginator-filter-desc>
+    </h3>
   </div>
   <div class="card-body">
     <div class="list-group">
-      <div class="list-group-item" *ngFor="let item of paginatedCollection$ | async">
+      <div
+        class="list-group-item"
+        *ngFor="let item of paginatedCollection$ | async"
+      >
         {{ item.code }} {{ item.nom }}
       </div>
     </div>

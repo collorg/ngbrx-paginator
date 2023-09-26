@@ -32,7 +32,6 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   showFilters: boolean = false;
   control = new FormControl();
-  filters: string[] = [];
 
   constructor(
     private service: NgbrxPaginatorService
@@ -50,7 +49,6 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
     this.filterValues$ = this.service.filterValues$(this.fullKey);
     this.hasFilter = this.service.hasFilter(this.fullKey);
     this.subscriptions.push(this.pagination$.subscribe((pagination) => this.page = pagination.page))
-    this.subscriptions.push(this.filters$.subscribe((filters) => this.filters = filters))
     this.subscriptions.push(
       this.service.currentFilter$(this.fullKey).subscribe((currentFilter) => this.currentFilter = currentFilter))
     this.subscriptions.push(this.filterQueries$.subscribe((filterQueries: string[]) => this.filterQueries = filterQueries));

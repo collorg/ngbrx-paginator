@@ -67,6 +67,7 @@
       *ngIf="filters$ | async as filters"
     >
       <ngbrx-paginator-search-icon
+        *ngIf="hasFilter"
         (click)="toggleShowFilters()"
       ></ngbrx-paginator-search-icon>
     </div>

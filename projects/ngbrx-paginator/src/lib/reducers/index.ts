@@ -136,6 +136,14 @@ export const reducers = createReducer(
       }
       return updateSate(nState, paginations, action.key, pagination)
     }),
+  on(NgbrxPaginatorActions.clearFilters,
+    (state, action) => {
+      const { nState, paginations, pagination } = cloneStateWithPaginator(state, action.key);
+      const filterQueries: string[] = [];
+      pagination.filterQueries.forEach((_, index: number) => filterQueries.push(''))
+      pagination.filterQueries = filterQueries
+      return updateSate(nState, paginations, action.key, pagination);
+    }),
   on(NgbrxPaginatorActions.toggleActivatedFilter,
     (state, action) => {
       const { nState, paginations, pagination } = cloneStateWithPaginator(state, action.key);

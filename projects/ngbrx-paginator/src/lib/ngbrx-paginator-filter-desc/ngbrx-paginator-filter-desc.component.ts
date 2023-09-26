@@ -31,6 +31,8 @@ export class NgbrxPaginatorFilterDesc implements OnInit {
     this.actviatedFilters$ = this.service.activatedFilters$(this.fullKey);
   }
 
-  isActivated$ = (key: string, idx: number) => this.service.isActivated$(key, idx);
+  isActivated$ = (idx: number) => this.service.isActivated$(this.fullKey, idx);
+  clearFilters = () => this.service.clearFilters(this.fullKey);
+  filterIsSet$ = () => this.service.filterIsSet$(this.fullKey);
 
 }

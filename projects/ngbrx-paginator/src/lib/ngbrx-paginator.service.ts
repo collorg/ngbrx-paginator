@@ -90,7 +90,7 @@ export class NgbrxPaginatorService {
 
   hasFilter(key: string): boolean {
     if (sp.paginators[key]) {
-      return !!sp.paginators[key].filters;
+      return Object.keys(sp.paginators[key].filters).length > 0;
     }
     return false;
   }
@@ -184,4 +184,15 @@ export class NgbrxPaginatorService {
       map((filters: number[]) => filters.indexOf(filterIdx) !== -1)
     )
   }
+
+  clearFilters(key: string) {
+    this.store.dispatch(NgbrxPaginatorActions.clearFilters({ key }))
+  }
+
+  filterIsSet$(key: string): Observable<boolean> {
+    return this.store.select(fromStore.selectFilterQueries(key)).pipe(
+      map((queries: string[]) => queries.join('') !== '')
+    )
+  }
+
 }
