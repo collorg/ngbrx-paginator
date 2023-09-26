@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { EMPTY, Observable, Subscription, map } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, Subscription, map } from 'rxjs';
 import { Pagination } from './ngbrx-paginator.model';
 import { FormControl } from '@angular/forms';
 import { NgbrxPaginatorService } from './ngbrx-paginator.service';
@@ -14,6 +14,10 @@ import { NgbrxPaginatorService } from './ngbrx-paginator.service';
 export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   @Input({ required: true }) key: string = '';
   @Input() extension: string | undefined;
+
+  #showFilters: boolean = false;
+  #showFiltersSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.#showFilters);
+  showFilters$: Observable<boolean> = this.#showFiltersSubject.asObservable();
   fullKey = this.key;
   collection$: Observable<any[]> = EMPTY;
   pagination$: Observable<Pagination> = EMPTY;
@@ -30,7 +34,6 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   page: number = 1;
   FILTER_PAG_REGEX = /[^0-9]/g;
   subscriptions: Subscription[] = [];
-  showFilters: boolean = false;
   control = new FormControl();
 
   constructor(
@@ -110,7 +113,8 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   }
 
   toggleShowFilters() {
-    this.showFilters = !this.showFilters;
+    this.#showFilters = !this.#showFilters;
+    this.#showFiltersSubject.next(this.#showFilters);
   }
 
   isActivated$(filterIdx: number) {

@@ -1,5 +1,6 @@
 <div *ngIf="pagination$ | async as pagination">
-  <div class="row stick-to-the-top">
+  <div class="stick-to-the-top">
+    <div class="d-flex">
     <div class="col">
       <ngb-pagination
         [collectionSize]="(collection$ | async)?.length || 0"
@@ -63,15 +64,16 @@
       </ul>
     </div>
     <div
-      class="col d-flex justify-content-end"
+    class="d-inline-block"
       *ngIf="filters$ | async as filters"
     >
-      <ngbrx-paginator-search-icon
+      <ngbrx-paginator-search-icon [showFilters]="showFilters$ | async"
         *ngIf="hasFilter"
         (click)="toggleShowFilters()"
       ></ngbrx-paginator-search-icon>
     </div>
-    <div *ngIf="showFilters">
+  </div>
+    <div *ngIf="showFilters$ | async">
       <ngbrx-paginator-filter-selector
         [key]="key"
         [extension]="extension"

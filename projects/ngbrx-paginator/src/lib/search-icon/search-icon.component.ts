@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'ngbrx-paginator-search-icon',
@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./search-icon.component.css']
 })
 export class SearchIconComponent {
-
+  @Input({required: true}) showFilters: boolean | null = null;
 }
