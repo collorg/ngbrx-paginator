@@ -1,3 +1,7 @@
+# release 0.3.3 (2023-09-26)
+
+* Add button clear filters with filter-desc component. (29795d9)
+
 # release 0.3.2 (2023-09-25)
 
 * Use ChangeDetectionStrategy.OnPush for ngbrx-paginator.component. (01a151d)
