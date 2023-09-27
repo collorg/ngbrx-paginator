@@ -1,3 +1,10 @@
+# release 0.3.4 (2023-09-27)
+
+* Add page-selector component. Remove use of subscribe. (caeab21)
+* Scroll to top of the window on  page change. (50c213b)
+* [UI] Improve placement of the filter activation button. (ae3a4e2)
+* Do not alter the original data$ observable. (6c0886d)
+
 # release 0.3.3 (2023-09-26)
 
 * Add button clear filters with filter-desc component. (29795d9)
