@@ -155,6 +155,7 @@ export class NgbrxPaginatorService {
 
   setPage(key: string, page: number): number {
     this.store.dispatch(NgbrxPaginatorActions.setPage({ key, page }));
+    window.scrollTo(0, 0);
     return page;
   }
 

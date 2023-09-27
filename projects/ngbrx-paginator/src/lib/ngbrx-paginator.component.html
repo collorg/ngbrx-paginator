@@ -1,6 +1,6 @@
 <div *ngIf="pagination$ | async as pagination">
   <div class="stick-to-the-top">
-    <div class="d-flex">
+    <div class="row">
     <div class="col">
       <ngb-pagination
         [collectionSize]="(collection$ | async)?.length || 0"
@@ -44,33 +44,37 @@
       </ngb-pagination>
     </div>
     <div class="col">
-      <button
-        class="btn dropdown-toggle"
-        id="dropdownMenuButton"
-        data-bs-toggle="dropdown"
-        aria-expanded="false"
-      >
-        {{ pagination.pageSize }} lines/page
-      </button>
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <li
-          *ngFor="let pageSize of pagination.pageSizeOptions"
-          class="dropdown-item"
-          value="{{ pageSize }}"
-          (click)="setPageSize(pageSize)"
+      <div class="d-flex">
+        <div class="col">
+          <button
+            class="btn dropdown-toggle"
+            id="dropdownMenuButton"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            {{ pagination.pageSize }} lines/page
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li
+              *ngFor="let pageSize of pagination.pageSizeOptions"
+              class="dropdown-item"
+              value="{{ pageSize }}"
+              (click)="setPageSize(pageSize)"
+            >
+              {{ pageSize }} lines
+            </li>
+          </ul>
+        </div>
+        <div
+        class="d-inline-block"
+          *ngIf="filters$ | async as filters"
         >
-          {{ pageSize }} lines
-        </li>
-      </ul>
-    </div>
-    <div
-    class="d-inline-block"
-      *ngIf="filters$ | async as filters"
-    >
-      <ngbrx-paginator-search-icon [showFilters]="showFilters$ | async"
-        *ngIf="hasFilter"
-        (click)="toggleShowFilters()"
-      ></ngbrx-paginator-search-icon>
+          <ngbrx-paginator-search-icon [showFilters]="showFilters$ | async"
+            *ngIf="hasFilter"
+            (click)="toggleShowFilters()"
+          ></ngbrx-paginator-search-icon>
+        </div>
+      </div>
     </div>
   </div>
     <div *ngIf="showFilters$ | async">
