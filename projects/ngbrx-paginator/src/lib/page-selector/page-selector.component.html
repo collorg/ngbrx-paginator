@@ -1,0 +1,43 @@
+<span *ngIf="pagination$ | async as pagination">
+  <ngb-pagination
+    [collectionSize]="(collection$ | async)?.length || 0"
+    [(page)]="page"
+    (pageChange)="setPage()"
+    [pageSize]="pagination.pageSize"
+    [boundaryLinks]="true"
+  >
+    <ng-template ngbPaginationPages let-page let-pages="pages">
+      <li class="ngb-custom-pages-item" *ngIf="pages.length > 0">
+        <div class="mb-3 d-flex flex-nowrap px-2">
+          <label
+            id="paginationInputLabel"
+            for="paginationInput"
+            class="col-form-label me-2 ms-1"
+            >Page</label
+          >
+          <input
+            #i
+            type="text"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            class="form-control custom-pages-input"
+            id="paginationInput"
+						[ngModel]="page"
+            [value]="pagination.page"
+            (keyup.enter)="setPage()"
+            (blur)="setPage()"
+            (input)="formatInput($any($event).target)"
+            aria-labelledby="paginationInputLabel paginationDescription"
+            style="width: 5rem"
+          />
+          <span
+            id="paginationDescription"
+            class="col-form-label text-nowrap px-2"
+          >
+            of {{ pagesCount$ | async }}</span
+          >
+        </div>
+      </li>
+    </ng-template>
+  </ngb-pagination>
+</span>

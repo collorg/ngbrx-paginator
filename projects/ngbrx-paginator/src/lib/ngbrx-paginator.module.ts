@@ -11,6 +11,7 @@ import { Paginators } from './ngbrx-paginator.model';
 import { NgbrxPaginatorFilterDesc } from './ngbrx-paginator-filter-desc/ngbrx-paginator-filter-desc.component';
 import { SearchIconComponent } from './search-icon/search-icon.component';
 import { NgbrxPaginatorFilterSelectorComponent } from './ngbrx-paginator-filter-selector/ngbrx-paginator-filter-selector.component';
+import { PageSelectorComponent } from './page-selector/page-selector.component';
 
 let paginators: Paginators<any> = {};
 const paginatorsSubject: BehaviorSubject<Paginators<any>> = new BehaviorSubject<Paginators<any>>(paginators);
@@ -22,6 +23,7 @@ const paginators$: Observable<Paginators<any>> = paginatorsSubject.asObservable(
     NgbrxPaginatorFilterDesc,
     SearchIconComponent,
     NgbrxPaginatorFilterSelectorComponent,
+    PageSelectorComponent,
   ],
   imports: [
     CommonModule,
@@ -33,7 +35,8 @@ const paginators$: Observable<Paginators<any>> = paginatorsSubject.asObservable(
   ],
   exports: [
     NgbrxPaginatorComponent,
-    NgbrxPaginatorFilterDesc
+    NgbrxPaginatorFilterDesc,
+    PageSelectorComponent
   ]
 })
 export class NgbrxPaginatorModule {

@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject, EMPTY, Observable, Subscription, map } from 'rxjs';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { BehaviorSubject, EMPTY, Observable, Subscription, map, tap } from 'rxjs';
 import { Pagination } from './ngbrx-paginator.model';
 import { FormControl } from '@angular/forms';
 import { NgbrxPaginatorService } from './ngbrx-paginator.service';
@@ -11,7 +11,7 @@ import { NgbrxPaginatorService } from './ngbrx-paginator.service';
   styleUrls: ['./ngbrx-paginator.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
+export class NgbrxPaginatorComponent implements OnInit {
   @Input({ required: true }) key: string = '';
   @Input() extension: string | undefined;
 
@@ -21,7 +21,6 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   fullKey = this.key;
   collection$: Observable<any[]> = EMPTY;
   pagination$: Observable<Pagination> = EMPTY;
-  pagesCount$: Observable<number> = EMPTY;
   filters$: Observable<string[]> = EMPTY;
   currentFilter$: Observable<number> = EMPTY;
   filterQueries$: Observable<string[]> = EMPTY;
@@ -31,9 +30,6 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
   currentFilter: number = -1;
   filterQueries: string[] = [];
   hasFilter: boolean = false;
-  page: number = 1;
-  FILTER_PAG_REGEX = /[^0-9]/g;
-  subscriptions: Subscription[] = [];
   control = new FormControl();
 
   constructor(
@@ -46,35 +42,18 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
     this.collection$ = this.service.filteredCollection$(this.fullKey);
     this.filters$ = this.service.filters$(this.fullKey);
     this.pagination$ = this.service.pagination$(this.fullKey);
-    this.pagesCount$ = this.service.pagesCount$(this.fullKey);
-    this.currentFilter$ = this.service.currentFilter$(this.fullKey);
-    this.filterQueries$ = this.service.filterQueries$(this.fullKey);
+    this.currentFilter$ = this.service.currentFilter$(this.fullKey).pipe(
+      tap((currentFilter) => this.currentFilter = currentFilter)
+    );
+    this.filterQueries$ = this.service.filterQueries$(this.fullKey).pipe(
+      tap((filterQueries: string[]) => this.filterQueries = filterQueries)
+    );
     this.filterValues$ = this.service.filterValues$(this.fullKey);
     this.hasFilter = this.service.hasFilter(this.fullKey);
-    this.subscriptions.push(this.pagination$.subscribe((pagination) => this.page = pagination.page))
-    this.subscriptions.push(
-      this.service.currentFilter$(this.fullKey).subscribe((currentFilter) => this.currentFilter = currentFilter))
-    this.subscriptions.push(this.filterQueries$.subscribe((filterQueries: string[]) => this.filterQueries = filterQueries));
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
-  }
-
-  changePage(page: number) {
-    this.page = this.service.setPage(this.fullKey, page)
-  }
-
-  setPage(page: string) {
-    this.changePage(parseInt(page, 10) || 1)
   }
 
   setPageSize(pageSize: number) {
     this.service.setPageSize(this.fullKey, pageSize);
-  }
-
-  formatInput(input: HTMLInputElement) {
-    input.value = input.value.replace(this.FILTER_PAG_REGEX, '');
   }
 
   getFilterQuery$(filterIdx: number): Observable<string> {
@@ -97,14 +76,14 @@ export class NgbrxPaginatorComponent implements OnInit, OnDestroy {
 
   setFilterQuery(event: any) {
     this.service.setFilterQuery(this.fullKey, event.target.value);
-    this.changePage(1)
+    this.service.setPage(this.fullKey, 1)
   }
 
   setSelectedOption(event: any) {
     let value = '';
     const val = JSON.parse(event.target.value)
     this.service.setFilterQuery(this.fullKey, val.key, val.value);
-    this.changePage(1)
+    this.service.setPage(this.fullKey, 1)
   }
 
   setFilterKey(filterIdx: number) {

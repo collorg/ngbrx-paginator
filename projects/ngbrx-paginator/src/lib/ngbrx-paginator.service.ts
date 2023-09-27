@@ -174,6 +174,7 @@ export class NgbrxPaginatorService {
   setFilterQuery(key: string, filterQuery: string, value?: string) {
     value = value || '';
     this.store.dispatch(NgbrxPaginatorActions.setFilterQuery({ key, value, filterQuery }));
+    this.store.dispatch(NgbrxPaginatorActions.setPage({ key, page: 1 }))
   }
 
   toggleActivatedFilter(key: string, filterIdx: number) {

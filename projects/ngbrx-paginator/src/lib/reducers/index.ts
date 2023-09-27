@@ -128,7 +128,6 @@ export const reducers = createReducer(
       const filterValues = [...state.paginations[action.key].filterValues]
       const filterIdx = pagination.currentFilter;
       if (filterIdx > -1 && action.filterQuery !== filterQueries[filterIdx]) {
-        pagination.page = 1;
         filterQueries[pagination.currentFilter] = action.filterQuery;
         filterValues[pagination.currentFilter] = action.value || '';
         pagination.filterQueries = filterQueries;
