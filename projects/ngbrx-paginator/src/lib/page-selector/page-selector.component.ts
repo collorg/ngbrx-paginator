@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbrxPaginatorService } from '../ngbrx-paginator.service';
-import { EMPTY, Observable, Subscription, tap } from 'rxjs';
+import { EMPTY, Observable, distinctUntilChanged, tap } from 'rxjs';
 import { Pagination } from '../ngbrx-paginator.model';
 
 @Component({
@@ -27,7 +27,8 @@ export class PageSelectorComponent implements OnInit {
   ngOnInit(): void {
     this.fullKey = this.service.getKey(this.key, this.extension);
     this.pagination$ = this.service.pagination$(this.fullKey).pipe(
-      tap((pagination) => this.page = pagination.page)
+      distinctUntilChanged(),
+      tap(pagination => this.page = pagination.page)
     );
     this.pagesCount$ = this.service.pagesCount$(this.fullKey);
     this.collection$ = this.service.filteredCollection$(this.fullKey);

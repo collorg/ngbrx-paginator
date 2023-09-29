@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { BehaviorSubject, EMPTY, Observable, Subscription, map, tap } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, distinctUntilChanged, map, tap } from 'rxjs';
 import { Pagination } from './ngbrx-paginator.model';
 import { FormControl } from '@angular/forms';
 import { NgbrxPaginatorService } from './ngbrx-paginator.service';
@@ -15,6 +15,7 @@ export class NgbrxPaginatorComponent implements OnInit {
   @Input({ required: true }) key: string = '';
   @Input() extension: string | undefined;
 
+  #searchTimeoutId: any = 0;
   #showFilters: boolean = false;
   #showFiltersSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.#showFilters);
   showFilters$: Observable<boolean> = this.#showFiltersSubject.asObservable();
@@ -41,12 +42,16 @@ export class NgbrxPaginatorComponent implements OnInit {
     this.fullKey = this.service.getKey(this.key, this.extension);
     this.collection$ = this.service.filteredCollection$(this.fullKey);
     this.filters$ = this.service.filters$(this.fullKey);
-    this.pagination$ = this.service.pagination$(this.fullKey);
+    this.pagination$ = this.service.pagination$(this.fullKey).pipe(
+      distinctUntilChanged()
+    );
     this.currentFilter$ = this.service.currentFilter$(this.fullKey).pipe(
-      tap((currentFilter) => this.currentFilter = currentFilter)
+      distinctUntilChanged(),
+      tap(currentFilter => this.currentFilter = currentFilter)
     );
     this.filterQueries$ = this.service.filterQueries$(this.fullKey).pipe(
-      tap((filterQueries: string[]) => this.filterQueries = filterQueries)
+      distinctUntilChanged(),
+      tap(filterQueries => this.filterQueries = filterQueries)
     );
     this.filterValues$ = this.service.filterValues$(this.fullKey);
     this.hasFilter = this.service.hasFilter(this.fullKey);
@@ -75,8 +80,13 @@ export class NgbrxPaginatorComponent implements OnInit {
   }
 
   setFilterQuery(event: any) {
-    this.service.setFilterQuery(this.fullKey, event.target.value);
-    this.service.setPage(this.fullKey, 1)
+    if (this.#searchTimeoutId) {
+      clearTimeout(this.#searchTimeoutId);
+    }
+    this.#searchTimeoutId = setTimeout(() => {
+      this.service.setFilterQuery(this.fullKey, event.target.value)
+      , 333
+    })
   }
 
   setSelectedOption(event: any) {
@@ -107,10 +117,10 @@ export class NgbrxPaginatorComponent implements OnInit {
   getFilterValues$ = (filterKey: string): Observable<any> => this.service.getFilterValues$(this.fullKey, filterKey);
   filterValue$ = (filterIdx: number) => this.service.filterValue$(this.fullKey, filterIdx);
 
-  getEntries(values: {[key: string]: string}): {key: string, value: string}[] {
-    const res: {key: string, value: string}[] = [];
+  getEntries(values: { [key: string]: string }): { key: string, value: string }[] {
+    const res: { key: string, value: string }[] = [];
     Object.keys(values).forEach(
-      (key: string) => res.push({key, value: values[key]})
+      (key: string) => res.push({ key, value: values[key] })
     )
     return res;
   }

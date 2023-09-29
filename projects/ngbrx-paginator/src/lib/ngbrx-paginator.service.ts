@@ -133,13 +133,13 @@ export class NgbrxPaginatorService {
 
   numberOfFilteredItems$<M>(paginatorKey: string): Observable<number> {
     return this.#getData$<M>(paginatorKey).pipe(
-      switchMap(data$ => this.store.select(fromStore.selectNumberOfFilteredItems(paginatorKey, of(data$))))
+      switchMap((data: M[]) => this.store.select(fromStore.selectNumberOfFilteredItems(paginatorKey, of(data))))
     )
   }
 
   filteredCollection$<M>(paginatorKey: string): Observable<M[]> {
     return this.#getData$<M>(paginatorKey).pipe(
-      switchMap(data$ => this.store.select(fromStore.selectFilteredCollection(paginatorKey, of(data$))))
+      switchMap((data: M[]) => this.store.select(fromStore.selectFilteredCollection(paginatorKey, of(data))))
     )
   }
 
@@ -149,14 +149,13 @@ export class NgbrxPaginatorService {
 
   pagesCount$<M>(paginatorKey: string): Observable<number> {
     return this.#getData$<M>(paginatorKey).pipe(
-      switchMap(data$ => this.store.select(fromStore.selectPagesCount(paginatorKey, of(data$))))
+      switchMap((data: M[]) => this.store.select(fromStore.selectPagesCount(paginatorKey, of(data))))
     )
   }
 
-  setPage(key: string, page: number): number {
+  setPage(key: string, page: number) {
     this.store.dispatch(NgbrxPaginatorActions.setPage({ key, page }));
     window.scrollTo(0, 0);
-    return page;
   }
 
   setPageSize(key: string, pageSize: number) {
@@ -168,13 +167,13 @@ export class NgbrxPaginatorService {
   }
 
   setCurrentFilter(key: string, filterIdx: number) {
-    this.store.dispatch(NgbrxPaginatorActions.setCurrentFilter({ key, filterIdx }))
+    this.store.dispatch(NgbrxPaginatorActions.setCurrentFilter({ key, filterIdx }));
   }
 
   setFilterQuery(key: string, filterQuery: string, value?: string) {
-    value = value || '';
+    value = value || ''; // for select filters
     this.store.dispatch(NgbrxPaginatorActions.setFilterQuery({ key, value, filterQuery }));
-    this.store.dispatch(NgbrxPaginatorActions.setPage({ key, page: 1 }))
+    this.setPage(key, 1);
   }
 
   toggleActivatedFilter(key: string, filterIdx: number) {
