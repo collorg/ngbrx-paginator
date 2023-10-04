@@ -1,3 +1,7 @@
+# release 0.3.6 (2023-10-04)
+
+* Fix #4. Clear filters values on clearFilters action. (5c984f4)
+
 # release 0.3.5 (2023-09-29)
 
 * Add delay to trigger filter query. (a23f2dc)
