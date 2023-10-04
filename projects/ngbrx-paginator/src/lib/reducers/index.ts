@@ -139,7 +139,8 @@ export const reducers = createReducer(
     (state, action) => {
       const { nState, paginations, pagination } = cloneStateWithPaginator(state, action.key);
       const filterQueries: string[] = [];
-      pagination.filterQueries.forEach((_, index: number) => filterQueries.push(''))
+      pagination.filterQueries.forEach((_) => filterQueries.push(''))
+      pagination.filterValues = filterQueries;
       pagination.filterQueries = filterQueries
       return updateSate(nState, paginations, action.key, pagination);
     }),
