@@ -1,3 +1,8 @@
+# release 0.3.7 (2023-10-19)
+
+* Bump @angular/cli from 16.2.0 to 1.2.7, @angular/core from 16.2.0 to 16.2.10 and @ngrx/store from 16.2.0 to 16.3.0 (a16d589)
+* Bump @babel/traverse from 7.22.17 to 7.23.2 (#5) (6689de3)
+
 # release 0.3.6 (2023-10-04)
 
 * Fix #4. Clear filters values on clearFilters action. (5c984f4)
