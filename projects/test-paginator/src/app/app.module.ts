@@ -28,7 +28,7 @@ import { NgbrxPaginatorModule } from 'ngbrx-paginator';
         lock: true,
         persist: true
       }
-    }),
+    , connectInZone: true}),
     NgbrxPaginatorModule
   ],
   providers: [],
