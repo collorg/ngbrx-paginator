@@ -15,9 +15,9 @@
   },
   "author": "Joël Maizi <joel.maizi@collorg.org>",
   "peerDependencies": {
-    "@ngrx/store": "^16.3.0",
-    "@angular/localize": "^16.2.0",
-    "@ng-bootstrap/ng-bootstrap": "^15.1.1",
+    "@ngrx/store": "^17",
+    "@angular/localize": "^17",
+    "@ng-bootstrap/ng-bootstrap": "^16",
     "@popperjs/core": "^2.11.8"
   }
 }
