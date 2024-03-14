@@ -3,7 +3,10 @@
 You have an application that uses ngrx to store your data.
 NgbrxPaginator gives you a really easy way to paginate your data with filters.
 
-This package is in **BETA** and is developped with angular@16, ngrx@16 and ng-bootstrap@15.
+This package is in **BETA**:
+
+* 0.3.8: angular@16, ngrx@16 and ng-bootstrap@15.
+* 0.4.0: angular@17, ngrx@17 and ng-bootstrap@16.
 
 The code is rather simple and if you want to join, you are more than welcome.
 
