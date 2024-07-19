@@ -1,7 +1,7 @@
  
 {
   "name": "ngbrx-paginator",
-  "version": "0.4.0",
+  "version": "0.5.1",
   "license": "MIT",
   "keywords": [
     "angular",
@@ -15,9 +15,9 @@
   },
   "author": "Joël Maizi <joel.maizi@collorg.org>",
   "peerDependencies": {
-    "@ngrx/store": "^17",
-    "@angular/localize": "^17",
-    "@ng-bootstrap/ng-bootstrap": "^16",
+    "@ngrx/store": "^18",
+    "@angular/localize": "^18",
+    "@ng-bootstrap/ng-bootstrap": "^17",
     "@popperjs/core": "^2.11.8"
   }
 }
